@@ -14,7 +14,7 @@ use IMSGlobal\LTI\OAuth;
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
  * @version 3.0.0
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class ToolConsumer
 {
