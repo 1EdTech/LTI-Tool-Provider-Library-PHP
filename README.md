@@ -16,4 +16,6 @@ Whilst supporting LTI is relatively simple, the benefits to using a class librar
 
 The wiki area of this repository contains [documentation](https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP/wiki) for this library.
 
+&copy; 2016 IMS Global Learning Consortium Inc. All Rights Reserved. Trademark Policy - (www.imsglobal.org/trademarks)
+
 <sup><sub>Learning Tools Interoperability and LTI are registered trademarks of IMS Global Learning Consortium Inc.</sub></sup>
