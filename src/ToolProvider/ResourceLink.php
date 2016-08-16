@@ -12,7 +12,7 @@ use IMSGlobal\LTI\OAuth;
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
- * @version 3.0.0
+ * @version 3.0.1
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class ResourceLink
@@ -703,7 +703,7 @@ EOF;
 
             for ($i = 0; $i < count($members); $i++) {
 
-                $user = new User($this, $members[$i]['user_id']);
+                $user = User::fromResourceLink($this, $members[$i]['user_id']);
 
 // Set the user name
                 $firstname = (isset($members[$i]['person_name_given'])) ? $members[$i]['person_name_given'] : '';
