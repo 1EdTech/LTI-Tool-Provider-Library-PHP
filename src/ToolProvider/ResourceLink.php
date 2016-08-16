@@ -1155,7 +1155,7 @@ EOF;
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
                 try {
-                    $this->extDoc = new DOMDocument();
+                    $this->extDoc = new \DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
                     if (isset($this->extNodes['statusinfo']['codemajor']) && ($this->extNodes['statusinfo']['codemajor'] === 'Success')) {
