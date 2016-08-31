@@ -431,6 +431,7 @@ class ToolProvider
         if ($ok) {
             $this->consumer->setKey($http->responseJson->tool_proxy_guid);
             $this->consumer->secret = $toolProxy->security_contract->shared_secret;
+            $this->consumer->toolProxy = json_encode($toolProxy);
             $this->consumer->save();
         }
 
