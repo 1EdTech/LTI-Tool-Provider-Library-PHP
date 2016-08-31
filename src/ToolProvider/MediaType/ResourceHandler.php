@@ -31,10 +31,12 @@ class ResourceHandler
         $this->description = new \stdClass;
         $this->description->default_value = $resourceHandler->item->description;
         $this->description->key = "{$resourceHandler->item->id}.resource.description";
-        $this->icon_info = new \stdClass;
-        $this->icon_info->default_location = new \stdClass;
-        $this->icon_info->default_location->path = $resourceHandler->icon;
-        $this->icon_info->key = "{$resourceHandler->item->id}.icon.path";
+        $icon_info = new \stdClass;
+        $icon_info->default_location = new \stdClass;
+        $icon_info->default_location->path = $resourceHandler->icon;
+        $icon_info->key = "{$resourceHandler->item->id}.icon.path";
+        $icon_info->key = "{$resourceHandler->item->id}.icon.path";
+        $this->icon_info = array($icon_info);
         $this->message = array();
         foreach ($resourceHandler->requiredMessages as $message) {
             $this->message[] = new Message($message, $toolProvider->consumer->profile->capability_offered);
