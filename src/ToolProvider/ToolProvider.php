@@ -2,7 +2,8 @@
 
 namespace IMSGlobal\LTI\ToolProvider;
 
-use IMSGlobal\LTI\ToolProvider\DataConnector;
+use IMSGlobal\LTI\Profile\Item;
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\MediaType;
 use IMSGlobal\LTI\Profile;
 use IMSGlobal\LTI\HTTPMessage;
@@ -424,7 +425,7 @@ class ToolProvider
 
 // Create tool proxy
         $toolProxyService = $this->findService('application/vnd.ims.lti.v2.toolproxy+json', array('POST'));
-        $secret = DataConnector\DataConnector::getRandomString(12);
+        $secret = DataConnector::getRandomString(12);
         $toolProxy = new MediaType\ToolProxy($this, $toolProxyService, $secret);
         $http = $this->consumer->doServiceRequest($toolProxyService, 'POST', 'application/vnd.ims.lti.v2.toolproxy+json', json_encode($toolProxy));
         $ok = $http->ok && ($http->status == 201) && isset($http->responseJson->tool_proxy_guid) && (strlen($http->responseJson->tool_proxy_guid) > 0);
@@ -469,9 +470,10 @@ class ToolProvider
 /**
  * Generate a web page containing an auto-submitted form of parameters.
  *
- * @param string $url         URL to which the form should be submitted
- * @param array    $params    Array of form parameters
- * @param string $target    Name of target (optional)
+ * @param string $url URL to which the form should be submitted
+ * @param array $params Array of form parameters
+ * @param string $target Name of target (optional)
+ * @return string
  */
     public static function sendForm($url, $params, $target = '')
     {
@@ -1180,7 +1182,7 @@ EOD;
             } else {
 // Check if this is a new share key
                 $shareKey = new ResourceLinkShareKey($this->resourceLink, $_POST['custom_share_key']);
-                if (!is_null($shareKey->primaryConsumerKey) && !is_null($share_key->primaryResourceLinkId)) {
+                if (!is_null($shareKey->primaryConsumerKey) && !is_null($shareKey->primaryResourceLinkId)) {
 // Update resource link with sharing primary resource link details
                     $key = $shareKey->primaryConsumerKey;
                     $id = $shareKey->primaryResourceLinkId;

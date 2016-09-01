@@ -1,6 +1,7 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider;
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 /**
  * Class to represent a tool consumer resource link share key
@@ -58,7 +59,7 @@ class ResourceLinkShareKey
 /**
  * Date/time when the share key expires.
  *
- * @var datetime $expires
+ * @var int $expires
  */
     public $expires = null;
 

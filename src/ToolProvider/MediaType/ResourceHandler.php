@@ -1,6 +1,8 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
+use IMSGlobal\LTI\ToolProvider\ToolProvider;
+use IMSGlobal\LTI\Profile\ResourceHandler as ProfileResourceHandler;
 
 /**
  * Class to represent an LTI Resource Handler
@@ -18,7 +20,7 @@ class ResourceHandler
  * Class constructor.
  *
  * @param ToolProvider $toolProvider   Tool Provider object
- * @param resourceHandler $resourceHandler   Resource handler object
+ * @param ProfileResourceHandler $resourceHandler   Resource handler object
  */
     function __construct($toolProvider, $resourceHandler)
     {

@@ -1,6 +1,7 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider;
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 /**
  * Class to represent a tool consumer user
@@ -175,7 +176,7 @@ class User
 /**
  * Get resource link.
  *
- * @return LTIResourceLink Resource link object
+ * @return ResourceLink Resource link object
  */
     public function getResourceLink()
     {
@@ -398,8 +399,9 @@ class User
 /**
  * Class constructor from resource link.
  *
- * @param ResourceLink $resourceLink   Resource_Link object
- * @param string       $ltiUserId      User ID value
+ * @param ResourceLink $resourceLink Resource_Link object
+ * @param string $ltiUserId User ID value
+ * @return User
  */
     public static function fromResourceLink($resourceLink, $ltiUserId)
     {
@@ -455,9 +457,10 @@ class User
         $this->id = $id;
         $dataConnector = $this->getDataConnector();
         if (!is_null($dataConnector)) {
-            $dataConnector->loadUser($this);
+            return $dataConnector->loadUser($this);
         }
 
+        return false;
     }
 
 }
