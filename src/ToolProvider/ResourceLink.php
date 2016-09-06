@@ -2,6 +2,9 @@
 
 namespace IMSGlobal\LTI\ToolProvider;
 
+use DOMDocument;
+use DOMElement;
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\Service;
 use IMSGlobal\LTI\HTTPMessage;
 use IMSGlobal\LTI\OAuth;
@@ -131,13 +134,13 @@ class ResourceLink
 /**
  * Date/time when the object was created.
  *
- * @var dateime $created
+ * @var int $created
  */
     public $created = null;
 /**
  * Date/time when the object was last updated.
  *
- * @var datetime $updated
+ * @var int $updated
  */
     public $updated = null;
 
@@ -959,9 +962,10 @@ EOF;
 /**
  * Class constructor from consumer.
  *
- * @param ToolConsumer $consumer            Consumer object
- * @param string $ltiResourceLinkId         Resource link ID value
- * @param string $tempId                    Temporary Resource link ID value (optional, default is null)
+ * @param ToolConsumer $consumer Consumer object
+ * @param string $ltiResourceLinkId Resource link ID value
+ * @param string $tempId Temporary Resource link ID value (optional, default is null)
+ * @return ResourceLink
  */
     public static function fromConsumer($consumer, $ltiResourceLinkId, $tempId = null)
     {
@@ -986,9 +990,10 @@ EOF;
 /**
  * Class constructor from context.
  *
- * @param Context   $context                   Context object
- * @param string    $ltiResourceLinkId         Resource link ID value
- * @param string    $tempId                    Temporary Resource link ID value (optional, default is null)
+ * @param Context $context Context object
+ * @param string $ltiResourceLinkId Resource link ID value
+ * @param string $tempId Temporary Resource link ID value (optional, default is null)
+ * @return ResourceLink
  */
     public static function fromContext($context, $ltiResourceLinkId, $tempId = null)
     {
@@ -1092,13 +1097,13 @@ EOF;
                 if (in_array(self::EXT_TYPE_LETTER_AF_PLUS, $supportedTypes)) {
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_LETTER_AF_PLUS;
-                } else if (in_array(self::EXT_TYPE_TEXT, $supporteTypes)) {
+                } else if (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_TEXT;
                 }
 // Convert letter_af_plus to letter_af or text
             } else if ($type === self::EXT_TYPE_LETTER_AF_PLUS) {
-                if (in_array(self::EXT_TYPE_LETTER_AF, $supported_types) && (strlen($value) === 1)) {
+                if (in_array(self::EXT_TYPE_LETTER_AF, $supportedTypes) && (strlen($value) === 1)) {
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_LETTER_AF;
                 } else if (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
@@ -1155,7 +1160,7 @@ EOF;
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
                 try {
-                    $this->extDoc = new \DOMDocument();
+                    $this->extDoc = new DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
                     if (isset($this->extNodes['statusinfo']['codemajor']) && ($this->extNodes['statusinfo']['codemajor'] === 'Success')) {
@@ -1226,7 +1231,7 @@ EOD;
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
                 try {
-                    $this->extDoc = new \DOMDocument();
+                    $this->extDoc = new DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
                     if (isset($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) &&

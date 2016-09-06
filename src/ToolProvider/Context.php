@@ -2,6 +2,7 @@
 
 namespace IMSGlobal\LTI\ToolProvider;
 
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\Service;
 
 /**
@@ -37,13 +38,13 @@ class Context
 /**
  * Date/time when the object was created.
  *
- * @var datetime $created
+ * @var int $created
  */
     public $created = null;
 /**
  * Date/time when the object was last updated.
  *
- * @var datetime $updated
+ * @var int $updated
  */
     public $updated = null;
 
@@ -417,8 +418,9 @@ class Context
 /**
  * Class constructor from consumer.
  *
- * @param LTIToolConsumer $consumer       Consumer instance
- * @param string          $ltiContextId   LTI Context ID value
+ * @param ToolConsumer $consumer Consumer instance
+ * @param string $ltiContextId LTI Context ID value
+ * @return Context
  */
     public static function fromConsumer($consumer, $ltiContextId)
     {

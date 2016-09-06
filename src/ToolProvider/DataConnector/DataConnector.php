@@ -2,6 +2,13 @@
 
 namespace IMSGlobal\LTI\ToolProvider\DataConnector;
 
+use IMSGlobal\LTI\ToolProvider\ConsumerNonce;
+use IMSGlobal\LTI\ToolProvider\Context;
+use IMSGlobal\LTI\ToolProvider\ResourceLink;
+use IMSGlobal\LTI\ToolProvider\ResourceLinkShareKey;
+use IMSGlobal\LTI\ToolProvider\ToolConsumer;
+use IMSGlobal\LTI\ToolProvider\ToolProxy;
+use IMSGlobal\LTI\ToolProvider\User;
 use PDO;
 
 /**
@@ -577,10 +584,9 @@ class DataConnector
  * Any single quotes in the value passed will be replaced with two single quotes.  If a null value is passed, a string
  * of 'null' is returned (which will never be enclosed in quotes irrespective of the value of the $addQuotes parameter.
  *
- * @param string $value     Value to be quoted
- * @param string $addQuotes If true the returned string will be enclosed in single quotes (optional, default is true)
- *
- * @return boolean True if the user object was successfully deleted
+ * @param string $value Value to be quoted
+ * @param bool $addQuotes If true the returned string will be enclosed in single quotes (optional, default is true)
+ * @return string The quoted string.
  */
     static function quoted($value, $addQuotes = true)
     {

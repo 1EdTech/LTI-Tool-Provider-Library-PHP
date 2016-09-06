@@ -29,7 +29,7 @@ class Outcome
 /**
  * Outcome date value.
  *
- * @var datetime $date
+ * @var string $date
  */
     public $date = null;
 /**

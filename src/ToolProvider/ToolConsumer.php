@@ -2,7 +2,7 @@
 
 namespace IMSGlobal\LTI\ToolProvider;
 
-use IMSGlobal\LTI\ToolProvider\DataConnector;
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\Service;
 use IMSGlobal\LTI\HTTPMessage;
 use IMSGlobal\LTI\OAuth;
@@ -76,19 +76,19 @@ class ToolConsumer
 /**
  * Date/time from which the the tool consumer instance is enabled to accept incoming connection requests.
  *
- * @var datetime $enableFrom
+ * @var int $enableFrom
  */
     public $enableFrom = null;
 /**
  * Date/time until which the tool consumer instance is enabled to accept incoming connection requests.
  *
- * @var datetime $enableUntil
+ * @var int $enableUntil
  */
     public $enableUntil = null;
 /**
  * Date of last connection from this tool consumer.
  *
- * @var datetime $lastAccess
+ * @var int $lastAccess
  */
     public $lastAccess = null;
 /**
@@ -112,13 +112,13 @@ class ToolConsumer
 /**
  * Date/time when the object was created.
  *
- * @var datetime $created
+ * @var int $created
  */
     public $created = null;
 /**
  * Date/time when the object was last updated.
  *
- * @var datetime $updated
+ * @var int $updated
  */
     public $updated = null;
 
@@ -151,7 +151,7 @@ class ToolConsumer
  * Class constructor.
  *
  * @param string  $key             Consumer key
- * @param mixed   $dataConnector   A data connector object
+ * @param DataConnector   $dataConnector   A data connector object
  * @param boolean $autoEnable      true if the tool consumers is to be enabled automatically (optional, default is false)
  */
     public function __construct($key = null, $dataConnector = null, $autoEnable = false)
@@ -159,13 +159,13 @@ class ToolConsumer
 
         $this->initialize();
         if (empty($dataConnector)) {
-            $dataConnector = DataConnector\DataConnector::getDataConnector();
+            $dataConnector = DataConnector::getDataConnector();
         }
         $this->dataConnector = $dataConnector;
         if (!empty($key)) {
             $this->load($key, $autoEnable);
         } else {
-            $this->secret = DataConnector\DataConnector::getRandomString(32);
+            $this->secret = DataConnector::getRandomString(32);
         }
 
     }

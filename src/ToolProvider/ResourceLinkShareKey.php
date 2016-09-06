@@ -1,7 +1,8 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider;
-use IMSGlobal\LTI\ToolProvider\DataConnector;
+
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 /**
  * Class to represent a tool consumer resource link share key
@@ -59,7 +60,7 @@ class ResourceLinkShareKey
 /**
  * Date/time when the share key expires.
  *
- * @var datetime $expires
+ * @var int $expires
  */
     public $expires = null;
 
@@ -140,7 +141,7 @@ class ResourceLinkShareKey
             } else {
                 $this->length = max(min($this->length, self::MAX_SHARE_KEY_LENGTH), self::MIN_SHARE_KEY_LENGTH);
             }
-            $this->id = DataConnector\DataConnector::getRandomString($this->length);
+            $this->id = DataConnector::getRandomString($this->length);
         }
 
         return $this->dataConnector->saveResourceLinkShareKey($this);
