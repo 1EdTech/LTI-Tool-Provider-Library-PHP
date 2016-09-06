@@ -1,6 +1,7 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider;
+use IMSGlobal\LTI\ToolProvider\DataConnector;
 
 /**
  * Class to represent a tool consumer resource link share key
@@ -139,7 +140,7 @@ class ResourceLinkShareKey
             } else {
                 $this->length = max(min($this->length, self::MAX_SHARE_KEY_LENGTH), self::MIN_SHARE_KEY_LENGTH);
             }
-            $this->id = DataConnector::getRandomString($this->length);
+            $this->id = DataConnector\DataConnector::getRandomString($this->length);
         }
 
         return $this->dataConnector->saveResourceLinkShareKey($this);
