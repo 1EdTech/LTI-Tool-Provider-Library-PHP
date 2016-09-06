@@ -2,8 +2,8 @@
 
 namespace IMSGlobal\LTI\ToolProvider;
 
+use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\MediaType;
-use IMSGlobal\LTI\ToolProvider\DataConnector;
 
 /**
  * Class to represent an LTI Tool Proxy
@@ -45,7 +45,7 @@ class ToolProxy
 /**
  * Data connector object.
  *
- * @var DataConnector\DataConnector $dataConnector
+ * @var DataConnector $dataConnector
  */
     private $dataConnector = null;
 /**
@@ -58,7 +58,7 @@ class ToolProxy
 /**
  * Class constructor.
  *
- * @param DataConnector\DataConnector   $dataConnector   Data connector
+ * @param DataConnector   $dataConnector   Data connector
  * @param string                        $id              Tool Proxy ID (optional, default is null)
  */
     public function __construct($dataConnector, $id = null)
@@ -69,7 +69,7 @@ class ToolProxy
         if (!empty($id)) {
             $this->load($id);
         } else {
-            $this->recordId = DataConnector\DataConnector::getRandomString(32);
+            $this->recordId = DataConnector::getRandomString(32);
         }
 
     }

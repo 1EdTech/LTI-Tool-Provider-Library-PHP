@@ -3,6 +3,8 @@
 namespace IMSGlobal\LTI\ToolProvider\DataConnector;
 
 use IMSGlobal\LTI\ToolProvider;
+use IMSGlobal\LTI\ToolProvider\Context;
+use IMSGlobal\LTI\ToolProvider\ToolConsumer;
 use PDO;
 
 /**

@@ -3,6 +3,12 @@
 namespace IMSGlobal\LTI\ToolProvider\DataConnector;
 
 use IMSGlobal\LTI\ToolProvider;
+use IMSGlobal\LTI\ToolProvider\ConsumerNonce;
+use IMSGlobal\LTI\ToolProvider\Context;
+use IMSGlobal\LTI\ToolProvider\ResourceLink;
+use IMSGlobal\LTI\ToolProvider\ResourceLinkShareKey;
+use IMSGlobal\LTI\ToolProvider\ToolConsumer;
+use IMSGlobal\LTI\ToolProvider\User;
 
 /**
  * Class to represent an LTI Data Connector for MySQL

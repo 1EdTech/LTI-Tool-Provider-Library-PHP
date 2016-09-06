@@ -106,7 +106,8 @@ class ContentItem
 /**
  * Wrap the content items to form a complete application/vnd.ims.lti.v1.contentitems+json media type instance.
  *
- * @param mixed $items  An array of content items or a single item
+ * @param mixed $items An array of content items or a single item
+ * @return string
  */
     public static function toJson($items)
     {

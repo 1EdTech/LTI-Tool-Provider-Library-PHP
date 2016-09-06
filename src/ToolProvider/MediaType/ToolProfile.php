@@ -1,6 +1,7 @@
 <?php
 
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
+use IMSGlobal\LTI\ToolProvider\ToolProvider;
 
 /**
  * Class to represent an LTI Tool Profile

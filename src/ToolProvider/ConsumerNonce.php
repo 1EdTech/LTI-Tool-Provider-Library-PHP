@@ -22,7 +22,7 @@ class ConsumerNonce
 /**
  * Date/time when the nonce value expires.
  *
- * @var datetime $expires
+ * @var int $expires
  */
     public $expires = null;
 
