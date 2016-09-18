@@ -15,7 +15,7 @@ use IMSGlobal\LTI\OAuth;
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
- * @version  3.0.0
+ * @version  3.0.2
  * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
  */
 class ToolProvider
@@ -1073,6 +1073,11 @@ EOD;
 // Set the user email
             $email = (isset($_POST['lis_person_contact_email_primary'])) ? $_POST['lis_person_contact_email_primary'] : '';
             $this->user->setEmail($email, $this->defaultEmail);
+
+// Set the user image URI
+            if (isset($_POST['user_image'])) {
+                $this->user->image = $_POST['user_image'];
+            }
 
 // Set the user roles
             if (isset($_POST['roles'])) {

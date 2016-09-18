@@ -9,7 +9,7 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
- * @version 3.0.0
+ * @version 3.0.2
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class User
@@ -39,6 +39,12 @@ class User
  * @var string $email
  */
     public $email = '';
+/**
+ * User's image URI.
+ *
+ * @var string $image
+ */
+    public $image = '';
 /**
  * Roles for user.
  *
@@ -121,6 +127,7 @@ class User
         $this->lastname = '';
         $this->fullname = '';
         $this->email = '';
+        $this->image = '';
         $this->roles = array();
         $this->groups = array();
         $this->ltiResultSourcedId = null;
