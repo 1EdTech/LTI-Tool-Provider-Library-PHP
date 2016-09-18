@@ -10,7 +10,7 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
- * @version 3.0.0
+ * @version 3.0.2
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class ResourceLinkShareKey

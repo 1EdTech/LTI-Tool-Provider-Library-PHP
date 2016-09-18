@@ -11,7 +11,7 @@ use IMSGlobal\LTI\ToolProvider\MediaType;
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
- * @version  3.0.0
+ * @version  3.0.2
  * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
  */
 class ToolProxy
