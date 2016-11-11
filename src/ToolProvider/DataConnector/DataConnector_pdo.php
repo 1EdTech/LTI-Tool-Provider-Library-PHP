@@ -61,7 +61,7 @@ class DataConnector_pdo extends DataConnector
                    'consumer_name, consumer_version, consumer_guid, ' .
                    'profile, tool_proxy, settings, protected, enabled, ' .
                    'enable_from, enable_until, last_access, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::CONSUMER_TABLE_NAME . ' ' .
                    'WHERE consumer_pk = :id';
             $query = $this->db->prepare($sql);
             $id = $consumer->getRecordId();
@@ -71,10 +71,10 @@ class DataConnector_pdo extends DataConnector
                    'consumer_name, consumer_version, consumer_guid, ' .
                    'profile, tool_proxy, settings, protected, enabled, ' .
                    'enable_from, enable_until, last_access, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::CONSUMER_TABLE_NAME . ' ' .
                    'WHERE consumer_key256 = :key256';
             $query = $this->db->prepare($sql);
-            $key256 = DataConnector::getConsumerKey($consumer->getKey());
+            $key256 = static::getConsumerKey($consumer->getKey());
             $query->bindValue('key256', $key256, PDO::PARAM_STR);
         }
 
@@ -158,7 +158,7 @@ class DataConnector_pdo extends DataConnector
             $last = date($this->dateFormat, $consumer->lastAccess);
         }
         if (empty($id)) {
-            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' (consumer_key256, consumer_key, name, ' .
+            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::CONSUMER_TABLE_NAME . ' (consumer_key256, consumer_key, name, ' .
                    'secret, lti_version, consumer_name, consumer_version, consumer_guid, profile, tool_proxy, settings, protected, enabled, ' .
                    'enable_from, enable_until, last_access, created, updated) ' .
                    'VALUES (:key256, :key, :name, :secret, :lti_version, :consumer_name, :consumer_version, :consumer_guid, :profile, :tool_proxy, :settings, ' .
@@ -183,7 +183,7 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('created', $now, PDO::PARAM_STR);
             $query->bindValue('updated', $now, PDO::PARAM_STR);
         } else {
-            $sql = 'UPDATE ' . $this->dbTableNamePrefix . DataConnector::CONSUMER_TABLE_NAME . ' ' .
+            $sql = 'UPDATE ' . $this->dbTableNamePrefix . static::CONSUMER_TABLE_NAME . ' ' .
                    'SET consumer_key256 = :key256, consumer_key = :key, name = :name, secret = :secret, lti_version = :lti_version, ' .
                    'consumer_name = :consumer_name, consumer_version = :consumer_version, consumer_guid = :consumer_guid, ' .
                    'profile = :profile, tool_proxy = :tool_proxy, settings = :settings, ' .
@@ -235,15 +235,15 @@ class DataConnector_pdo extends DataConnector
         $id = $consumer->getRecordId();
 
 // Delete any nonce values for this consumer
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE consumer_pk = :id';
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::NONCE_TABLE_NAME . ' WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
 
 // Delete any outstanding share keys for resource links for this consumer
         $sql = 'DELETE sk ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
                'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -251,9 +251,9 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any outstanding share keys for resource links for contexts in this consumer
         $sql = 'DELETE sk ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -261,8 +261,8 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any users in resource links for this consumer
         $sql = 'DELETE u ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' u ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
                'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -270,17 +270,17 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any users in resource links for contexts in this consumer
         $sql = 'DELETE u ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' u ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
 
 // Update any resource links for which this consumer is acting as a primary resource link
-        $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
+        $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' prl ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
                'SET prl.primary_resource_link_pk = NULL, prl.share_approved = NULL ' .
                'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
@@ -288,9 +288,9 @@ class DataConnector_pdo extends DataConnector
         $query->execute();
 
 // Update any resource links for contexts in which this consumer is acting as a primary resource link
-        $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
+        $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' prl ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
                'SET prl.primary_resource_link_pk = NULL, prl.share_approved = NULL ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
@@ -299,7 +299,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any resource links for this consumer
         $sql = 'DELETE rl ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ' .
                'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -307,8 +307,8 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any resource links for contexts in this consumer
         $sql = 'DELETE rl ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ON rl.context_pk = c.context_pk ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -316,7 +316,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any contexts for this consumer
         $sql = 'DELETE c ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ' .
+               "FROM {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -324,7 +324,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete consumer
         $sql = 'DELETE c ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' c ' .
+               "FROM {$this->dbTableNamePrefix}" . static::CONSUMER_TABLE_NAME . ' c ' .
                'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -350,7 +350,7 @@ class DataConnector_pdo extends DataConnector
                'consumer_name, consumer_version, consumer_guid, ' .
                'profile, tool_proxy, settings, protected, enabled, ' .
                'enable_from, enable_until, last_access, created, updated ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' ' .
+               "FROM {$this->dbTableNamePrefix}" . static::CONSUMER_TABLE_NAME . ' ' .
                'ORDER BY name';
         $query = $this->db->prepare($sql);
         $ok = ($query !== FALSE);
@@ -453,13 +453,13 @@ class DataConnector_pdo extends DataConnector
         $ok = false;
         if (!empty($context->getRecordId())) {
             $sql = 'SELECT context_pk, consumer_pk, lti_context_id, settings, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' ' .
                    'WHERE (context_pk = :id)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $context->getRecordId(), PDO::PARAM_INT);
         } else {
             $sql = 'SELECT context_pk, consumer_pk, lti_context_id, settings, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' ' .
                    'WHERE (consumer_pk = :cid) AND (lti_context_id = :ctx)';
             $query = $this->db->prepare($sql);
             $query->bindValue('cid', $context->getConsumer()->getRecordId(), PDO::PARAM_INT);
@@ -504,7 +504,7 @@ class DataConnector_pdo extends DataConnector
         $id = $context->getRecordId();
         $consumer_pk = $context->getConsumer()->getRecordId();
         if (empty($id)) {
-            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' (consumer_pk, lti_context_id, ' .
+            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' (consumer_pk, lti_context_id, ' .
                    'settings, created, updated) ' .
                    'VALUES (:cid, :ctx, :settings, :created, :updated)';
             $query = $this->db->prepare($sql);
@@ -514,7 +514,7 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('created', $now, PDO::PARAM_STR);
             $query->bindValue('updated', $now, PDO::PARAM_STR);
         } else {
-            $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' SET ' .
+            $sql = "UPDATE {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' SET ' .
                    'lti_context_id = :ctx, settings = :settings, '.
                    'updated = :updated ' .
                    'WHERE (consumer_pk = :cid) AND (context_pk = :ctxid)';
@@ -552,8 +552,8 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any outstanding share keys for resource links for this context
         $sql = 'DELETE sk ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' sk ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON sk.resource_link_pk = rl.resource_link_pk ' .
                'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -561,16 +561,16 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any users in resource links for this context
         $sql = 'DELETE u ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
+               "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' u ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON u.resource_link_pk = rl.resource_link_pk ' .
                'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
 
 // Update any resource links for which this consumer is acting as a primary resource link
-        $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
-               "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
+        $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' prl ' .
+               "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
                'SET prl.primary_resource_link_pk = null, prl.share_approved = null ' .
                'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
@@ -579,7 +579,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any resource links for this consumer
         $sql = 'DELETE rl ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' rl ' .
                'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -587,7 +587,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete context
         $sql = 'DELETE c ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ' .
+               "FROM {$this->dbTableNamePrefix}" . static::CONTEXT_TABLE_NAME . ' c ' .
                'WHERE c.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -617,21 +617,21 @@ class DataConnector_pdo extends DataConnector
 
         if (!empty($resourceLink->getRecordId())) {
             $sql = 'SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' ' .
                    'WHERE (resource_link_pk = :id)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $resourceLink->getRecordId(), PDO::PARAM_INT);
         } else if (!empty($resourceLink->getContext())) {
             $sql = 'SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' ' .
                    'WHERE (context_pk = :id) AND (lti_resource_link_id = :rlid)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $resourceLink->getContext()->getRecordId(), PDO::PARAM_INT);
             $query->bindValue('rlid', $resourceLink->getId(), PDO::PARAM_STR);
         } else {
             $sql = 'SELECT r.resource_link_pk, r.context_pk, r.consumer_pk, r.lti_resource_link_id, r.settings, r.primary_resource_link_pk, r.share_approved, r.created, r.updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' r LEFT OUTER JOIN ' .
-                   $this->dbTableNamePrefix . DataConnector::CONTEXT_TABLE_NAME . ' c ON r.context_pk = c.context_pk ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' r LEFT OUTER JOIN ' .
+                   $this->dbTableNamePrefix . static::CONTEXT_TABLE_NAME . ' c ON r.context_pk = c.context_pk ' .
                    ' WHERE ((r.consumer_pk = :id1) OR (c.consumer_pk = :id2)) AND (lti_resource_link_id = :rlid)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id1', $resourceLink->getConsumer()->getRecordId(), PDO::PARAM_INT);
@@ -706,7 +706,7 @@ class DataConnector_pdo extends DataConnector
         }
         $id = $resourceLink->getRecordId();
         if (empty($id)) {
-            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' (consumer_pk, context_pk, ' .
+            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' (consumer_pk, context_pk, ' .
                    'lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated) ' .
                    'VALUES (:cid, :ctx, :rlid, :settings, :prlid, :share_approved, :created, :updated)';
             $query = $this->db->prepare($sql);
@@ -719,7 +719,7 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('created', $now, PDO::PARAM_STR);
             $query->bindValue('updated', $now, PDO::PARAM_STR);
         } else if (!is_null($contextId)) {
-            $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
+            $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' SET ' .
                    'consumer_pk = NULL, context_pk = :ctx, lti_resource_link_id = :rlid, settings = :settings, '.
                    'primary_resource_link_pk = :prlid, share_approved = :share_approved, updated = :updated ' .
                    'WHERE (resource_link_pk = :id)';
@@ -732,7 +732,7 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('updated', $now, PDO::PARAM_STR);
             $query->bindValue('id', $id, PDO::PARAM_INT);
         } else {
-            $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
+            $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' SET ' .
                    'context_pk = :ctx, lti_resource_link_id = :rlid, settings = :settings, '.
                    'primary_resource_link_pk = :prlid, share_approved = :share_approved, updated = :updated ' .
                    'WHERE (consumer_pk = :cid) AND (resource_link_pk = :id)';
@@ -772,7 +772,7 @@ class DataConnector_pdo extends DataConnector
         $id = $resourceLink->getRecordId();
 
 // Delete any outstanding share keys for resource links for this consumer
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
                'WHERE (resource_link_pk = :id)';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -780,7 +780,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete users
         if ($ok) {
-            $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
+            $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' ' .
                    'WHERE (resource_link_pk = :id)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -789,7 +789,7 @@ class DataConnector_pdo extends DataConnector
 
 // Update any resource links for which this is the primary resource link
         if ($ok) {
-            $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+            $sql = "UPDATE {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' ' .
                    'SET primary_resource_link_pk = NULL ' .
                    'WHERE (primary_resource_link_pk = :id)';
             $query = $this->db->prepare($sql);
@@ -799,7 +799,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete resource link
         if ($ok) {
-            $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+            $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' ' .
                    'WHERE (resource_link_pk = :id)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -834,16 +834,16 @@ class DataConnector_pdo extends DataConnector
 
         if ($localOnly) {
             $sql = 'SELECT u.user_pk, u.lti_result_sourcedid, u.lti_user_id, u.created, u.updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' AS u '  .
-                   "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' AS rl '  .
+                   "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' AS u '  .
+                   "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' AS rl '  .
                    'ON u.resource_link_pk = rl.resource_link_pk ' .
                    'WHERE (rl.resource_link_pk = :id) AND (rl.primary_resource_link_pk IS NULL)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $id, PDO::PARAM_INT);
         } else {
             $sql = 'SELECT u.user_pk, u.lti_result_sourcedid, u.lti_user_id, u.created, u.updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' AS u '  .
-                   "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' AS rl '  .
+                   "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' AS u '  .
+                   "INNER JOIN {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' AS rl '  .
                    'ON u.resource_link_pk = rl.resource_link_pk ' .
                    'WHERE ((rl.resource_link_pk = :id) AND (rl.primary_resource_link_pk IS NULL)) OR ' .
                    '((rl.primary_resource_link_pk = :pid) AND (share_approved = 1))';
@@ -882,7 +882,7 @@ class DataConnector_pdo extends DataConnector
         $shares = array();
 
         $sql = 'SELECT consumer_pk, resource_link_pk, share_approved ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_TABLE_NAME . ' ' .
                'WHERE (primary_resource_link_pk = :id) ' .
                'ORDER BY consumer_pk';
         $query = $this->db->prepare($sql);
@@ -920,7 +920,7 @@ class DataConnector_pdo extends DataConnector
 
 // Delete any expired nonce values
         $now = date("{$this->dateFormat} {$this->timeFormat}", time());
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE expires <= :now';
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::NONCE_TABLE_NAME . ' WHERE expires <= :now';
         $query = $this->db->prepare($sql);
         $query->bindValue('now', $now, PDO::PARAM_STR);
         $query->execute();
@@ -928,7 +928,7 @@ class DataConnector_pdo extends DataConnector
 // Load the nonce
         $id = $nonce->getConsumer()->getRecordId();
         $value = $nonce->getValue();
-        $sql = "SELECT value T FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE (consumer_pk = :id) AND (value = :value)';
+        $sql = "SELECT value T FROM {$this->dbTableNamePrefix}" . static::NONCE_TABLE_NAME . ' WHERE (consumer_pk = :id) AND (value = :value)';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->bindValue('value', $value, PDO::PARAM_STR);
@@ -957,7 +957,7 @@ class DataConnector_pdo extends DataConnector
         $id = $nonce->getConsumer()->getRecordId();
         $value = $nonce->getValue();
         $expires = date("{$this->dateFormat} {$this->timeFormat}", $nonce->expires);
-        $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' (consumer_pk, value, expires) VALUES (:id, :value, :expires)';
+        $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::NONCE_TABLE_NAME . ' (consumer_pk, value, expires) VALUES (:id, :value, :expires)';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->bindValue('value', $value, PDO::PARAM_STR);
@@ -987,7 +987,7 @@ class DataConnector_pdo extends DataConnector
 
 // Clear expired share keys
         $now = date("{$this->dateFormat} {$this->timeFormat}", time());
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' WHERE expires <= :now';
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' WHERE expires <= :now';
         $query = $this->db->prepare($sql);
         $query->bindValue('now', $now, PDO::PARAM_STR);
         $query->execute();
@@ -995,7 +995,7 @@ class DataConnector_pdo extends DataConnector
 // Load share key
         $id = $shareKey->getId();
         $sql = 'SELECT resource_link_pk, auto_approve, expires ' .
-               "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
+               "FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
                'WHERE share_key_id = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_STR);
@@ -1027,7 +1027,7 @@ class DataConnector_pdo extends DataConnector
 
         $id = $shareKey->getId();
         $expires = date("{$this->dateFormat} {$this->timeFormat}", $shareKey->expires);
-        $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
+        $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
                '(share_key_id, resource_link_pk, auto_approve, expires) ' .
                'VALUES (:id, :prlid, :approve, :expires)';
         $query = $this->db->prepare($sql);
@@ -1052,7 +1052,7 @@ class DataConnector_pdo extends DataConnector
     {
 
         $id = $shareKey->getId();
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' WHERE share_key_id = :id';
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' WHERE share_key_id = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_STR);
         $ok = $query->execute();
@@ -1084,7 +1084,7 @@ class DataConnector_pdo extends DataConnector
         if (!empty($user->getRecordId())) {
             $id = $user->getRecordId();
             $sql = 'SELECT user_pk, resource_link_pk, lti_user_id, lti_result_sourcedid, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' ' .
                    'WHERE (user_pk = :id)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -1092,7 +1092,7 @@ class DataConnector_pdo extends DataConnector
             $id = $user->getResourceLink()->getRecordId();
             $uid = $user->getId(ToolProvider\ToolProvider::ID_SCOPE_ID_ONLY);
             $sql = 'SELECT user_pk, resource_link_pk, lti_user_id, lti_result_sourcedid, created, updated ' .
-                   "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
+                   "FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' ' .
                    'WHERE (resource_link_pk = :id) AND (lti_user_id = :uid)';
             $query = $this->db->prepare($sql);
             $query->bindValue('id', $id, PDO::PARAM_INT);
@@ -1129,7 +1129,7 @@ class DataConnector_pdo extends DataConnector
         $time = time();
         $now = date("{$this->dateFormat} {$this->timeFormat}", $time);
         if (is_null($user->created)) {
-            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' (resource_link_pk, ' .
+            $sql = "INSERT INTO {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' (resource_link_pk, ' .
                    'lti_user_id, lti_result_sourcedid, created, updated) ' .
                    'VALUES (:rlid, :uid, :sourcedid, :created, :updated)';
             $query = $this->db->prepare($sql);
@@ -1139,7 +1139,7 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('created', $now, PDO::PARAM_STR);
             $query->bindValue('updated', $now, PDO::PARAM_STR);
         } else {
-            $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
+            $sql = "UPDATE {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' ' .
                    'SET lti_result_sourcedid = :sourcedid, updated = :updated ' .
                    'WHERE (user_pk = :id)';
             $query = $this->db->prepare($sql);
@@ -1170,7 +1170,7 @@ class DataConnector_pdo extends DataConnector
     public function deleteUser($user)
     {
 
-        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
+        $sql = "DELETE FROM {$this->dbTableNamePrefix}" . static::USER_RESULT_TABLE_NAME . ' ' .
                'WHERE (user_pk = :id)';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $user->getRecordId(), PDO::PARAM_INT);
