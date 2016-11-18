@@ -584,9 +584,18 @@ class ResourceLink
             }
         }
         if (isset($do)) {
+        	//get the params
             $value = $ltiOutcome->getValue();
             if (is_null($value)) {
                 $value = '';
+            }
+            $text = $ltiOutcome->getText();
+            if (is_null($text)) {
+            	$text = '';
+            }
+            $url = $ltiOutcome->getUrl();
+            if (is_null($url)) {
+            	$url = '';
             }
             if ($urlLTI11) {
                 $xml = '';
@@ -598,6 +607,10 @@ class ResourceLink
             <language>{$ltiOutcome->language}</language>
             <textString>{$value}</textString>
           </resultScore>
+          <resultData>
+            <text><![CDATA[{$text}]]></text>
+            <url><![CDATA[{$url}]]></url>
+          </resultData>
         </result>
 EOF;
                 }
