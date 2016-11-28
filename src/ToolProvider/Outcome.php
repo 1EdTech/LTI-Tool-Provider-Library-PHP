@@ -51,16 +51,22 @@ class Outcome
  * @var string $value
  */
     private $value = null;
+    private $text = null;
+    private $url = null;
 
 /**
  * Class constructor.
  *
- * @param string $value     Outcome value (optional, default is none)
+ * @param string $value     Outcome score value (optional, default is none)
+ * @param string $text Outcome text value (optional, default is none)
+ * @param string $url Outcome url value (optional, default is none)
  */
-    public function __construct($value = null)
+    public function __construct($value = null, $text=null, $url=null)
     {
 
         $this->value = $value;
+        $this->text = $text;
+        $this->url = $url;
         $this->language = 'en-US';
         $this->date = gmdate('Y-m-d\TH:i:s\Z', time());
         $this->type = 'decimal';
@@ -90,5 +96,53 @@ class Outcome
         $this->value = $value;
 
     }
+
+	/**
+	 * Get the outcome text.
+	 *
+	 * @return string Outcome text
+	 */
+	public function getText()
+	{
+	
+		return $this->text;
+	
+	}
+	
+	/**
+	 * Set the outcome text.
+	 *
+	 * @param string $text  Outcome text
+	 */
+	public function setText($text)
+	{
+	
+		$this->text = $text;
+	
+	}
+	
+	/**
+	 * Get the outcome url.
+	 *
+	 * @return string Outcome url
+	 */
+	public function getUrl()
+	{
+	
+		return $this->url;
+	
+	}
+	
+	/**
+	 * Set the outcome url.
+	 *
+	 * @param string $url  Outcome url
+	 */
+	public function setUrl($url)
+	{
+	
+		$this->url = $url;
+	
+	}
 
 }
