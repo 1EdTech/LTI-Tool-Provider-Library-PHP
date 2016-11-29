@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./vendor/autoload.php"
+         forceCoversAnnotation="true">
+
+    <testsuites>
+        <testsuite>
+            <directory suffix="Test.php">tests/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <server name="TEST_SERVER_PORT" value="9999"/>
+    </php>
+
+</phpunit>
