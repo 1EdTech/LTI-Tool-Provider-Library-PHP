@@ -166,6 +166,7 @@ class HTTPMessage
                 if ($fp) {
                     $resp = @stream_get_contents($fp);
                     $this->ok = $resp !== false;
+                    $this->response = $resp;
                 }
             } catch (\Exception $e) {
                 $this->ok = false;
