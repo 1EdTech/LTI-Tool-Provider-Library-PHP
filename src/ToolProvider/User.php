@@ -297,30 +297,48 @@ class User
  */
     public function setNames($firstname, $lastname, $fullname)
     {
-
         $names = array(0 => '', 1 => '');
+        
         if (!empty($fullname)) {
+            
             $this->fullname = trim($fullname);
             $names = preg_split("/[\s]+/", $this->fullname, 2);
         }
+        
+        
         if (!empty($firstname)) {
+            
             $this->firstname = trim($firstname);
             $names[0] = $this->firstname;
-        } else if (!empty($names[0])) {
+        
+        } elseif (!empty($names[0])) {
+            
             $this->firstname = $names[0];
+        
         } else {
-            $this->firstname = 'User';
+            
+            $this->firstname = '';
         }
+        
+
         if (!empty($lastname)) {
+            
             $this->lastname = trim($lastname);
             $names[1] = $this->lastname;
-        } else if (!empty($names[1])) {
+        
+        } elseif (!empty($names[1])) {
+            
             $this->lastname = $names[1];
+        
         } else {
-            $this->lastname = $this->ltiUserId;
+	        
+            $this->lastname = '';
         }
+        
+        
         if (empty($this->fullname)) {
-            $this->fullname = "{$this->firstname} {$this->lastname}";
+            
+            $this->fullname = implode(' ', array_filter(array($this->firstname, $this->lastname)));
         }
 
     }
