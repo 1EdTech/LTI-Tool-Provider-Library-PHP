@@ -633,7 +633,7 @@ class ToolConsumer
     private function load($key, $autoEnable = false)
     {
 
-        $this->key = $key;
+        $this->key = trim($key);
         $ok = $this->dataConnector->loadToolConsumer($this);
         if (!$ok) {
             $this->enabled = $autoEnable;
