@@ -765,7 +765,7 @@ EOD;
                     $last = date('Y-m-d', $this->consumer->lastAccess);
                     $doSaveConsumer = $doSaveConsumer || ($last !== $today);
                 }
-                $this->consumer->last_access = $now;
+                $this->consumer->lastAccess = $now;
                 try {
                     $store = new OAuthDataStore($this);
                     $server = new OAuth\OAuthServer($store);
@@ -800,7 +800,7 @@ EOD;
                     $last = date('Y-m-d', $this->consumer->lastAccess);
                     $doSaveConsumer = $doSaveConsumer || ($last !== $today);
                 }
-                $this->consumer->last_access = $now;
+                $this->consumer->lastAccess = $now;
                 if ($this->consumer->protected) {
                     if (!is_null($this->consumer->consumerGuid)) {
                         $this->ok = empty($_POST['tool_consumer_instance_guid']) ||
