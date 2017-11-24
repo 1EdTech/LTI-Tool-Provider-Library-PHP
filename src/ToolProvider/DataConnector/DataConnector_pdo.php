@@ -36,7 +36,7 @@ class DataConnector_pdo extends DataConnector
 
         parent::__construct($db, $dbTableNamePrefix);
         if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) == 'oci') {
-            $this->date_format = 'd-M-Y';
+            $this->dateFormat = 'd-M-Y';
         }
 
     }
