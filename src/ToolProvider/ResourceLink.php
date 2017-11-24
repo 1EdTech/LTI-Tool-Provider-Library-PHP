@@ -1254,46 +1254,38 @@ EOD;
  *
  * @param DOMElement $node XML element
  *
- * @return array Array of XML document elements
+ * @return array|string Array of XML document elements
  */
     private function domnodeToArray($node)
     {
 
-        $output = '';
+        $output = [];
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
             case XML_TEXT_NODE:
-                $output = trim($node->textContent);
-                break;
+                return trim($node->textContent);
             case XML_ELEMENT_NODE:
                 for ($i = 0; $i < $node->childNodes->length; $i++) {
                     $child = $node->childNodes->item($i);
                     $v = $this->domnodeToArray($child);
                     if (isset($child->tagName)) {
-                        $t = $child->tagName;
-                        if (!isset($output[$t])) {
-                            $output[$t] = array();
-                        }
-                        $output[$t][] = $v;
+                        $output[$child->tagName][] = $v;
                     } else {
                         $s = (string) $v;
                         if (strlen($s) > 0) {
-                            $output = $s;
+                            return $s;
                         }
                     }
                 }
-                if (is_array($output)) {
-                    if ($node->attributes->length) {
-                        $a = array();
-                        foreach ($node->attributes as $attrName => $attrNode) {
-                            $a[$attrName] = (string) $attrNode->value;
-                        }
-                        $output['@attributes'] = $a;
+                if ($node->hasAttributes()) {
+                    foreach ($node->attributes as $attrNode) {
+                        /* @var $attrNode \DOMAttr */
+                        $output['@attributes'][$attrNode->name] = (string) $attrNode->value;
                     }
-                    foreach ($output as $t => $v) {
-                        if (is_array($v) && count($v)==1 && $t!='@attributes') {
-                            $output[$t] = $v[0];
-                        }
+                }
+                foreach ($output as $t => $v) {
+                    if (is_array($v) && count($v)==1 && $t!='@attributes') {
+                        $output[$t] = $v[0];
                     }
                 }
                 break;
