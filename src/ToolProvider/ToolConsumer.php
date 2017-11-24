@@ -608,7 +608,7 @@ class ToolConsumer
  * @param string          $id                The consumer key record ID
  * @param DataConnector   $dataConnector    Database connection object
  *
- * @return object ToolConsumer       The tool consumer object
+ * @return ToolConsumer       The tool consumer object
  */
     public static function fromRecordId($id, $dataConnector)
     {
