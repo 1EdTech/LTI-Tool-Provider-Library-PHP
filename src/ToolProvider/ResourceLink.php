@@ -901,7 +901,8 @@ EOF;
 
         $has = !empty($this->contextId);
         if ($has) {
-            $has = !empty($this->getContext()->getSetting('custom_context_memberships_url'));
+            $value = $this->getContext()->getSetting('custom_context_memberships_url');
+            $has = !empty($value);
         }
 
         return $has;

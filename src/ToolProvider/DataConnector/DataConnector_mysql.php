@@ -43,7 +43,7 @@ class DataConnector_mysql extends DataConnector
     {
 
         $ok = false;
-        if (!empty($consumer->getRecordId())) {
+        if (!is_null($consumer->getRecordId())) {
             $sql = sprintf('SELECT consumer_pk, name, consumer_key256, consumer_key, secret, lti_version, ' .
                            'consumer_name, consumer_version, consumer_guid, ' .
                            'profile, tool_proxy, settings, protected, enabled, ' .
@@ -389,7 +389,7 @@ class DataConnector_mysql extends DataConnector
     {
 
         $ok = false;
-        if (!empty($context->getRecordId())) {
+        if (!is_null($context->getRecordId())) {
             $sql = sprintf('SELECT context_pk, consumer_pk, lti_context_id, settings, created, updated ' .
                            "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' .
                            'WHERE (context_pk = %d)',
@@ -535,12 +535,12 @@ class DataConnector_mysql extends DataConnector
     {
 
         $ok = false;
-        if (!empty($resourceLink->getRecordId())) {
+        if (!is_null($resourceLink->getRecordId())) {
             $sql = sprintf('SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
                            "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
                            'WHERE (resource_link_pk = %d)',
                            $resourceLink->getRecordId());
-        } else if (!empty($resourceLink->getContext())) {
+        } else if (!is_null($resourceLink->getContext())) {
             $sql = sprintf('SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
                            "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
                            'WHERE (context_pk = %d) AND (lti_resource_link_id = %s)',
@@ -613,10 +613,10 @@ class DataConnector_mysql extends DataConnector
         $time = time();
         $now = date("{$this->dateFormat} {$this->timeFormat}", $time);
         $settingsValue = serialize($resourceLink->getSettings());
-        if (!empty($resourceLink->getContext())) {
+        if (!is_null($resourceLink->getContext())) {
             $consumerId = 'NULL';
             $contextId = strval($resourceLink->getContext()->getRecordId());
-        } else if (!empty($resourceLink->getContextId())) {
+        } else if (!is_null($resourceLink->getContextId())) {
             $consumerId = 'NULL';
             $contextId = strval($resourceLink->getContextId());
         } else {
@@ -956,7 +956,7 @@ class DataConnector_mysql extends DataConnector
     {
 
         $ok = false;
-        if (!empty($user->getRecordId())) {
+        if (!is_null($user->getRecordId())) {
             $sql = sprintf('SELECT user_pk, resource_link_pk, lti_user_id, lti_result_sourcedid, created, updated ' .
                            "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
                            'WHERE (user_pk = %d)',
