@@ -121,6 +121,12 @@ class ToolConsumer
  * @var int $updated
  */
     public $updated = null;
+/**
+ * The consumer profile data.
+ *
+ * @var object
+ */
+    public $profile = null;
 
 /**
  * Consumer ID value.
