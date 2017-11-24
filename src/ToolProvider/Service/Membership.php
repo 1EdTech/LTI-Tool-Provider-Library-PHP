@@ -19,7 +19,7 @@ class Membership extends Service
 /**
  * The object to which the settings apply (ResourceLink, Context or ToolConsumer).
  *
- * @var object  $source
+ * @var ToolProvider\ToolConsumer|ToolProvider\ResourceLink|ToolProvider\Context  $source
  */
     private $source;
 

@@ -578,7 +578,9 @@ EOD;
  *
  * This function may set the redirect_url and output properties.
  *
- * @return boolean True if no error reported
+ * @param string|null $method
+ *
+ * @return void True if no error reported
  */
     private function doCallback($method = null)
     {
@@ -1257,6 +1259,10 @@ EOD;
 
 /**
  * Validate a parameter value from an array of permitted values.
+ *
+ * @param mixed $value
+ * @param array $values
+ * @param string $reason
  *
  * @return boolean True if value is valid
  */

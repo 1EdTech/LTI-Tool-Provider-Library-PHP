@@ -24,56 +24,56 @@ class HTTPMessage
 /**
  * Request body.
  *
- * @var request $request
+ * @var string|null $request
  */
     public $request = null;
 
 /**
  * Request headers.
  *
- * @var request_headers $requestHeaders
+ * @var string $requestHeaders
  */
     public $requestHeaders = '';
 
 /**
  * Response body.
  *
- * @var response $response
+ * @var string|null $response
  */
     public $response = null;
 
 /**
  * Response headers.
  *
- * @var response_headers $responseHeaders
+ * @var string $responseHeaders
  */
     public $responseHeaders = '';
 
 /**
  * Status of response (0 if undetermined).
  *
- * @var status $status
+ * @var int $status
  */
     public $status = 0;
 
 /**
  * Error message
  *
- * @var error $error
+ * @var string $error
  */
     public $error = '';
 
 /**
  * Request URL.
  *
- * @var url $url
+ * @var string $url
  */
     private $url = null;
 
 /**
  * Request method.
  *
- * @var method $method
+ * @var string|null $method
  */
     private $method = null;
 

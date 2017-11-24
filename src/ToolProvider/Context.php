@@ -63,7 +63,7 @@ class Context
 /**
  * ID for this context.
  *
- * @var int $id
+ * @var int|null $id
  */
     private $id = null;
 /**
@@ -198,7 +198,7 @@ class Context
 /**
  * Get the context record ID.
  *
- * @return int Context record ID value
+ * @return int|null Context record ID value
  */
     public function getRecordId()
     {
@@ -210,7 +210,7 @@ class Context
 /**
  * Sets the context record ID.
  *
- * @return int $id  Context record ID value
+ * @param int $id  Context record ID value
  */
     public function setRecordId($id)
     {

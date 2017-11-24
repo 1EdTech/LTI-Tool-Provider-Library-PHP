@@ -147,7 +147,7 @@ class ResourceLink
 /**
  * Record ID for this resource link.
  *
- * @var int $id
+ * @var int|null $id
  */
     private $id = null;
 /**
@@ -201,7 +201,7 @@ class ResourceLink
 /**
  * Data connector object or string.
  *
- * @var mixed $dataConnector
+ * @var DataConnector|null $dataConnector
  */
     private $dataConnector = null;
 
@@ -309,7 +309,7 @@ class ResourceLink
 /**
  * Get context.
  *
- * @return object LTIContext object for this resource link.
+ * @return Context|null LTIContext object for this resource link.
  */
     public function getContext()
     {
@@ -325,7 +325,7 @@ class ResourceLink
 /**
  * Get context record ID.
  *
- * @return int Context record ID for this resource link.
+ * @return int|null Context record ID for this resource link.
  */
     public function getContextId()
     {
@@ -374,7 +374,7 @@ class ResourceLink
 /**
  * Get resource link record ID.
  *
- * @return int Record ID for this resource link.
+ * @return int|null Record ID for this resource link.
  */
     public function getRecordId()
     {
@@ -398,7 +398,7 @@ class ResourceLink
 /**
  * Get the data connector.
  *
- * @return mixed Data connector object or string
+ * @return DataConnector|null Data connector object or string
  */
     public function getDataConnector()
     {
@@ -938,7 +938,7 @@ EOF;
  * @param boolean $localOnly True if only users from this resource link are to be returned, not users from shared resource links (optional, default is false)
  * @param int     $idScope     Scope to use for ID values (optional, default is null for consumer default)
  *
- * @return array Array of User objects
+ * @return User[] Array of User objects
  */
     public function getUserResultSourcedIDs($localOnly = false, $idScope = null)
     {
@@ -950,7 +950,7 @@ EOF;
 /**
  * Get an array of ResourceLinkShare objects for each resource link which is sharing this context.
  *
- * @return array Array of ResourceLinkShare objects
+ * @return ResourceLinkShare[] Array of ResourceLinkShare objects
  */
     public function getShares()
     {
@@ -1185,6 +1185,7 @@ EOF;
  * @param string $xml  XML of message request
  *
  * @return boolean True if the request successfully obtained a response
+ * @throws OAuth\OAuthException
  */
     private function doLTI11Service($type, $url, $xml)
     {

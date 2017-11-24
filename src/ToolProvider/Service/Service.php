@@ -33,7 +33,7 @@ class Service
 /**
  * Tool Consumer for this service request.
  *
- * @var ToolConsumer $consumer
+ * @var ToolProvider\ToolConsumer $consumer
  */
     private $consumer;
 /**
@@ -46,7 +46,7 @@ class Service
 /**
  * Class constructor.
  *
- * @param ToolConsumer $consumer   Tool consumer object for this service request
+ * @param ToolProvider\ToolConsumer $consumer   Tool consumer object for this service request
  * @param string       $endpoint   Service endpoint
  * @param string       $mediaType  Media type of message body
  */

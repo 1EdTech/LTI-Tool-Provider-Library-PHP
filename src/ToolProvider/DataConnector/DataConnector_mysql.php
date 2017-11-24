@@ -720,7 +720,7 @@ class DataConnector_mysql extends DataConnector
  * @param boolean     $localOnly True if only users within the resource link are to be returned (excluding users sharing this resource link)
  * @param int         $idScope     Scope value to use for user IDs
  *
- * @return array Array of User objects
+ * @return User[] Array of User objects
  */
     public function getUserResultSourcedIDsResourceLink($resourceLink, $localOnly, $idScope)
     {
@@ -768,7 +768,7 @@ class DataConnector_mysql extends DataConnector
  *
  * @param ResourceLink $resourceLink Resource_Link object
  *
- * @return array Array of ResourceLinkShare objects
+ * @return ToolProvider\ResourceLinkShare[] Array of ResourceLinkShare objects
  */
     public function getSharesResourceLink($resourceLink)
     {

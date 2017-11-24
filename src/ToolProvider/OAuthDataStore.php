@@ -40,7 +40,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
  *
  * @param string $consumerKey Consumer key value
  *
- * @return OAuthConsumer OAuthConsumer object
+ * @return OAuth\OAuthConsumer OAuthConsumer object
  */
     function lookup_consumer($consumerKey)
     {
@@ -57,7 +57,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
  * @param string $tokenType  Token type
  * @param string $token      Token value
  *
- * @return OAuthToken OAuthToken object
+ * @return OAuth\OAuthToken OAuthToken object
  */
     function lookup_token($consumer, $tokenType, $token)
     {
@@ -69,7 +69,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
 /**
  * Lookup nonce value for the tool consumer.
  *
- * @param OAuthConsumer $consumer  OAuthConsumer object
+ * @param OAuth\OAuthConsumer $consumer  OAuthConsumer object
  * @param string        $token     Token value
  * @param string        $value     Nonce value
  * @param string        $timestamp Date/time of request
@@ -95,7 +95,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
 /**
  * Get new request token.
  *
- * @param OAuthConsumer $consumer  OAuthConsumer object
+ * @param OAuth\OAuthConsumer $consumer  OAuthConsumer object
  * @param string        $callback  Callback URL
  *
  * @return string Null value
@@ -111,7 +111,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
  * Get new access token.
  *
  * @param string        $token     Token value
- * @param OAuthConsumer $consumer  OAuthConsumer object
+ * @param OAuth\OAuthConsumer $consumer  OAuthConsumer object
  * @param string        $verifier  Verification code
  *
  * @return string Null value

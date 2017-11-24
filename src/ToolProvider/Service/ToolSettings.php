@@ -2,6 +2,10 @@
 
 namespace IMSGlobal\LTI\ToolProvider\Service;
 
+use IMSGlobal\LTI\ToolProvider\Context;
+use IMSGlobal\LTI\ToolProvider\ResourceLink;
+use IMSGlobal\LTI\ToolProvider\ToolConsumer;
+
 /**
  * Class to implement the Tool Settings service
  *
@@ -39,7 +43,7 @@ class ToolSettings extends Service
 /**
  * The object to which the settings apply (ResourceLink, Context or ToolConsumer).
  *
- * @var object  $source
+ * @var ResourceLink|Context|ToolConsumer  $source
  */
     private $source;
 /**
@@ -52,7 +56,7 @@ class ToolSettings extends Service
 /**
  * Class constructor.
  *
- * @param object       $source     The object to which the settings apply (ResourceLink, Context or ToolConsumer)
+ * @param ResourceLink|Context|ToolConsumer       $source     The object to which the settings apply (ResourceLink, Context or ToolConsumer)
  * @param string       $endpoint   Service endpoint
  * @param boolean      $simple     True if the simple media type is to be used (optional, default is true)
  */
@@ -113,7 +117,7 @@ class ToolSettings extends Service
  *
  * @param array  $settings  An associative array of settings (optional, default is null)
  *
- * @return HTTPMessage HTTP object containing request and response details
+ * @return bool
  */
     public function set($settings) {
 

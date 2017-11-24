@@ -14,6 +14,8 @@ use PDO;
 /**
  * Class to represent an LTI Data Connector for PDO connections
  *
+ * @property PDO $db Database object.
+ *
  * @author  Stephen P Vickers <svickers@imsglobal.org>
  * @copyright  IMS Global Learning Consortium Inc
  * @date  2016
@@ -28,7 +30,7 @@ class DataConnector_pdo extends DataConnector
 /**
  * Class constructor
  *
- * @param object $db                 Database connection object
+ * @param PDO $db                 Database connection object
  * @param string $dbTableNamePrefix  Prefix for database table names (optional, default is none)
  */
     public function __construct($db, $dbTableNamePrefix = '')
@@ -824,7 +826,7 @@ class DataConnector_pdo extends DataConnector
  * @param boolean     $localOnly True if only users within the resource link are to be returned (excluding users sharing this resource link)
  * @param int         $idScope     Scope value to use for user IDs
  *
- * @return array Array of User objects
+ * @return User[] Array of User objects
  */
     public function getUserResultSourcedIDsResourceLink($resourceLink, $localOnly, $idScope)
     {
@@ -872,7 +874,7 @@ class DataConnector_pdo extends DataConnector
  *
  * @param ResourceLink $resourceLink Resource_Link object
  *
- * @return array Array of ResourceLinkShare objects
+ * @return ToolProvider\ResourceLinkShare[] Array of ResourceLinkShare objects
  */
     public function getSharesResourceLink($resourceLink)
     {

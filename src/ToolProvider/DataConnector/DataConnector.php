@@ -5,6 +5,7 @@ namespace IMSGlobal\LTI\ToolProvider\DataConnector;
 use IMSGlobal\LTI\ToolProvider\ConsumerNonce;
 use IMSGlobal\LTI\ToolProvider\Context;
 use IMSGlobal\LTI\ToolProvider\ResourceLink;
+use IMSGlobal\LTI\ToolProvider\ResourceLinkShare;
 use IMSGlobal\LTI\ToolProvider\ResourceLinkShareKey;
 use IMSGlobal\LTI\ToolProvider\ToolConsumer;
 use IMSGlobal\LTI\ToolProvider\ToolProxy;
@@ -334,7 +335,7 @@ class DataConnector
  * @param boolean     $localOnly True if only users within the resource link are to be returned (excluding users sharing this resource link)
  * @param int         $idScope     Scope value to use for user IDs
  *
- * @return array Array of User objects
+ * @return User[] Array of User objects
  */
     public function getUserResultSourcedIDsResourceLink($resourceLink, $localOnly, $idScope)
     {
@@ -348,7 +349,7 @@ class DataConnector
  *
  * @param ResourceLink $resourceLink Resource_Link object
  *
- * @return array Array of ResourceLinkShare objects
+ * @return ResourceLinkShare[] Array of ResourceLinkShare objects
  */
     public function getSharesResourceLink($resourceLink)
     {
