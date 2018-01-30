@@ -591,6 +591,7 @@ EOF;
                             } else {
                                 $ltiOutcome->setValue($this->extNodes['imsx_POXBody']["{$do}Response"]['result']['resultScore']['textString']);
                             }
+                            // FALL-THROUGH !!!
                         case self::EXT_WRITE:
                         case self::EXT_DELETE:
                             $response = true;
