@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\Service;
 
 use IMSGlobal\LTI\ToolProvider;
@@ -17,60 +16,59 @@ use IMSGlobal\LTI\HTTPMessage;
 class Service
 {
 
-/**
- * Whether service request should be sent unsigned.
- *
- * @var boolean $unsigned
- */
+    /**
+     * Whether service request should be sent unsigned.
+     *
+     * @var boolean $unsigned
+     */
     public $unsigned = false;
 
-/**
- * Service endpoint.
- *
- * @var string $endpoint
- */
+    /**
+     * Service endpoint.
+     *
+     * @var string $endpoint
+     */
     protected $endpoint;
-/**
- * Tool Consumer for this service request.
- *
- * @var ToolConsumer $consumer
- */
+
+    /**
+     * Tool Consumer for this service request.
+     *
+     * @var ToolConsumer $consumer
+     */
     private $consumer;
-/**
- * Media type of message body.
- *
- * @var string $mediaType
- */
+
+    /**
+     * Media type of message body.
+     *
+     * @var string $mediaType
+     */
     private $mediaType;
 
-/**
- * Class constructor.
- *
- * @param ToolConsumer $consumer   Tool consumer object for this service request
- * @param string       $endpoint   Service endpoint
- * @param string       $mediaType  Media type of message body
- */
+    /**
+     * Class constructor.
+     *
+     * @param ToolConsumer $consumer   Tool consumer object for this service request
+     * @param string       $endpoint   Service endpoint
+     * @param string       $mediaType  Media type of message body
+     */
     public function __construct($consumer, $endpoint, $mediaType)
     {
-
         $this->consumer = $consumer;
         $this->endpoint = $endpoint;
         $this->mediaType = $mediaType;
-
     }
 
-/**
- * Send a service request.
- *
- * @param string  $method      The action type constant (optional, default is GET)
- * @param array   $parameters  Query parameters to add to endpoint (optional, default is none)
- * @param string  $body        Body of request (optional, default is null)
- *
- * @return HTTPMessage HTTP object containing request and response details
- */
+    /**
+     * Send a service request.
+     *
+     * @param string  $method      The action type constant (optional, default is GET)
+     * @param array   $parameters  Query parameters to add to endpoint (optional, default is none)
+     * @param string  $body        Body of request (optional, default is null)
+     *
+     * @return HTTPMessage HTTP object containing request and response details
+     */
     public function send($method, $parameters = array(), $body = null)
     {
-
         $url = $this->endpoint;
         if (!empty($parameters)) {
             if (strpos($url, '?') === false) {
@@ -96,9 +94,7 @@ class Service
             $http->responseJson = json_decode($http->response);
             $http->ok = !is_null($http->responseJson);
         }
-
+        
         return $http;
-
     }
-
 }

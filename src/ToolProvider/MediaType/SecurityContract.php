@@ -1,6 +1,6 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
+
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 
 /**
@@ -15,22 +15,21 @@ use IMSGlobal\LTI\ToolProvider\ToolProvider;
 class SecurityContract
 {
 
-/**
- * Class constructor.
- *
- * @param ToolProvider $toolProvider  Tool Provider instance
- * @param string $secret Shared secret
- */
+    /**
+     * Class constructor.
+     *
+     * @param ToolProvider $toolProvider  Tool Provider instance
+     * @param string $secret Shared secret
+     */
     function __construct($toolProvider, $secret)
     {
-
         $tcContexts = array();
         foreach ($toolProvider->consumer->profile->{'@context'} as $context) {
-          if (is_object($context)) {
-            $tcContexts = array_merge(get_object_vars($context), $tcContexts);
-          }
+            if (is_object($context)) {
+                $tcContexts = array_merge(get_object_vars($context), $tcContexts);
+            }
         }
-
+        
         $this->shared_secret = $secret;
         $toolServices = array();
         foreach ($toolProvider->requiredServices as $requiredService) {
@@ -44,7 +43,7 @@ class SecurityContract
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
-                    $toolService = new \stdClass;
+                    $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
                     $toolService->action = $requiredService->actions;
@@ -63,7 +62,7 @@ class SecurityContract
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
-                    $toolService = new \stdClass;
+                    $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
                     $toolService->action = $optionalService->actions;
@@ -72,7 +71,5 @@ class SecurityContract
             }
         }
         $this->tool_service = array_values($toolServices);
-
     }
-
 }

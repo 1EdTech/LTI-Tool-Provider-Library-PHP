@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
 
 /**
@@ -14,15 +13,14 @@ namespace IMSGlobal\LTI\ToolProvider\MediaType;
 class Message
 {
 
-/**
- * Class constructor.
- *
- * @param Message $message               Message object
- * @param array   $capabilitiesOffered   Capabilities offered
- */
+    /**
+     * Class constructor.
+     *
+     * @param Message $message               Message object
+     * @param array   $capabilitiesOffered   Capabilities offered
+     */
     function __construct($message, $capabilitiesOffered)
     {
-
         $this->message_type = $message->type;
         $this->path = $message->path;
         $this->enabled_capability = array();
@@ -33,20 +31,18 @@ class Message
         }
         $this->parameter = array();
         foreach ($message->constants as $name => $value) {
-            $parameter = new \stdClass;
+            $parameter = new \stdClass();
             $parameter->name = $name;
             $parameter->fixed = $value;
             $this->parameter[] = $parameter;
         }
         foreach ($message->variables as $name => $value) {
             if (in_array($value, $capabilitiesOffered)) {
-                $parameter = new \stdClass;
+                $parameter = new \stdClass();
                 $parameter->name = $name;
                 $parameter->variable = $value;
                 $this->parameter[] = $parameter;
             }
         }
-
     }
-
 }

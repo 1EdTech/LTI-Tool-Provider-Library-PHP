@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
@@ -14,17 +13,16 @@ namespace IMSGlobal\LTI\ToolProvider;
 class ContentItemPlacement
 {
 
-/**
- * Class constructor.
- *
- * @param int $displayWidth       Width of item location
- * @param int $displayHeight      Height of item location
- * @param string $documentTarget  Location to open content in
- * @param string $windowTarget    Name of window target
- */
+    /**
+     * Class constructor.
+     *
+     * @param int $displayWidth       Width of item location
+     * @param int $displayHeight      Height of item location
+     * @param string $documentTarget  Location to open content in
+     * @param string $windowTarget    Name of window target
+     */
     function __construct($displayWidth, $displayHeight, $documentTarget, $windowTarget)
     {
-
         if (!empty($displayWidth)) {
             $this->displayWidth = $displayWidth;
         }
@@ -37,7 +35,5 @@ class ContentItemPlacement
         if (!empty($windowTarget)) {
             $this->windowTarget = $windowTarget;
         }
-
     }
-
 }

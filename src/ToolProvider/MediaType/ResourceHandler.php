@@ -1,6 +1,6 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
+
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 use IMSGlobal\LTI\Profile\ResourceHandler as ProfileResourceHandler;
 
@@ -16,25 +16,24 @@ use IMSGlobal\LTI\Profile\ResourceHandler as ProfileResourceHandler;
 class ResourceHandler
 {
 
-/**
- * Class constructor.
- *
- * @param ToolProvider $toolProvider   Tool Provider object
- * @param ProfileResourceHandler $resourceHandler   Resource handler object
- */
+    /**
+     * Class constructor.
+     *
+     * @param ToolProvider $toolProvider   Tool Provider object
+     * @param ProfileResourceHandler $resourceHandler   Resource handler object
+     */
     function __construct($toolProvider, $resourceHandler)
     {
-
-        $this->resource_type = new \stdClass;
+        $this->resource_type = new \stdClass();
         $this->resource_type->code = $resourceHandler->item->id;
-        $this->resource_name = new \stdClass;
+        $this->resource_name = new \stdClass();
         $this->resource_name->default_value = $resourceHandler->item->name;
         $this->resource_name->key = "{$resourceHandler->item->id}.resource.name";
-        $this->description = new \stdClass;
+        $this->description = new \stdClass();
         $this->description->default_value = $resourceHandler->item->description;
         $this->description->key = "{$resourceHandler->item->id}.resource.description";
-        $this->icon_info = new \stdClass;
-        $this->icon_info->default_location = new \stdClass;
+        $this->icon_info = new \stdClass();
+        $this->icon_info->default_location = new \stdClass();
         $this->icon_info->default_location->path = $resourceHandler->icon;
         $this->icon_info->key = "{$resourceHandler->item->id}.icon.path";
         $this->message = array();
@@ -46,7 +45,5 @@ class ResourceHandler
                 $this->message[] = new Message($message, $toolProvider->consumer->profile->capability_offered);
             }
         }
-
     }
-
 }

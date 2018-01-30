@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI;
 
 /**
@@ -14,80 +13,79 @@ namespace IMSGlobal\LTI;
 class HTTPMessage
 {
 
-/**
- * True if message was sent successfully.
- *
- * @var boolean $ok
- */
+    /**
+     * True if message was sent successfully.
+     *
+     * @var boolean $ok
+     */
     public $ok = false;
 
-/**
- * Request body.
- *
- * @var request $request
- */
+    /**
+     * Request body.
+     *
+     * @var request $request
+     */
     public $request = null;
 
-/**
- * Request headers.
- *
- * @var request_headers $requestHeaders
- */
+    /**
+     * Request headers.
+     *
+     * @var request_headers $requestHeaders
+     */
     public $requestHeaders = '';
 
-/**
- * Response body.
- *
- * @var response $response
- */
+    /**
+     * Response body.
+     *
+     * @var response $response
+     */
     public $response = null;
 
-/**
- * Response headers.
- *
- * @var response_headers $responseHeaders
- */
+    /**
+     * Response headers.
+     *
+     * @var response_headers $responseHeaders
+     */
     public $responseHeaders = '';
 
-/**
- * Status of response (0 if undetermined).
- *
- * @var status $status
- */
+    /**
+     * Status of response (0 if undetermined).
+     *
+     * @var status $status
+     */
     public $status = 0;
 
-/**
- * Error message
- *
- * @var error $error
- */
+    /**
+     * Error message
+     *
+     * @var error $error
+     */
     public $error = '';
 
-/**
- * Request URL.
- *
- * @var url $url
- */
+    /**
+     * Request URL.
+     *
+     * @var url $url
+     */
     private $url = null;
 
-/**
- * Request method.
- *
- * @var method $method
- */
+    /**
+     * Request method.
+     *
+     * @var method $method
+     */
     private $method = null;
 
-/**
- * Class constructor.
- *
- * @param string $url     URL to send request to
- * @param string $method  Request method to use (optional, default is GET)
- * @param mixed  $params  Associative array of parameter values to be passed or message body (optional, default is none)
- * @param string $header  Values to include in the request header (optional, default is none)
- */
+    /**
+     * Class constructor.
+     *
+     * @param string $url     URL to send request to
+     * @param string $method  Request method to use (optional, default is GET)
+     * @param mixed  $params  Associative array of parameter values to be passed or message body (optional, default is none)
+     * @param string $header  Values to include in the request header (optional, default is none)
+     */
     function __construct($url, $method = 'GET', $params = null, $header = null)
     {
-
         $this->url = $url;
         $this->method = strtoupper($method);
         if (is_array($params)) {
@@ -98,17 +96,15 @@ class HTTPMessage
         if (!empty($header)) {
             $this->requestHeaders = explode("\n", $header);
         }
-
     }
 
-/**
- * Send the request to the target URL.
- *
- * @return boolean True if the request was successful
- */
+    /**
+     * Send the request to the target URL.
+     *
+     * @return boolean True if the request was successful
+     */
     public function send()
     {
-
         $this->ok = false;
 // Try using curl if available
         if (function_exists('curl_init')) {
@@ -123,12 +119,13 @@ class HTTPMessage
             if ($this->method === 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
-            } else if ($this->method !== 'GET') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
-                if (!is_null($this->request)) {
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
+            } else 
+                if ($this->method !== 'GET') {
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+                    if (!is_null($this->request)) {
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
+                    }
                 }
-            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
             curl_setopt($ch, CURLOPT_HEADER, true);
@@ -154,14 +151,17 @@ class HTTPMessage
             $this->response = $resp;
         } else {
 // Try using fopen if curl was not available
-            $opts = array('method' => $this->method,
-                          'content' => $this->request
-                         );
+            $opts = array(
+                'method' => $this->method,
+                'content' => $this->request
+            );
             if (!empty($this->requestHeaders)) {
                 $opts['header'] = $this->requestHeaders;
             }
             try {
-                $ctx = stream_context_create(array('http' => $opts));
+                $ctx = stream_context_create(array(
+                    'http' => $opts
+                ));
                 $fp = @fopen($this->url, 'rb', false, $ctx);
                 if ($fp) {
                     $resp = @stream_get_contents($fp);
@@ -171,9 +171,7 @@ class HTTPMessage
                 $this->ok = false;
             }
         }
-
+        
         return $this->ok;
-
     }
-
 }

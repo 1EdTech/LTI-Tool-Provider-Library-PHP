@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
@@ -14,81 +13,78 @@ namespace IMSGlobal\LTI\ToolProvider;
 class Outcome
 {
 
-/**
- * Language value.
- *
- * @var string $language
- */
+    /**
+     * Language value.
+     *
+     * @var string $language
+     */
     public $language = null;
-/**
- * Outcome status value.
- *
- * @var string $status
- */
+
+    /**
+     * Outcome status value.
+     *
+     * @var string $status
+     */
     public $status = null;
-/**
- * Outcome date value.
- *
- * @var string $date
- */
+
+    /**
+     * Outcome date value.
+     *
+     * @var string $date
+     */
     public $date = null;
-/**
- * Outcome type value.
- *
- * @var string $type
- */
+
+    /**
+     * Outcome type value.
+     *
+     * @var string $type
+     */
     public $type = null;
-/**
- * Outcome data source value.
- *
- * @var string $dataSource
- */
+
+    /**
+     * Outcome data source value.
+     *
+     * @var string $dataSource
+     */
     public $dataSource = null;
 
-/**
- * Outcome value.
- *
- * @var string $value
- */
+    /**
+     * Outcome value.
+     *
+     * @var string $value
+     */
     private $value = null;
 
-/**
- * Class constructor.
- *
- * @param string $value     Outcome value (optional, default is none)
- */
+    /**
+     * Class constructor.
+     *
+     * @param string $value     Outcome value (optional, default is none)
+     */
     public function __construct($value = null)
     {
-
         $this->value = $value;
         $this->language = 'en-US';
         $this->date = gmdate('Y-m-d\TH:i:s\Z', time());
         $this->type = 'decimal';
-
     }
 
-/**
- * Get the outcome value.
- *
- * @return string Outcome value
- */
+    /**
+     * Get the outcome value.
+     *
+     * @return string Outcome value
+     */
     public function getValue()
     {
-
         return $this->value;
-
     }
 
-/**
- * Set the outcome value.
- *
- * @param string $value  Outcome value
- */
+    /**
+     * Set the outcome value.
+     *
+     * @param string $value  Outcome value
+     */
     public function setValue($value)
     {
-
         $this->value = $value;
-
     }
-
 }

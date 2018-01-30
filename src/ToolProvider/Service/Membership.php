@@ -1,5 +1,4 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\Service;
 
 use IMSGlobal\LTI\ToolProvider;
@@ -16,38 +15,36 @@ use IMSGlobal\LTI\ToolProvider;
 class Membership extends Service
 {
 
-/**
- * The object to which the settings apply (ResourceLink, Context or ToolConsumer).
- *
- * @var object  $source
- */
+    /**
+     * The object to which the settings apply (ResourceLink, Context or ToolConsumer).
+     *
+     * @var object  $source
+     */
     private $source;
 
-/**
- * Class constructor.
- *
- * @param object       $source     The object to which the memberships apply (ResourceLink or Context)
- * @param string       $endpoint   Service endpoint
- */
+    /**
+     * Class constructor.
+     *
+     * @param object       $source     The object to which the memberships apply (ResourceLink or Context)
+     * @param string       $endpoint   Service endpoint
+     */
     public function __construct($source, $endpoint)
     {
-
         $consumer = $source->getConsumer();
         parent::__construct($consumer, $endpoint, 'application/vnd.ims.lis.v2.membershipcontainer+json');
         $this->source = $source;
-
     }
 
-/**
- * Get the memberships.
- *
- * @param string    $role   Role for which memberships are to be requested (optional, default is all roles)
- * @param int       $limit  Limit on the number of memberships to be returned (optional, default is all)
- *
- * @return mixed The array of User objects if successful, otherwise false
- */
-    public function get($role = null, $limit = 0) {
-
+    /**
+     * Get the memberships.
+     *
+     * @param string    $role   Role for which memberships are to be requested (optional, default is all roles)
+     * @param int       $limit  Limit on the number of memberships to be returned (optional, default is all)
+     *
+     * @return mixed The array of User objects if successful, otherwise false
+     */
+    public function get($role = null, $limit = 0)
+    {
         $isLink = is_a($this->source, 'IMSGlobal\LTI\ToolProvider\ResourceLink');
         $parameters = array();
         if (!empty($role)) {
@@ -100,7 +97,7 @@ class Membership extends Service
                                     $user->ltiResultSourcedId = $message->lis_result_sourcedid;
                                     $user->save();
                                 }
-                                break;                                
+                                break;
                             }
                         }
                     }
@@ -120,9 +117,7 @@ class Membership extends Service
                 }
             }
         }
-
+        
         return $users;
-
     }
-
 }
