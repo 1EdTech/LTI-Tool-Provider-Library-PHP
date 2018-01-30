@@ -74,10 +74,12 @@ class OAuthUtil
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
             $out = array();
-            if (isset($_SERVER['CONTENT_TYPE']))
+            if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
-            if (isset($_ENV['CONTENT_TYPE']))
+            }
+            if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
+            }
             
             foreach ($_SERVER as $key => $value) {
                 if (substr($key, 0, 5) == 'HTTP_') {
@@ -97,8 +99,9 @@ class OAuthUtil
     // array('a' => array('b','c'), 'd' => 'e')
     public static function parse_parameters($input)
     {
-        if (!isset($input) || !$input)
+        if (!isset($input) || !$input) {
             return array();
+        }
         
         $pairs = explode('&', $input);
         
@@ -132,8 +135,9 @@ class OAuthUtil
 
     public static function build_http_query($params)
     {
-        if (!$params)
+        if (!$params) {
             return '';
+        }
             
             // Urlencode both keys and values
         $keys = OAuthUtil::urlencode_rfc3986(array_keys($params));

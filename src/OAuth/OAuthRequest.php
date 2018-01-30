@@ -88,8 +88,9 @@ class OAuthRequest
             'oauth_timestamp' => OAuthRequest::generate_timestamp(),
             'oauth_consumer_key' => $consumer->key
         );
-        if ($token)
+        if ($token) {
             $defaults['oauth_token'] = $token->key;
+        }
         
         $parameters = array_merge($defaults, $parameters);
         
@@ -227,13 +228,14 @@ class OAuthRequest
         if ($realm) {
             $out = 'Authorization: OAuth realm="' . OAuthUtil::urlencode_rfc3986($realm) . '"';
             $first = false;
-        } else
+        } else {
             $out = 'Authorization: OAuth';
-        
+        }
         $total = array();
         foreach ($this->parameters as $k => $v) {
-            if (substr($k, 0, 5) != "oauth")
+            if (substr($k, 0, 5) != "oauth") {
                 continue;
+            }
             if (is_array($v)) {
                 throw new OAuthException('Arrays not supported in headers');
             }

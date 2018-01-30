@@ -195,8 +195,9 @@ class OAuthServer
      */
     private function check_timestamp($timestamp)
     {
-        if (!$timestamp)
+        if (!$timestamp) {
             throw new OAuthException('Missing timestamp parameter. The parameter is required');
+        }
             
             // verify that timestamp is recentish
         $now = time();
@@ -210,8 +211,9 @@ class OAuthServer
      */
     private function check_nonce($consumer, $token, $nonce, $timestamp)
     {
-        if (!$nonce)
+        if (!$nonce) {
             throw new OAuthException('Missing nonce parameter. The parameter is required');
+        }
             
             // verify that the nonce is uniqueish
         $found = $this->data_store->lookup_nonce($consumer, $token, $nonce, $timestamp);
