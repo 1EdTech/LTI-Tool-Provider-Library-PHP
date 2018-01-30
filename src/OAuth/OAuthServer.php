@@ -11,10 +11,10 @@ namespace IMSGlobal\LTI\OAuth;
 class OAuthServer
 {
 
-    protected $timestamp_threshold = 300;
- // in seconds, five minutes
+    protected $timestamp_threshold = 300; // in seconds, five minutes
+    
     protected $version = '1.0';
- // hi blaine
+    
     protected $signature_methods = array();
 
     protected $data_store;
@@ -30,8 +30,6 @@ class OAuthServer
     }
     
     // high level functions
-    
-
     /**
      * process a request_token request
      * returns the request token on success
@@ -198,8 +196,8 @@ class OAuthServer
         if (!$timestamp) {
             throw new OAuthException('Missing timestamp parameter. The parameter is required');
         }
-            
-            // verify that timestamp is recentish
+        
+        // verify that timestamp is recentish
         $now = time();
         if (abs($now - $timestamp) > $this->timestamp_threshold) {
             throw new OAuthException("Expired timestamp, yours $timestamp, ours $now");
@@ -214,8 +212,8 @@ class OAuthServer
         if (!$nonce) {
             throw new OAuthException('Missing nonce parameter. The parameter is required');
         }
-            
-            // verify that the nonce is uniqueish
+        
+        // verify that the nonce is uniqueish
         $found = $this->data_store->lookup_nonce($consumer, $token, $nonce, $timestamp);
         if ($found) {
             throw new OAuthException("Nonce already used: $nonce");

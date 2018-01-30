@@ -51,8 +51,8 @@ class ResourceLinkShareKey
      *
      * @var int $life
      */
-    public $life = null;
- // in hours
+    public $life = null; // in hours
+
     /**
      * Whether the sharing arrangement should be automatically approved when first used.
      *

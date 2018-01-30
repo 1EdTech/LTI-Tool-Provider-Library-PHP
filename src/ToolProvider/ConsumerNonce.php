@@ -12,13 +12,11 @@ namespace IMSGlobal\LTI\ToolProvider;
  */
 class ConsumerNonce
 {
-    
+
     /**
      * Maximum age nonce values will be retained for (in minutes).
      */
-    const MAX_NONCE_AGE = 30;
- // in minutes
-    
+    const MAX_NONCE_AGE = 30; // in minutes
 
     /**
      * Date/time when the nonce value expires.

@@ -138,8 +138,8 @@ class OAuthUtil
         if (!$params) {
             return '';
         }
-            
-            // Urlencode both keys and values
+        
+        // Urlencode both keys and values
         $keys = OAuthUtil::urlencode_rfc3986(array_keys($params));
         $values = OAuthUtil::urlencode_rfc3986(array_values($params));
         $params = array_combine($keys, $values);

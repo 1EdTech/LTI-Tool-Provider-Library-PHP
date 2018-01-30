@@ -2,7 +2,6 @@
 namespace IMSGlobal\LTI\Profile;
 
 /**
- 
  * Class to represent a resource handler message object
  *
  * @author  Stephen P Vickers <svickers@imsglobal.org>

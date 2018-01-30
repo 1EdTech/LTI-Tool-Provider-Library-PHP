@@ -678,7 +678,6 @@ EOF;
             }
             
             for ($i = 0; $i < count($members); $i++) {
-                
                 $user = User::fromResourceLink($this, $members[$i]['user_id']);
 
 // Set the user name
@@ -786,7 +785,6 @@ EOF;
                 break;
         }
         if (isset($do)) {
-            
             $url = $this->getSetting('ext_ims_lti_tool_setting_url');
             $params = array();
             $params['id'] = $this->getSetting('ext_ims_lti_tool_setting_id');
@@ -1051,7 +1049,7 @@ EOF;
                     $ltiOutcome->setValue($parts[0] / $parts[1]);
                     $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
                 }
-    // Convert letter_af to letter_af_plus or text
+                // Convert letter_af to letter_af_plus or text
             } elseif ($type === self::EXT_TYPE_LETTER_AF) {
                 if (in_array(self::EXT_TYPE_LETTER_AF_PLUS, $supportedTypes)) {
                     $ok = true;
@@ -1060,7 +1058,7 @@ EOF;
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_TEXT;
                 }
-    // Convert letter_af_plus to letter_af or text
+                // Convert letter_af_plus to letter_af or text
             } elseif ($type === self::EXT_TYPE_LETTER_AF_PLUS) {
                 if (in_array(self::EXT_TYPE_LETTER_AF, $supportedTypes) && (strlen($value) === 1)) {
                     $ok = true;
@@ -1069,7 +1067,7 @@ EOF;
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_TEXT;
                 }
-    // Convert text to decimal
+                // Convert text to decimal
             } elseif ($type === self::EXT_TYPE_TEXT) {
                 $ok = is_numeric($value) && ($value >= 0) && ($value <= 1);
                 if ($ok) {
@@ -1124,7 +1122,8 @@ EOF;
                          ($this->extNodes['statusinfo']['codemajor'] === 'Success')) {
                         $ok = true;
                     }
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
             $this->extRequest = $http->request;
             $this->extRequestHeaders = $http->requestHeaders;
@@ -1191,12 +1190,12 @@ EOD;
                     $this->extDoc = new DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
-                    if (isset($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) &&
-                         ($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor'] ===
+                    if (isset($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) && ($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor'] ===
                          'success')) {
                         $ok = true;
                     }
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+                }
             }
             $this->extRequest = $http->request;
             $this->extRequestHeaders = $http->requestHeaders;
