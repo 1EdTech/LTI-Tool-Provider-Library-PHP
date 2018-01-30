@@ -15,6 +15,9 @@
     "require":{
         "php": ">=5.6.0"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.2"
+    },
     "autoload":{
         "psr-4": {
             "IMSGlobal\\LTI\\": "src/"
