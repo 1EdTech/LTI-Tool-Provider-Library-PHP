@@ -468,17 +468,16 @@ class DataConnector_mysql extends DataConnector
             $sql = sprintf('SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
                  "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
                  'WHERE (resource_link_pk = %d)', $resourceLink->getRecordId());
-        } else 
-            if (!empty($resourceLink->getContext())) {
-                $sql = sprintf('SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
-                     "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
-                     'WHERE (context_pk = %d) AND (lti_resource_link_id = %s)', $resourceLink->getContext()->getRecordId(), DataConnector::quoted($resourceLink->getId()));
-            } else {
-                $sql = sprintf('SELECT r.resource_link_pk, r.context_pk, r.consumer_pk, r.lti_resource_link_id, r.settings, r.primary_resource_link_pk, r.share_approved, r.created, r.updated ' .
-                     "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' r LEFT OUTER JOIN ' .
-                     $this->dbTableNamePrefix . DataConnector::CONTEXT_TABLE_NAME . ' c ON r.context_pk = c.context_pk ' .
-                     ' WHERE ((r.consumer_pk = %d) OR (c.consumer_pk = %d)) AND (lti_resource_link_id = %s)', $resourceLink->getConsumer()->getRecordId(), $resourceLink->getConsumer()->getRecordId(), DataConnector::quoted($resourceLink->getId()));
-            }
+        } elseif (!empty($resourceLink->getContext())) {
+            $sql = sprintf('SELECT resource_link_pk, context_pk, consumer_pk, lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated ' .
+                 "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
+                 'WHERE (context_pk = %d) AND (lti_resource_link_id = %s)', $resourceLink->getContext()->getRecordId(), DataConnector::quoted($resourceLink->getId()));
+        } else {
+            $sql = sprintf('SELECT r.resource_link_pk, r.context_pk, r.consumer_pk, r.lti_resource_link_id, r.settings, r.primary_resource_link_pk, r.share_approved, r.created, r.updated ' .
+                 "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' r LEFT OUTER JOIN ' .
+                 $this->dbTableNamePrefix . DataConnector::CONTEXT_TABLE_NAME . ' c ON r.context_pk = c.context_pk ' .
+                 ' WHERE ((r.consumer_pk = %d) OR (c.consumer_pk = %d)) AND (lti_resource_link_id = %s)', $resourceLink->getConsumer()->getRecordId(), $resourceLink->getConsumer()->getRecordId(), DataConnector::quoted($resourceLink->getId()));
+        }
         $rsContext = mysql_query($sql);
         if ($rsContext) {
             $row = mysql_fetch_object($rsContext);
@@ -527,12 +526,11 @@ class DataConnector_mysql extends DataConnector
     {
         if (is_null($resourceLink->shareApproved)) {
             $approved = 'NULL';
-        } else 
-            if ($resourceLink->shareApproved) {
-                $approved = '1';
-            } else {
-                $approved = '0';
-            }
+        } elseif ($resourceLink->shareApproved) {
+            $approved = '1';
+        } else {
+            $approved = '0';
+        }
         if (empty($resourceLink->primaryResourceLinkId)) {
             $primaryResourceLinkId = 'NULL';
         } else {
@@ -544,32 +542,30 @@ class DataConnector_mysql extends DataConnector
         if (!empty($resourceLink->getContext())) {
             $consumerId = 'NULL';
             $contextId = strval($resourceLink->getContext()->getRecordId());
-        } else 
-            if (!empty($resourceLink->getContextId())) {
-                $consumerId = 'NULL';
-                $contextId = strval($resourceLink->getContextId());
-            } else {
-                $consumerId = strval($resourceLink->getConsumer()->getRecordId());
-                $contextId = 'NULL';
-            }
+        } elseif (!empty($resourceLink->getContextId())) {
+            $consumerId = 'NULL';
+            $contextId = strval($resourceLink->getContextId());
+        } else {
+            $consumerId = strval($resourceLink->getConsumer()->getRecordId());
+            $contextId = 'NULL';
+        }
         $id = $resourceLink->getRecordId();
         if (empty($id)) {
             $sql = sprintf("INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
                  ' (consumer_pk, context_pk, ' .
                  'lti_resource_link_id, settings, primary_resource_link_pk, share_approved, created, updated) ' .
                  'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', $consumerId, $contextId, DataConnector::quoted($resourceLink->getId()), DataConnector::quoted($settingsValue), $primaryResourceLinkId, $approved, DataConnector::quoted($now), DataConnector::quoted($now));
-        } else 
-            if ($contextId !== 'NULL') {
-                $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
-                     'consumer_pk = %s, lti_resource_link_id = %s, settings = %s, ' .
-                     'primary_resource_link_pk = %s, share_approved = %s, updated = %s ' .
-                     'WHERE (context_pk = %s) AND (resource_link_pk = %d)', $consumerId, DataConnector::quoted($resourceLink->getId()), DataConnector::quoted($settingsValue), $primaryResourceLinkId, $approved, DataConnector::quoted($now), $contextId, $id);
-            } else {
-                $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
-                     'context_pk = %s, lti_resource_link_id = %s, settings = %s, ' .
-                     'primary_resource_link_pk = %s, share_approved = %s, updated = %s ' .
-                     'WHERE (consumer_pk = %s) AND (resource_link_pk = %d)', $contextId, DataConnector::quoted($resourceLink->getId()), DataConnector::quoted($settingsValue), $primaryResourceLinkId, $approved, DataConnector::quoted($now), $consumerId, $id);
-            }
+        } elseif ($contextId !== 'NULL') {
+            $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
+                 'consumer_pk = %s, lti_resource_link_id = %s, settings = %s, ' .
+                 'primary_resource_link_pk = %s, share_approved = %s, updated = %s ' .
+                 'WHERE (context_pk = %s) AND (resource_link_pk = %d)', $consumerId, DataConnector::quoted($resourceLink->getId()), DataConnector::quoted($settingsValue), $primaryResourceLinkId, $approved, DataConnector::quoted($now), $contextId, $id);
+        } else {
+            $sql = sprintf("UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' SET ' .
+                 'context_pk = %s, lti_resource_link_id = %s, settings = %s, ' .
+                 'primary_resource_link_pk = %s, share_approved = %s, updated = %s ' .
+                 'WHERE (consumer_pk = %s) AND (resource_link_pk = %d)', $contextId, DataConnector::quoted($resourceLink->getId()), DataConnector::quoted($settingsValue), $primaryResourceLinkId, $approved, DataConnector::quoted($now), $consumerId, $id);
+        }
         $ok = mysql_query($sql);
         if ($ok) {
             if (empty($id)) {

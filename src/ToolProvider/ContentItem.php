@@ -73,10 +73,9 @@ class ContentItem
     {
         if (!empty($title)) {
             $this->title = $title;
-        } else 
-            if (isset($this->title)) {
-                unset($this->title);
-            }
+        } elseif (isset($this->title)) {
+            unset($this->title);
+        }
     }
 
     /**
@@ -88,10 +87,9 @@ class ContentItem
     {
         if (!empty($text)) {
             $this->text = $text;
-        } else 
-            if (isset($this->text)) {
-                unset($this->text);
-            }
+        } elseif (isset($this->text)) {
+            unset($this->text);
+        }
     }
 
     /**

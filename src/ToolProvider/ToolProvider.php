@@ -371,10 +371,9 @@ class ToolProvider
 // Set return URL if available
         if (isset($_POST['launch_presentation_return_url'])) {
             $this->returnUrl = $_POST['launch_presentation_return_url'];
-        } else 
-            if (isset($_POST['content_item_return_url'])) {
-                $this->returnUrl = $_POST['content_item_return_url'];
-            }
+        } elseif (isset($_POST['content_item_return_url'])) {
+            $this->returnUrl = $_POST['content_item_return_url'];
+        }
         $this->vendor = new Profile\Item();
         $this->product = new Profile\Item();
         $this->requiredServices = array();
@@ -626,11 +625,10 @@ EOD;
         }
         if (method_exists($this, $callback)) {
             $result = $this->$callback();
-        } else 
-            if (is_null($method) && $this->ok) {
-                $this->ok = false;
-                $this->reason = "Message type not supported: {$_POST['lti_message_type']}";
-            }
+        } elseif (is_null($method) && $this->ok) {
+            $this->ok = false;
+            $this->reason = "Message type not supported: {$_POST['lti_message_type']}";
+        }
         if ($this->ok && ($_POST['lti_message_type'] == 'ToolProxyRegistrationRequest')) {
             $this->consumer->save();
         }
@@ -685,21 +683,18 @@ EOD;
                 } else {
                     if (!is_null($this->errorOutput)) {
                         echo $this->errorOutput;
-                    } else 
-                        if ($this->debugMode && !empty($this->reason)) {
-                            echo "Debug error: {$this->reason}";
-                        } else {
-                            echo "Error: {$this->message}";
-                        }
-                }
-            } else 
-                if (!is_null($this->redirectUrl)) {
-                    header("Location: {$this->redirectUrl}");
-                    exit();
-                } else 
-                    if (!is_null($this->output)) {
-                        echo $this->output;
+                    } elseif ($this->debugMode && !empty($this->reason)) {
+                        echo "Debug error: {$this->reason}";
+                    } else {
+                        echo "Error: {$this->message}";
                     }
+                }
+            } elseif (!is_null($this->redirectUrl)) {
+                header("Location: {$this->redirectUrl}");
+                exit();
+            } elseif (!is_null($this->output)) {
+                echo $this->output;
+            }
         }
     }
 
@@ -733,67 +728,64 @@ EOD;
                 if (!$this->ok) {
                     $this->reason = 'Missing resource link ID.';
                 }
-            } else 
-                if ($_POST['lti_message_type'] === 'ContentItemSelectionRequest') {
-                    if (isset($_POST['accept_media_types']) && (strlen(trim($_POST['accept_media_types'])) > 0)) {
-                        $mediaTypes = array_filter(explode(',', str_replace(' ', '', $_POST['accept_media_types'])), 'strlen');
-                        $mediaTypes = array_unique($mediaTypes);
-                        $this->ok = count($mediaTypes) > 0;
-                        if (!$this->ok) {
-                            $this->reason = 'No accept_media_types found.';
-                        } else {
-                            $this->mediaTypes = $mediaTypes;
-                        }
+            } elseif ($_POST['lti_message_type'] === 'ContentItemSelectionRequest') {
+                if (isset($_POST['accept_media_types']) && (strlen(trim($_POST['accept_media_types'])) > 0)) {
+                    $mediaTypes = array_filter(explode(',', str_replace(' ', '', $_POST['accept_media_types'])), 'strlen');
+                    $mediaTypes = array_unique($mediaTypes);
+                    $this->ok = count($mediaTypes) > 0;
+                    if (!$this->ok) {
+                        $this->reason = 'No accept_media_types found.';
                     } else {
-                        $this->ok = false;
+                        $this->mediaTypes = $mediaTypes;
                     }
-                    if ($this->ok && isset($_POST['accept_presentation_document_targets']) &&
-                         (strlen(trim($_POST['accept_presentation_document_targets'])) > 0)) {
-                        $documentTargets = array_filter(explode(',', str_replace(' ', '', $_POST['accept_presentation_document_targets'])), 'strlen');
-                        $documentTargets = array_unique($documentTargets);
-                        $this->ok = count($documentTargets) > 0;
-                        if (!$this->ok) {
-                            $this->reason = 'Missing or empty accept_presentation_document_targets parameter.';
-                        } else {
-                            foreach ($documentTargets as $documentTarget) {
-                                $this->ok = $this->checkValue($documentTarget, array(
-                                    'embed',
-                                    'frame',
-                                    'iframe',
-                                    'window',
-                                    'popup',
-                                    'overlay',
-                                    'none'
-                                ), 'Invalid value in accept_presentation_document_targets parameter: %s.');
-                                if (!$this->ok) {
-                                    break;
-                                }
-                            }
-                            if ($this->ok) {
-                                $this->documentTargets = $documentTargets;
+                } else {
+                    $this->ok = false;
+                }
+                if ($this->ok && isset($_POST['accept_presentation_document_targets']) &&
+                     (strlen(trim($_POST['accept_presentation_document_targets'])) > 0)) {
+                    $documentTargets = array_filter(explode(',', str_replace(' ', '', $_POST['accept_presentation_document_targets'])), 'strlen');
+                    $documentTargets = array_unique($documentTargets);
+                    $this->ok = count($documentTargets) > 0;
+                    if (!$this->ok) {
+                        $this->reason = 'Missing or empty accept_presentation_document_targets parameter.';
+                    } else {
+                        foreach ($documentTargets as $documentTarget) {
+                            $this->ok = $this->checkValue($documentTarget, array(
+                                'embed',
+                                'frame',
+                                'iframe',
+                                'window',
+                                'popup',
+                                'overlay',
+                                'none'
+                            ), 'Invalid value in accept_presentation_document_targets parameter: %s.');
+                            if (!$this->ok) {
+                                break;
                             }
                         }
-                    } else {
-                        $this->ok = false;
-                    }
-                    if ($this->ok) {
-                        $this->ok = isset($_POST['content_item_return_url']) &&
-                             (strlen(trim($_POST['content_item_return_url'])) > 0);
-                        if (!$this->ok) {
-                            $this->reason = 'Missing content_item_return_url parameter.';
+                        if ($this->ok) {
+                            $this->documentTargets = $documentTargets;
                         }
                     }
-                } else 
-                    if ($_POST['lti_message_type'] == 'ToolProxyRegistrationRequest') {
-                        $this->ok = ((isset($_POST['reg_key']) && (strlen(trim($_POST['reg_key'])) > 0)) &&
-                             (isset($_POST['reg_password']) && (strlen(trim($_POST['reg_password'])) > 0)) &&
-                             (isset($_POST['tc_profile_url']) && (strlen(trim($_POST['tc_profile_url'])) > 0)) &&
-                             (isset($_POST['launch_presentation_return_url']) &&
-                             (strlen(trim($_POST['launch_presentation_return_url'])) > 0)));
-                        if ($this->debugMode && !$this->ok) {
-                            $this->reason = 'Missing message parameters.';
-                        }
+                } else {
+                    $this->ok = false;
+                }
+                if ($this->ok) {
+                    $this->ok = isset($_POST['content_item_return_url']) &&
+                         (strlen(trim($_POST['content_item_return_url'])) > 0);
+                    if (!$this->ok) {
+                        $this->reason = 'Missing content_item_return_url parameter.';
                     }
+                }
+            } elseif ($_POST['lti_message_type'] == 'ToolProxyRegistrationRequest') {
+                $this->ok = ((isset($_POST['reg_key']) && (strlen(trim($_POST['reg_key'])) > 0)) &&
+                     (isset($_POST['reg_password']) && (strlen(trim($_POST['reg_password'])) > 0)) &&
+                     (isset($_POST['tc_profile_url']) && (strlen(trim($_POST['tc_profile_url'])) > 0)) && (isset($_POST['launch_presentation_return_url']) &&
+                     (strlen(trim($_POST['launch_presentation_return_url'])) > 0)));
+                if ($this->debugMode && !$this->ok) {
+                    $this->reason = 'Missing message parameters.';
+                }
+            }
         }
         $now = time();
 // Check consumer key
@@ -919,17 +911,16 @@ EOD;
                             'false'
                         ), 'Invalid value for can_confirm parameter: %s.');
                     }
-                } else 
-                    if (isset($_POST['launch_presentation_document_target'])) {
-                        $this->ok = $this->checkValue($_POST['launch_presentation_document_target'], array(
-                            'embed',
-                            'frame',
-                            'iframe',
-                            'window',
-                            'popup',
-                            'overlay'
-                        ), 'Invalid value for launch_presentation_document_target parameter: %s.');
-                    }
+                } elseif (isset($_POST['launch_presentation_document_target'])) {
+                    $this->ok = $this->checkValue($_POST['launch_presentation_document_target'], array(
+                        'embed',
+                        'frame',
+                        'iframe',
+                        'window',
+                        'popup',
+                        'overlay'
+                    ), 'Invalid value for launch_presentation_document_target parameter: %s.');
+                }
             }
         }
         
@@ -1008,17 +999,16 @@ EOD;
                     $doSaveConsumer = true;
                 }
             }
-        } else 
-            if ($this->ok && !empty($_POST['custom_tc_profile_url']) && empty($this->consumer->profile)) {
-                $http = new HTTPMessage($_POST['custom_tc_profile_url'], 'GET', null, 'Accept: application/vnd.ims.lti.v2.toolconsumerprofile+json');
-                if ($http->send()) {
-                    $tcProfile = json_decode($http->response);
-                    if (!is_null($tcProfile)) {
-                        $this->consumer->profile = $tcProfile;
-                        $doSaveConsumer = true;
-                    }
+        } elseif ($this->ok && !empty($_POST['custom_tc_profile_url']) && empty($this->consumer->profile)) {
+            $http = new HTTPMessage($_POST['custom_tc_profile_url'], 'GET', null, 'Accept: application/vnd.ims.lti.v2.toolconsumerprofile+json');
+            if ($http->send()) {
+                $tcProfile = json_decode($http->response);
+                if (!is_null($tcProfile)) {
+                    $this->consumer->profile = $tcProfile;
+                    $doSaveConsumer = true;
                 }
             }
+        }
 
 // Validate message parameter constraints
         if ($this->ok) {
@@ -1182,38 +1172,34 @@ EOD;
                     $this->consumer->consumerVersion = $version;
                     $doSaveConsumer = true;
                 }
-            } else 
-                if (isset($_POST['ext_lms']) && ($this->consumer->consumerName !== $_POST['ext_lms'])) {
-                    $this->consumer->consumerVersion = $_POST['ext_lms'];
-                    $doSaveConsumer = true;
-                }
+            } elseif (isset($_POST['ext_lms']) && ($this->consumer->consumerName !== $_POST['ext_lms'])) {
+                $this->consumer->consumerVersion = $_POST['ext_lms'];
+                $doSaveConsumer = true;
+            }
             if (isset($_POST['tool_consumer_instance_guid'])) {
                 if (is_null($this->consumer->consumerGuid)) {
                     $this->consumer->consumerGuid = $_POST['tool_consumer_instance_guid'];
                     $doSaveConsumer = true;
-                } else 
-                    if (!$this->consumer->protected) {
-                        $doSaveConsumer = ($this->consumer->consumerGuid !== $_POST['tool_consumer_instance_guid']);
-                        if ($doSaveConsumer) {
-                            $this->consumer->consumerGuid = $_POST['tool_consumer_instance_guid'];
-                        }
+                } elseif (!$this->consumer->protected) {
+                    $doSaveConsumer = ($this->consumer->consumerGuid !== $_POST['tool_consumer_instance_guid']);
+                    if ($doSaveConsumer) {
+                        $this->consumer->consumerGuid = $_POST['tool_consumer_instance_guid'];
                     }
+                }
             }
             if (isset($_POST['launch_presentation_css_url'])) {
                 if ($this->consumer->cssPath !== $_POST['launch_presentation_css_url']) {
                     $this->consumer->cssPath = $_POST['launch_presentation_css_url'];
                     $doSaveConsumer = true;
                 }
-            } else 
-                if (isset($_POST['ext_launch_presentation_css_url']) &&
-                     ($this->consumer->cssPath !== $_POST['ext_launch_presentation_css_url'])) {
-                    $this->consumer->cssPath = $_POST['ext_launch_presentation_css_url'];
-                    $doSaveConsumer = true;
-                } else 
-                    if (!empty($this->consumer->cssPath)) {
-                        $this->consumer->cssPath = null;
-                        $doSaveConsumer = true;
-                    }
+            } elseif (isset($_POST['ext_launch_presentation_css_url']) &&
+                 ($this->consumer->cssPath !== $_POST['ext_launch_presentation_css_url'])) {
+                $this->consumer->cssPath = $_POST['ext_launch_presentation_css_url'];
+                $doSaveConsumer = true;
+            } elseif (!empty($this->consumer->cssPath)) {
+                $this->consumer->cssPath = null;
+                $doSaveConsumer = true;
+            }
         }
 
 // Persist changes to consumer
@@ -1237,11 +1223,10 @@ EOD;
                     $this->user->ltiResultSourcedId = $_POST['lis_result_sourcedid'];
                     $this->user->save();
                 }
-            } else 
-                if (!empty($this->user->ltiResultSourcedId)) {
-                    $this->user->ltiResultSourcedId = '';
-                    $this->user->save();
-                }
+            } elseif (!empty($this->user->ltiResultSourcedId)) {
+                $this->user->ltiResultSourcedId = '';
+                $this->user->save();
+            }
         }
         
         return $this->ok;

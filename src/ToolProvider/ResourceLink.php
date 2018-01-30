@@ -532,31 +532,28 @@ class ResourceLink
                 case self::EXT_READ:
                     if ($urlLTI11 && ($ltiOutcome->type === self::EXT_TYPE_DECIMAL)) {
                         $do = 'readResult';
-                    } else 
-                        if ($urlExt) {
-                            $urlLTI11 = null;
-                            $do = 'basic-lis-readresult';
-                        }
+                    } elseif ($urlExt) {
+                        $urlLTI11 = null;
+                        $do = 'basic-lis-readresult';
+                    }
                     break;
                 case self::EXT_WRITE:
                     if ($urlLTI11 && $this->checkValueType($ltiOutcome, array(
                         self::EXT_TYPE_DECIMAL
                     ))) {
                         $do = 'replaceResult';
-                    } else 
-                        if ($this->checkValueType($ltiOutcome)) {
-                            $urlLTI11 = null;
-                            $do = 'basic-lis-updateresult';
-                        }
+                    } elseif ($this->checkValueType($ltiOutcome)) {
+                        $urlLTI11 = null;
+                        $do = 'basic-lis-updateresult';
+                    }
                     break;
                 case self::EXT_DELETE:
                     if ($urlLTI11 && ($ltiOutcome->type === self::EXT_TYPE_DECIMAL)) {
                         $do = 'deleteResult';
-                    } else 
-                        if ($urlExt) {
-                            $urlLTI11 = null;
-                            $do = 'basic-lis-deleteresult';
-                        }
+                    } elseif ($urlExt) {
+                        $urlLTI11 = null;
+                        $do = 'basic-lis-deleteresult';
+                    }
                     break;
             }
         }
@@ -672,13 +669,12 @@ EOF;
         if ($ok) {
             if (!isset($this->extNodes['memberships']['member'])) {
                 $members = array();
-            } else 
-                if (!isset($this->extNodes['memberships']['member'][0])) {
-                    $members = array();
-                    $members[0] = $this->extNodes['memberships']['member'];
-                } else {
-                    $members = $this->extNodes['memberships']['member'];
-                }
+            } elseif (!isset($this->extNodes['memberships']['member'][0])) {
+                $members = array();
+                $members[0] = $this->extNodes['memberships']['member'];
+            } else {
+                $members = $this->extNodes['memberships']['member'];
+            }
             
             for ($i = 0; $i < count($members); $i++) {
                 
@@ -702,13 +698,12 @@ EOF;
 // Set the user groups
                 if (!isset($members[$i]['groups']['group'])) {
                     $groups = array();
-                } else 
-                    if (!isset($members[$i]['groups']['group'][0])) {
-                        $groups = array();
-                        $groups[0] = $members[$i]['groups']['group'];
-                    } else {
-                        $groups = $members[$i]['groups']['group'];
-                    }
+                } elseif (!isset($members[$i]['groups']['group'][0])) {
+                    $groups = array();
+                    $groups[0] = $members[$i]['groups']['group'];
+                } else {
+                    $groups = $members[$i]['groups']['group'];
+                }
                 for ($j = 0; $j < count($groups); $j++) {
                     $group = $groups[$j];
                     if (isset($group['set'])) {
@@ -1047,57 +1042,50 @@ EOF;
                     $ltiOutcome->setValue($value / 100);
                     $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
                 }
-            } else 
-                if ($type === self::EXT_TYPE_RATIO) {
-                    $parts = explode('/', $value, 2);
-                    $ok = (count($parts) === 2) && is_numeric($parts[0]) && is_numeric($parts[1]) && ($parts[0] >= 0) &&
-                         ($parts[1] > 0);
-                    if ($ok) {
-                        $ltiOutcome->setValue($parts[0] / $parts[1]);
-                        $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
-                    }
+            } elseif ($type === self::EXT_TYPE_RATIO) {
+                $parts = explode('/', $value, 2);
+                $ok = (count($parts) === 2) && is_numeric($parts[0]) && is_numeric($parts[1]) && ($parts[0] >= 0) &&
+                     ($parts[1] > 0);
+                if ($ok) {
+                    $ltiOutcome->setValue($parts[0] / $parts[1]);
+                    $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
+                }
     // Convert letter_af to letter_af_plus or text
-                } else 
-                    if ($type === self::EXT_TYPE_LETTER_AF) {
-                        if (in_array(self::EXT_TYPE_LETTER_AF_PLUS, $supportedTypes)) {
-                            $ok = true;
-                            $ltiOutcome->type = self::EXT_TYPE_LETTER_AF_PLUS;
-                        } else 
-                            if (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
-                                $ok = true;
-                                $ltiOutcome->type = self::EXT_TYPE_TEXT;
-                            }
+            } elseif ($type === self::EXT_TYPE_LETTER_AF) {
+                if (in_array(self::EXT_TYPE_LETTER_AF_PLUS, $supportedTypes)) {
+                    $ok = true;
+                    $ltiOutcome->type = self::EXT_TYPE_LETTER_AF_PLUS;
+                } elseif (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
+                    $ok = true;
+                    $ltiOutcome->type = self::EXT_TYPE_TEXT;
+                }
     // Convert letter_af_plus to letter_af or text
-                    } else 
-                        if ($type === self::EXT_TYPE_LETTER_AF_PLUS) {
-                            if (in_array(self::EXT_TYPE_LETTER_AF, $supportedTypes) && (strlen($value) === 1)) {
-                                $ok = true;
-                                $ltiOutcome->type = self::EXT_TYPE_LETTER_AF;
-                            } else 
-                                if (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
-                                    $ok = true;
-                                    $ltiOutcome->type = self::EXT_TYPE_TEXT;
-                                }
+            } elseif ($type === self::EXT_TYPE_LETTER_AF_PLUS) {
+                if (in_array(self::EXT_TYPE_LETTER_AF, $supportedTypes) && (strlen($value) === 1)) {
+                    $ok = true;
+                    $ltiOutcome->type = self::EXT_TYPE_LETTER_AF;
+                } elseif (in_array(self::EXT_TYPE_TEXT, $supportedTypes)) {
+                    $ok = true;
+                    $ltiOutcome->type = self::EXT_TYPE_TEXT;
+                }
     // Convert text to decimal
-                        } else 
-                            if ($type === self::EXT_TYPE_TEXT) {
-                                $ok = is_numeric($value) && ($value >= 0) && ($value <= 1);
-                                if ($ok) {
-                                    $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
-                                } else 
-                                    if (substr($value, -1) === '%') {
-                                        $value = substr($value, 0, -1);
-                                        $ok = is_numeric($value) && ($value >= 0) && ($value <= 100);
-                                        if ($ok) {
-                                            if (in_array(self::EXT_TYPE_PERCENTAGE, $supportedTypes)) {
-                                                $ltiOutcome->type = self::EXT_TYPE_PERCENTAGE;
-                                            } else {
-                                                $ltiOutcome->setValue($value / 100);
-                                                $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
-                                            }
-                                        }
-                                    }
-                            }
+            } elseif ($type === self::EXT_TYPE_TEXT) {
+                $ok = is_numeric($value) && ($value >= 0) && ($value <= 1);
+                if ($ok) {
+                    $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
+                } elseif (substr($value, -1) === '%') {
+                    $value = substr($value, 0, -1);
+                    $ok = is_numeric($value) && ($value >= 0) && ($value <= 100);
+                    if ($ok) {
+                        if (in_array(self::EXT_TYPE_PERCENTAGE, $supportedTypes)) {
+                            $ltiOutcome->type = self::EXT_TYPE_PERCENTAGE;
+                        } else {
+                            $ltiOutcome->setValue($value / 100);
+                            $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
+                        }
+                    }
+                }
+            }
         }
         
         return $ok;

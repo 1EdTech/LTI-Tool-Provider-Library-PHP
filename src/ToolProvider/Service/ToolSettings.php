@@ -87,25 +87,22 @@ class ToolSettings extends Service
         $parameter = array();
         if ($mode === self::MODE_ALL_LEVELS) {
             $parameter['bubble'] = 'all';
-        } else 
-            if ($mode === self::MODE_DISTINCT_NAMES) {
-                $parameter['bubble'] = 'distinct';
-            }
+        } elseif ($mode === self::MODE_DISTINCT_NAMES) {
+            $parameter['bubble'] = 'distinct';
+        }
         $http = $this->send('GET', $parameter);
         if (!$http->ok) {
             $response = false;
-        } else 
-            if ($this->simple) {
-                $response = json_decode($http->response, true);
-            } else 
-                if (isset($http->responseJson->{'@graph'})) {
-                    $response = array();
-                    foreach ($http->responseJson->{'@graph'} as $level) {
-                        $settings = json_decode(json_encode($level->custom), true);
-                        unset($settings['@id']);
-                        $response[self::$LEVEL_NAMES[$level->{'@type'}]] = $settings;
-                    }
-                }
+        } elseif ($this->simple) {
+            $response = json_decode($http->response, true);
+        } elseif (isset($http->responseJson->{'@graph'})) {
+            $response = array();
+            foreach ($http->responseJson->{'@graph'} as $level) {
+                $settings = json_decode(json_encode($level->custom), true);
+                unset($settings['@id']);
+                $response[self::$LEVEL_NAMES[$level->{'@type'}]] = $settings;
+            }
+        }
         
         return $response;
     }
@@ -122,12 +119,11 @@ class ToolSettings extends Service
         if (!$this->simple) {
             if (is_a($this->source, 'ToolConsumer')) {
                 $type = 'ToolProxy';
-            } else 
-                if (is_a($this->source, 'ToolConsumer')) {
-                    $type = 'ToolProxyBinding';
-                } else {
-                    $type = 'LtiLink';
-                }
+            } elseif (is_a($this->source, 'ToolConsumer')) {
+                $type = 'ToolProxyBinding';
+            } else {
+                $type = 'LtiLink';
+            }
             $obj = new \stdClass();
             $obj->{'@context'} = 'http://purl.imsglobal.org/ctx/lti/v2/ToolSettings';
             $obj->{'@graph'} = array();

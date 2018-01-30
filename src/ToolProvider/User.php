@@ -299,21 +299,19 @@ class User
         if (!empty($firstname)) {
             $this->firstname = trim($firstname);
             $names[0] = $this->firstname;
-        } else 
-            if (!empty($names[0])) {
-                $this->firstname = $names[0];
-            } else {
-                $this->firstname = 'User';
-            }
+        } elseif (!empty($names[0])) {
+            $this->firstname = $names[0];
+        } else {
+            $this->firstname = 'User';
+        }
         if (!empty($lastname)) {
             $this->lastname = trim($lastname);
             $names[1] = $this->lastname;
-        } else 
-            if (!empty($names[1])) {
-                $this->lastname = $names[1];
-            } else {
-                $this->lastname = $this->ltiUserId;
-            }
+        } elseif (!empty($names[1])) {
+            $this->lastname = $names[1];
+        } else {
+            $this->lastname = $this->ltiUserId;
+        }
         if (empty($this->fullname)) {
             $this->fullname = "{$this->firstname} {$this->lastname}";
         }
@@ -329,15 +327,14 @@ class User
     {
         if (!empty($email)) {
             $this->email = $email;
-        } else 
-            if (!empty($defaultEmail)) {
-                $this->email = $defaultEmail;
-                if (substr($this->email, 0, 1) === '@') {
-                    $this->email = $this->getId() . $this->email;
-                }
-            } else {
-                $this->email = '';
+        } elseif (!empty($defaultEmail)) {
+            $this->email = $defaultEmail;
+            if (substr($this->email, 0, 1) === '@') {
+                $this->email = $this->getId() . $this->email;
             }
+        } else {
+            $this->email = '';
+        }
     }
 
     /**

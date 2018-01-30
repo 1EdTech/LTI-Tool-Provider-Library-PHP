@@ -119,13 +119,12 @@ class HTTPMessage
             if ($this->method === 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
-            } else 
-                if ($this->method !== 'GET') {
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
-                    if (!is_null($this->request)) {
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
-                    }
+            } elseif ($this->method !== 'GET') {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+                if (!is_null($this->request)) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
                 }
+            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
             curl_setopt($ch, CURLOPT_HEADER, true);

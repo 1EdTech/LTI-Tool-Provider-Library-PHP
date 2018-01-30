@@ -533,11 +533,10 @@ class ToolConsumer
                 if (!empty($type)) {
                     $header .= "\nAccept: {$type}";
                 }
-            } else 
-                if (isset($type)) {
-                    $header .= "\nContent-Type: {$type}";
-                    $header .= "\nContent-Length: " . strlen($data);
-                }
+            } elseif (isset($type)) {
+                $header .= "\nContent-Type: {$type}";
+                $header .= "\nContent-Length: " . strlen($data);
+            }
             return $header;
         } else {
             return $params;
