@@ -21,7 +21,7 @@ class SecurityContract
      * @param ToolProvider $toolProvider  Tool Provider instance
      * @param string $secret Shared secret
      */
-    function __construct($toolProvider, $secret)
+    public function __construct($toolProvider, $secret)
     {
         $tcContexts = array();
         foreach ($toolProvider->consumer->profile->{'@context'} as $context) {

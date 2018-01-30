@@ -39,7 +39,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
      *
      * @return OAuthConsumer OAuthConsumer object
      */
-    function lookup_consumer($consumerKey)
+    public function lookup_consumer($consumerKey)
     {
         return new OAuth\OAuthConsumer($this->toolProvider->consumer->getKey(), $this->toolProvider->consumer->secret);
     }
@@ -53,7 +53,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
      *
      * @return OAuthToken OAuthToken object
      */
-    function lookup_token($consumer, $tokenType, $token)
+    public function lookup_token($consumer, $tokenType, $token)
     {
         return new OAuth\OAuthToken($consumer, '');
     }
@@ -68,7 +68,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
      *
      * @return boolean True if the nonce value already exists
      */
-    function lookup_nonce($consumer, $token, $value, $timestamp)
+    public function lookup_nonce($consumer, $token, $value, $timestamp)
     {
         $nonce = new ConsumerNonce($this->toolProvider->consumer, $value);
         $ok = !$nonce->load();
@@ -90,7 +90,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
      *
      * @return string Null value
      */
-    function new_request_token($consumer, $callback = null)
+    public function new_request_token($consumer, $callback = null)
     {
         return null;
     }
@@ -104,7 +104,7 @@ class OAuthDataStore extends OAuth\OAuthDataStore
      *
      * @return string Null value
      */
-    function new_access_token($token, $consumer, $verifier = null)
+    public function new_access_token($token, $consumer, $verifier = null)
     {
         return null;
     }

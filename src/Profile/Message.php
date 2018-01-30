@@ -58,7 +58,7 @@ class Message
      * @param array  $variables     Array of variable parameters to accompany message request
      * @param array  $constants     Array of fixed parameters to accompany message request
      */
-    function __construct($type, $path, $capabilities = array(), $variables = array(), $constants = array())
+    public function __construct($type, $path, $capabilities = array(), $variables = array(), $constants = array())
     {
         $this->type = $type;
         $this->path = $path;

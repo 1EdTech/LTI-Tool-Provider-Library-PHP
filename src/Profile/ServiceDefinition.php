@@ -49,7 +49,7 @@ class ServiceDefinition
      * @param string $id        ID of service (optional)
      * @param string $endpoint  URL for service requests (optional)
      */
-    function __construct($formats, $actions, $id = null, $endpoint = null)
+    public function __construct($formats, $actions, $id = null, $endpoint = null)
     {
         $this->formats = $formats;
         $this->actions = $actions;
@@ -57,7 +57,7 @@ class ServiceDefinition
         $this->endpoint = $endpoint;
     }
 
-    function setId($id)
+    public function setId($id)
     {
         $this->id = $id;
     }

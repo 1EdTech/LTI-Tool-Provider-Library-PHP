@@ -19,7 +19,7 @@ class Message
      * @param Message $message               Message object
      * @param array   $capabilitiesOffered   Capabilities offered
      */
-    function __construct($message, $capabilitiesOffered)
+    public function __construct($message, $capabilitiesOffered)
     {
         $this->message_type = $message->type;
         $this->path = $message->path;

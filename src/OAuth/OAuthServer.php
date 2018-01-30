@@ -19,7 +19,7 @@ class OAuthServer
 
     protected $data_store;
 
-    function __construct($data_store)
+    public function __construct($data_store)
     {
         $this->data_store = $data_store;
     }

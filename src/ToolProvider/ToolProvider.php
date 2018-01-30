@@ -359,7 +359,7 @@ class ToolProvider
      *
      * @param DataConnector     $dataConnector    Object containing a database connection object
      */
-    function __construct($dataConnector)
+    public function __construct($dataConnector)
     {
         $this->constraints = array();
         $this->dataConnector = $dataConnector;

@@ -22,7 +22,7 @@ class ResourceHandler
      * @param ToolProvider $toolProvider   Tool Provider object
      * @param ProfileResourceHandler $resourceHandler   Resource handler object
      */
-    function __construct($toolProvider, $resourceHandler)
+    public function __construct($toolProvider, $resourceHandler)
     {
         $this->resource_type = new \stdClass();
         $this->resource_type->code = $resourceHandler->item->id;

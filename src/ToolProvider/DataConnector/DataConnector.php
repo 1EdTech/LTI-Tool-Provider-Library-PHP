@@ -520,7 +520,7 @@ class DataConnector
      *
      * @return string Random string
      */
-    static function getRandomString($length = 8)
+    public static function getRandomString($length = 8)
     {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         
@@ -544,7 +544,7 @@ class DataConnector
      * @param bool $addQuotes If true the returned string will be enclosed in single quotes (optional, default is true)
      * @return string The quoted string.
      */
-    static function quoted($value, $addQuotes = true)
+    public static function quoted($value, $addQuotes = true)
     {
         if (is_null($value)) {
             $value = 'null';

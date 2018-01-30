@@ -22,7 +22,7 @@ class ToolProfile
      *
      * @param ToolProvider $toolProvider   Tool Provider object
      */
-    function __construct($toolProvider)
+    public function __construct($toolProvider)
     {
         $this->lti_version = 'LTI-2p0';
         

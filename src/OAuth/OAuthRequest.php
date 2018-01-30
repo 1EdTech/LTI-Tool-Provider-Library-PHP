@@ -23,7 +23,7 @@ class OAuthRequest
 
     public static $POST_INPUT = 'php://input';
 
-    function __construct($http_method, $http_url, $parameters = null)
+    public function __construct($http_method, $http_url, $parameters = null)
     {
         $parameters = ($parameters) ? $parameters : array();
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url($http_url, PHP_URL_QUERY)), $parameters);

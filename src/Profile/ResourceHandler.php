@@ -49,7 +49,7 @@ class ResourceHandler
      * @param array     $requiredMessages  Array of required Message objects for resource handler
      * @param array     $optionalMessages  Array of optional Message objects for resource handler
      */
-    function __construct($item, $icon, $requiredMessages, $optionalMessages)
+    public function __construct($item, $icon, $requiredMessages, $optionalMessages)
     {
         $this->item = $item;
         $this->icon = $icon;

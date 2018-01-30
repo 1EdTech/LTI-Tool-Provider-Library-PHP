@@ -65,7 +65,7 @@ class Item
      * @param string $version      Version of item (optional)
      * @param int    $timestamp    Timestamp of item (optional)
      */
-    function __construct($id = null, $name = null, $description = null, $url = null, $version = null, $timestamp = null)
+    public function __construct($id = null, $name = null, $description = null, $url = null, $version = null, $timestamp = null)
     {
         $this->id = $id;
         $this->name = $name;

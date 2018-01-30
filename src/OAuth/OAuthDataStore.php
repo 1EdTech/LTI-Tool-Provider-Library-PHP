@@ -11,27 +11,27 @@ namespace IMSGlobal\LTI\OAuth;
 class OAuthDataStore
 {
 
-    function lookup_consumer($consumer_key)
+    public function lookup_consumer($consumer_key)
     {
         // implement me
     }
 
-    function lookup_token($consumer, $token_type, $token)
+    public function lookup_token($consumer, $token_type, $token)
     {
         // implement me
     }
 
-    function lookup_nonce($consumer, $token, $nonce, $timestamp)
+    public function lookup_nonce($consumer, $token, $nonce, $timestamp)
     {
         // implement me
     }
 
-    function new_request_token($consumer, $callback = null)
+    public function new_request_token($consumer, $callback = null)
     {
         // return a new token attached to this consumer
     }
 
-    function new_access_token($token, $consumer, $verifier = null)
+    public function new_access_token($token, $consumer, $verifier = null)
     {
         // return a new access token attached to this consumer
         // for the user associated with this token if the request token

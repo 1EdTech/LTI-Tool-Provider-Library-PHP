@@ -23,7 +23,7 @@ class ToolProxy
      * @param ServiceDefinition $toolProxyService  Tool Proxy service
      * @param string $secret  Shared secret
      */
-    function __construct($toolProvider, $toolProxyService, $secret)
+    public function __construct($toolProvider, $toolProxyService, $secret)
     {
         $contexts = array();
         

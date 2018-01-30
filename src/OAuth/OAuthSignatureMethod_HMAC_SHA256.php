@@ -19,7 +19,7 @@ namespace IMSGlobal\LTI\OAuth;
 class OAuthSignatureMethod_HMAC_SHA256 extends OAuthSignatureMethod
 {
 
-    function get_name()
+    public function get_name()
     {
         return "HMAC-SHA256";
     }
