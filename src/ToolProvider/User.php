@@ -4,120 +4,59 @@ namespace IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 /**
- * Class to represent a tool consumer user
+ * Class to represent a tool consumer user.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class User
 {
 
-    /**
-     * User's first name.
-     *
-     * @var string $firstname
-     */
+    /** @var string User's first name. */
     public $firstname = '';
 
-    /**
-     * User's last name (surname or family name).
-     *
-     * @var string $lastname
-     */
+    /** @var string User's last name (surname or family name). */
     public $lastname = '';
 
-    /**
-     * User's fullname.
-     *
-     * @var string $fullname
-     */
+    /** @var string User's fullname. */
     public $fullname = '';
 
-    /**
-     * User's email address.
-     *
-     * @var string $email
-     */
+    /** @var string User's email address. */
     public $email = '';
 
-    /**
-     * User's image URI.
-     *
-     * @var string $image
-     */
+    /** @var string User's image URI. */
     public $image = '';
 
-    /**
-     * Roles for user.
-     *
-     * @var array $roles
-     */
+    /** @var array Roles for user. */
     public $roles = array();
 
-    /**
-     * Groups for user.
-     *
-     * @var array $groups
-     */
+    /** @var array Groups for user. */
     public $groups = array();
 
-    /**
-     * User's result sourcedid.
-     *
-     * @var string $ltiResultSourcedId
-     */
+    /** @var string User's result sourcedid. */
     public $ltiResultSourcedId = null;
 
-    /**
-     * Date/time the record was created.
-     *
-     * @var object $created
-     */
+    /** @var object Date/time the record was created. */
     public $created = null;
 
-    /**
-     * Date/time the record was last updated.
-     *
-     * @var object $updated
-     */
+    /** @var object Date/time the record was last updated. */
     public $updated = null;
 
-    /**
-     * Resource link object.
-     *
-     * @var ResourceLink $resourceLink
-     */
+    /** @var ResourceLink Resource link object. */
     private $resourceLink = null;
 
-    /**
-     * Resource link record ID.
-     *
-     * @var int $resourceLinkId
-     */
+    /** @var int Resource link record ID. */
     private $resourceLinkId = null;
 
-    /**
-     * User record ID value.
-     *
-     * @var string $id
-     */
+    /** @var string User record ID value. */
     private $id = null;
 
-    /**
-     * user ID as supplied in the last connection request.
-     *
-     * @var string $ltiUserId
-     */
+    /** @var string user ID as supplied in the last connection request. */
     public $ltiUserId = null;
 
-    /**
-     * Data connector object or string.
-     *
-     * @var mixed $dataConnector
-     */
+    /** @var mixed Data connector object or string. */
     private $dataConnector = null;
 
     /**
@@ -158,7 +97,7 @@ class User
     /**
      * Save the user to the database.
      *
-     * @return boolean True if the user object was successfully saved
+     * @return bool TRUE if the user object was successfully saved
      */
     public function save()
     {
@@ -174,7 +113,7 @@ class User
     /**
      * Delete the user from the database.
      *
-     * @return boolean True if the user object was successfully deleted
+     * @return bool TRUE if the user object was successfully deleted
      */
     public function delete()
     {
@@ -210,7 +149,7 @@ class User
     /**
      * Set record ID of user.
      *
-     * @param int $id  Record ID of user
+     * @param int $id Record ID of user.
      */
     public function setRecordId($id)
     {
@@ -220,7 +159,7 @@ class User
     /**
      * Set resource link ID of user.
      *
-     * @param int $resourceLinkId  Resource link ID of user
+     * @param int $resourceLinkId Resource link ID of user.
      */
     public function setResourceLinkId($resourceLinkId)
     {
@@ -240,7 +179,7 @@ class User
     /**
      * Get the user ID (which may be a compound of the tool consumer and resource link IDs).
      *
-     * @param int $idScope Scope to use for user ID (optional, default is null for consumer default setting)
+     * @param int $idScope Scope to use for user ID (optional, default is NULL for consumer default setting).
      *
      * @return string User ID value
      */
@@ -329,8 +268,8 @@ class User
     /**
      * Set the user's email address.
      *
-     * @param string $email        Email address value
-     * @param string $defaultEmail Value to use if no email is provided (optional, default is none)
+     * @param string $email Email address value.
+     * @param string $defaultEmail Value to use if no email is provided (optional, default is none).
      */
     public function setEmail($email, $defaultEmail = null)
     {
@@ -350,7 +289,7 @@ class User
     /**
      * Check if the user is an administrator (at any of the system, institution or context levels).
      *
-     * @return boolean True if the user has a role of administrator
+     * @return bool TRUE if the user has a role of administrator
      */
     public function isAdmin()
     {
@@ -362,7 +301,7 @@ class User
     /**
      * Check if the user is staff.
      *
-     * @return boolean True if the user has a role of instructor, contentdeveloper or teachingassistant
+     * @return bool TRUE if the user has a role of instructor, contentdeveloper or teachingassistant
      */
     public function isStaff()
     {
@@ -372,7 +311,7 @@ class User
     /**
      * Check if the user is a learner.
      *
-     * @return boolean True if the user has a role of learner
+     * @return bool TRUE if the user has a role of learner
      */
     public function isLearner()
     {
@@ -382,8 +321,8 @@ class User
     /**
      * Load the user from the database.
      *
-     * @param int $id     Record ID of user
-     * @param DataConnector   $dataConnector    Database connection object
+     * @param int $id Record ID of user.
+     * @param DataConnector $dataConnector Database connection object.
      *
      * @return User  User object
      */
@@ -399,8 +338,9 @@ class User
     /**
      * Class constructor from resource link.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
-     * @param string $ltiUserId User ID value
+     * @param ResourceLink $resourceLink Resource_Link object.
+     * @param string $ltiUserId User ID value.
+     *
      * @return User
      */
     public static function fromResourceLink($resourceLink, $ltiUserId)
@@ -430,9 +370,9 @@ class User
     /**
      * Check whether the user has a specified role name.
      *
-     * @param string $role Name of role
+     * @param string $role Name of role.
      *
-     * @return boolean True if the user has the specified role
+     * @return bool TRUE if the user has the specified role
      */
     private function hasRole($role)
     {
@@ -446,9 +386,9 @@ class User
     /**
      * Load the user from the database.
      *
-     * @param int $id     Record ID of user (optional, default is null)
+     * @param int $id Record ID of user (optional, default is NULL).
      *
-     * @return boolean True if the user object was successfully loaded
+     * @return bool TRUE if the user object was successfully loaded
      */
     private function load($id = null)
     {

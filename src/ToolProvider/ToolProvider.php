@@ -7,95 +7,63 @@ use IMSGlobal\LTI\ToolProvider\MediaType;
 use IMSGlobal\LTI\Profile;
 use IMSGlobal\LTI\HTTPMessage;
 use IMSGlobal\LTI\OAuth;
+use IMSGlobal\LTI\ToolProvider\Service\Service;
+use IMSGlobal\LTI\Profile\ResourceHandler;
 
 /**
- * Class to represent an LTI Tool Provider
+ * Class to represent an LTI Tool Provider.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.2
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.2
+ * @license Apache-2.0
  */
 class ToolProvider
 {
-    
-    /**
-     * Default connection error message.
-     */
+    /** @var string Default connection error message. */
     const CONNECTION_ERROR_MESSAGE = 'Sorry, there was an error connecting you to the application.';
-    /**
-     * LTI version 1 for messages.
-     */
+    /** @var string LTI version 1 for messages. */
     const LTI_VERSION1 = 'LTI-1p0';
-    /**
-     * LTI version 2 for messages.
-     */
+    /** @var string LTI version 2 for messages. */
     const LTI_VERSION2 = 'LTI-2p0';
-    /**
-     * Use ID value only.
-     */
+    /** @var int Use ID value only. */
     const ID_SCOPE_ID_ONLY = 0;
-    /**
-     * Prefix an ID with the consumer key.
-     */
+    /** @var int Prefix an ID with the consumer key. */
     const ID_SCOPE_GLOBAL = 1;
-    /**
-     * Prefix the ID with the consumer key and context ID.
-     */
+    /** @var int Prefix the ID with the consumer key and context ID. */
     const ID_SCOPE_CONTEXT = 2;
-    /**
-     * Prefix the ID with the consumer key and resource ID.
-     */
+    /** @var int Prefix the ID with the consumer key and resource ID. */
     const ID_SCOPE_RESOURCE = 3;
-    /**
-     * Character used to separate each element of an ID.
-     */
+    /** @var string Character used to separate each element of an ID. */
     const ID_SCOPE_SEPARATOR = ':';
 
-    /**
-     * Permitted LTI versions for messages.
-     */
+    /** @var string[] Permitted LTI versions for messages. */
     private static $LTI_VERSIONS = array(
         self::LTI_VERSION1,
         self::LTI_VERSION2
     );
 
-    /**
-     * List of supported message types and associated class methods.
-     */
+    /** @var string[] List of supported message types and associated class methods. */
     private static $MESSAGE_TYPES = array(
         'basic-lti-launch-request' => 'onLaunch',
         'ContentItemSelectionRequest' => 'onContentItem',
         'ToolProxyRegistrationRequest' => 'register'
     );
 
-    /**
-     * List of supported message types and associated class methods
-     *
-     * @var array $METHOD_NAMES
-     */
+    /** @var string[] List of supported message types and associated class methods. */
     private static $METHOD_NAMES = array(
         'basic-lti-launch-request' => 'onLaunch',
         'ContentItemSelectionRequest' => 'onContentItem',
         'ToolProxyRegistrationRequest' => 'onRegister'
     );
 
-    /**
-     * Names of LTI parameters to be retained in the consumer settings property.
-     *
-     * @var array $LTI_CONSUMER_SETTING_NAMES
-     */
+    /** @var string[] Names of LTI parameters to be retained in the consumer settings property. */
     private static $LTI_CONSUMER_SETTING_NAMES = array(
         'custom_tc_profile_url',
         'custom_system_setting_url'
     );
 
-    /**
-     * Names of LTI parameters to be retained in the context settings property.
-     *
-     * @var array $LTI_CONTEXT_SETTING_NAMES
-     */
+    /** @var string[] Names of LTI parameters to be retained in the context settings property. */
     private static $LTI_CONTEXT_SETTING_NAMES = array(
         'custom_context_setting_url',
         'custom_lineitems_url',
@@ -103,11 +71,7 @@ class ToolProvider
         'custom_context_memberships_url'
     );
 
-    /**
-     * Names of LTI parameters to be retained in the resource link settings property.
-     *
-     * @var array $LTI_RESOURCE_LINK_SETTING_NAMES
-     */
+    /** @var string[] Names of LTI parameters to be retained in the resource link settings property. */
     private static $LTI_RESOURCE_LINK_SETTING_NAMES = array(
         'lis_result_sourcedid',
         'lis_outcome_service_url',
@@ -123,11 +87,7 @@ class ToolProvider
         'custom_result_url'
     );
 
-    /**
-     * Names of LTI custom parameter substitution variables (or capabilities) and their associated default message parameter names.
-     *
-     * @var array $CUSTOM_SUBSTITUTION_VARIABLES
-     */
+    /** @var string[] Names of LTI custom parameter substitution variables (or capabilities) and their associated default message parameter names. */
     private static $CUSTOM_SUBSTITUTION_VARIABLES = array(
         'User.id' => 'user_id',
         'User.image' => 'user_image',
@@ -164,199 +124,91 @@ class ToolProvider
         'ToolProxyBinding.memberships.url' => 'custom_context_memberships_url'
     );
 
-    /**
-     * True if the last request was successful.
-     *
-     * @var boolean $ok
-     */
+    /** @var bool True if the last request was successful. */
     public $ok = true;
 
-    /**
-     * Tool Consumer object.
-     *
-     * @var ToolConsumer $consumer
-     */
+    /** @var ToolConsumer Tool Consumer object. */
     public $consumer = null;
 
-    /**
-     * Return URL provided by tool consumer.
-     *
-     * @var string $returnUrl
-     */
+    /** @var string Return URL provided by tool consumer. */
     public $returnUrl = null;
 
-    /**
-     * User object.
-     *
-     * @var User $user
-     */
+    /** @var User User object. */
     public $user = null;
 
-    /**
-     * Resource link object.
-     *
-     * @var ResourceLink $resourceLink
-     */
+    /** @var ResourceLink Resource link object. */
     public $resourceLink = null;
 
-    /**
-     * Context object.
-     *
-     * @var Context $context
-     */
+    /** @var Context Context object. */
     public $context = null;
 
-    /**
-     * Data connector object.
-     *
-     * @var DataConnector $dataConnector
-     */
+    /** @var DataConnector Data connector object. */
     public $dataConnector = null;
 
-    /**
-     * Default email domain.
-     *
-     * @var string $defaultEmail
-     */
+    /** @var string Default email domain. */
     public $defaultEmail = '';
 
-    /**
-     * Scope to use for user IDs.
-     *
-     * @var int $idScope
-     */
+    /** @var int Scope to use for user IDs. */
     public $idScope = self::ID_SCOPE_ID_ONLY;
 
-    /**
-     * Whether shared resource link arrangements are permitted.
-     *
-     * @var boolean $allowSharing
-     */
+    /** @var bool Whether shared resource link arrangements are permitted. */
     public $allowSharing = false;
 
-    /**
-     * Message for last request processed
-     *
-     * @var string $message
-     */
+    /** @var string Message for last request processed. */
     public $message = self::CONNECTION_ERROR_MESSAGE;
 
-    /**
-     * Error message for last request processed.
-     *
-     * @var string $reason
-     */
+    /** @var string Error message for last request processed. */
     public $reason = null;
 
-    /**
-     * Details for error message relating to last request processed.
-     *
-     * @var array $details
-     */
+    /** @var array Details for error message relating to last request processed. */
     public $details = array();
 
-    /**
-     * Base URL for tool provider service
-     *
-     * @var string $baseUrl
-     */
+    /** @var string Base URL for tool provider service. */
     public $baseUrl = null;
 
-    /**
-     * Vendor details
-     *
-     * @var Item $vendor
-     */
+    /** @var Item Vendor details. */
     public $vendor = null;
 
-    /**
-     * Product details
-     *
-     * @var Item $product
-     */
+    /** @var Item Product details. */
     public $product = null;
 
-    /**
-     * Services required by Tool Provider
-     *
-     * @var array $requiredServices
-     */
-    public $requiredServices = null;
+    /** @var Service[] Services required by Tool Provider. */
+    public $requiredServices = [];
 
-    /**
-     * Optional services used by Tool Provider
-     *
-     * @var array $optionalServices
-     */
-    public $optionalServices = null;
+    /** @var Service[] Optional services used by Tool Provider. */
+    public $optionalServices = [];
 
-    /**
-     * Resource handlers for Tool Provider
-     *
-     * @var array $resourceHandlers
-     */
-    public $resourceHandlers = null;
+    /** @var ResourceHandler[] Resource handlers for Tool Provider. */
+    public $resourceHandlers = [];
 
-    /**
-     * URL to redirect user to on successful completion of the request.
-     *
-     * @var string $redirectUrl
-     */
+    /** @var string URL to redirect user to on successful completion of the request. */
     protected $redirectUrl = null;
 
-    /**
-     * URL to redirect user to on successful completion of the request.
-     *
-     * @var string $mediaTypes
-     */
+    /** @var string URL to redirect user to on successful completion of the request. */
     protected $mediaTypes = null;
 
-    /**
-     * URL to redirect user to on successful completion of the request.
-     *
-     * @var string $documentTargets
-     */
+    /** @var string URL to redirect user to on successful completion of the request. */
     protected $documentTargets = null;
 
-    /**
-     * HTML to be displayed on a successful completion of the request.
-     *
-     * @var string $output
-     */
+    /** @var string HTML to be displayed on a successful completion of the request. */
     protected $output = null;
 
-    /**
-     * HTML to be displayed on an unsuccessful completion of the request and no return URL is available.
-     *
-     * @var string $errorOutput
-     */
+    /** @var string HTML to be displayed on an unsuccessful completion of the request and no return URL is available. */
     protected $errorOutput = null;
 
-    /**
-     * Whether debug messages explaining the cause of errors are to be returned to the tool consumer.
-     *
-     * @var boolean $debugMode
-     */
+    /** @var bool Whether debug messages explaining the cause of errors are to be returned to the tool consumer. */
     protected $debugMode = false;
 
-    /**
-     * Callback functions for handling requests.
-     *
-     * @var array $callbackHandler
-     */
+    /** @var array Callback functions for handling requests. */
     private $callbackHandler = null;
 
-    /**
-     * LTI parameter constraints for auto validation checks.
-     *
-     * @var array $constraints
-     */
+    /** @var array LTI parameter constraints for auto validation checks. */
     private $constraints = null;
 
     /**
-     * Class constructor
+     * Class constructor.
      *
-     * @param DataConnector     $dataConnector    Object containing a database connection object
+     * @param DataConnector $dataConnector Object containing a database connection object.
      */
     public function __construct($dataConnector)
     {
@@ -396,12 +248,12 @@ class ToolProvider
     }
 
     /**
-     * Add a parameter constraint to be checked on launch
+     * Add a parameter constraint to be checked on launch.
      *
-     * @param string $name           Name of parameter to be checked
-     * @param boolean $required      True if parameter is required (optional, default is true)
-     * @param int $maxLength         Maximum permitted length of parameter value (optional, default is null)
-     * @param array $messageTypes    Array of message types to which the constraint applies (optional, default is all)
+     * @param string $name Name of parameter to be checked.
+     * @param bool $required TRUE if parameter is required (optional, default is TRUE).
+     * @param int $maxLength Maximum permitted length of parameter value (optional, default is NULL).
+     * @param array $messageTypes Array of message types to which the constraint applies (optional, default is all).
      */
     public function setParameterConstraint($name, $required = true, $maxLength = null, $messageTypes = null)
     {
@@ -417,7 +269,7 @@ class ToolProvider
     }
 
     /**
-     * Get an array of defined tool consumers
+     * Get an array of defined tool consumers.
      *
      * @return array Array of ToolConsumer objects
      */
@@ -429,8 +281,8 @@ class ToolProvider
     /**
      * Find an offered service based on a media type and HTTP action(s)
      *
-     * @param string $format  Media type required
-     * @param array  $methods Array of HTTP actions required
+     * @param string $format Media type required.
+     * @param array $methods Array of HTTP actions required.
      *
      * @return object The service object
      */
@@ -470,9 +322,9 @@ class ToolProvider
     }
 
     /**
-     * Send the tool proxy to the Tool Consumer
+     * Send the tool proxy to the Tool Consumer.
      *
-     * @return boolean True if the tool proxy was accepted
+     * @return bool TRUE if the tool proxy was accepted
      */
     public function doToolProxyService()
     {
@@ -497,9 +349,9 @@ class ToolProvider
     }
 
     /**
-     * Get an array of fully qualified user roles
+     * Get an array of fully qualified user roles.
      *
-     * @param mixed $roles  Comma-separated list of roles or array of roles
+     * @param mixed $roles Comma-separated list of roles or array of roles.
      *
      * @return array Array of roles
      */
@@ -529,9 +381,10 @@ class ToolProvider
     /**
      * Generate a web page containing an auto-submitted form of parameters.
      *
-     * @param string $url URL to which the form should be submitted
-     * @param array $params Array of form parameters
-     * @param string $target Name of target (optional)
+     * @param string $url URL to which the form should be submitted.
+     * @param array $params Array of form parameters.
+     * @param string $target Name of target (optional).
+     *
      * @return string
      */
     public static function sendForm($url, $params, $target = '')
@@ -572,16 +425,11 @@ EOD;
         
         return $page;
     }
-    
-    ###
-    ###    PROTECTED METHODS
-    ###
-    
 
     /**
-     * Process a valid launch request
+     * Process a valid launch request.
      *
-     * @return boolean True if no error
+     * @return bool TRUE if no error
      */
     protected function onLaunch()
     {
@@ -589,9 +437,9 @@ EOD;
     }
 
     /**
-     * Process a valid content-item request
+     * Process a valid content-item request.
      *
-     * @return boolean True if no error
+     * @return bool TRUE if no error
      */
     protected function onContentItem()
     {
@@ -599,9 +447,9 @@ EOD;
     }
 
     /**
-     * Process a valid tool proxy registration request
+     * Process a valid tool proxy registration request.
      *
-     * @return boolean True if no error
+     * @return bool TRUE if no error
      */
     protected function onRegister()
     {
@@ -609,26 +457,21 @@ EOD;
     }
 
     /**
-     * Process a response to an invalid request
+     * Process a response to an invalid request.
      *
-     * @return boolean True if no further error processing required
+     * @return bool TRUE if no further error processing required
      */
     protected function onError()
     {
         $this->doCallback('onError');
     }
-    
-    ###
-    ###    PRIVATE METHODS
-    ###
-    
 
     /**
      * Call any callback function for the requested action.
      *
      * This function may set the redirect_url and output properties.
      *
-     * @return boolean True if no error reported
+     * @return bool TRUE if no error reported
      */
     private function doCallback($method = null)
     {
@@ -727,7 +570,7 @@ EOD;
      *
      * The consumer, resource link and user objects will be initialised if the request is valid.
      *
-     * @return boolean True if the request has been successfully validated.
+     * @return bool TRUE if the request has been successfully validated.
      */
     private function authenticate()
     {
@@ -1344,7 +1187,7 @@ EOD;
     /**
      * Check if a share arrangement is in place.
      *
-     * @return boolean True if no error is reported
+     * @return bool TRUE if no error is reported
      */
     private function checkForShare()
     {
@@ -1443,7 +1286,7 @@ EOD;
     /**
      * Validate a parameter value from an array of permitted values.
      *
-     * @return boolean True if value is valid
+     * @return bool TRUE if value is valid
      */
     private function checkValue($value, $values, $reason)
     {

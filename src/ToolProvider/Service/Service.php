@@ -5,51 +5,34 @@ use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\HTTPMessage;
 
 /**
- * Class to implement a service
+ * Class to implement a service.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class Service
 {
 
-    /**
-     * Whether service request should be sent unsigned.
-     *
-     * @var boolean $unsigned
-     */
+    /** @var bool Whether service request should be sent unsigned. */
     public $unsigned = false;
 
-    /**
-     * Service endpoint.
-     *
-     * @var string $endpoint
-     */
+    /** @var string Service endpoint. */
     protected $endpoint;
 
-    /**
-     * Tool Consumer for this service request.
-     *
-     * @var ToolConsumer $consumer
-     */
+    /** @var ToolConsumer Tool Consumer for this service request. */
     private $consumer;
 
-    /**
-     * Media type of message body.
-     *
-     * @var string $mediaType
-     */
+    /** @var string Media type of message body. */
     private $mediaType;
 
     /**
      * Class constructor.
      *
-     * @param ToolConsumer $consumer   Tool consumer object for this service request
-     * @param string       $endpoint   Service endpoint
-     * @param string       $mediaType  Media type of message body
+     * @param ToolConsumer $consumer Tool consumer object for this service request.
+     * @param string $endpoint Service endpoint.
+     * @param string $mediaType Media type of message body.
      */
     public function __construct($consumer, $endpoint, $mediaType)
     {
@@ -61,9 +44,9 @@ class Service
     /**
      * Send a service request.
      *
-     * @param string  $method      The action type constant (optional, default is GET)
-     * @param array   $parameters  Query parameters to add to endpoint (optional, default is none)
-     * @param string  $body        Body of request (optional, default is null)
+     * @param string $method The action type constant (optional, default is GET).
+     * @param array $parameters Query parameters to add to endpoint (optional, default is none).
+     * @param string $body Body of request (optional, default is NULL).
      *
      * @return HTTPMessage HTTP object containing request and response details
      */

@@ -11,15 +11,14 @@ use IMSGlobal\LTI\ToolProvider\User;
 use PDO;
 
 /**
- * Class to provide a connection to a persistent store for LTI objects
+ * Class to provide a connection to a persistent store for LTI objects.
  *
  * This class assumes no data persistence - it should be extended for specific database connections.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class DataConnector
 {
@@ -53,39 +52,23 @@ class DataConnector
      */
     const NONCE_TABLE_NAME = 'lti2_nonce';
 
-    /**
-     * Database object.
-     *
-     * @var object $db
-     */
+    /** @var object Database object. */
     protected $db = null;
 
-    /**
-     * Prefix for database table names.
-     *
-     * @var string $dbTableNamePrefix
-     */
+    /** @var string Prefix for database table names. */
     protected $dbTableNamePrefix = '';
 
-    /**
-     * SQL date format (default = 'Y-m-d')
-     *
-     * @var string $dateFormat
-     */
+    /** @var string SQL date format (default = 'Y-m-d'). */
     protected $dateFormat = 'Y-m-d';
 
-    /**
-     * SQL time format (default = 'H:i:s')
-     *
-     * @var string $timeFormat
-     */
+    /** @var string SQL time format (default = 'H:i:s'). */
     protected $timeFormat = 'H:i:s';
 
     /**
-     * Class constructor
+     * Class constructor.
      *
-     * @param object $db                 Database connection object
-     * @param string $dbTableNamePrefix  Prefix for database table names (optional, default is none)
+     * @param object $db Database connection object.
+     * @param string $dbTableNamePrefix Prefix for database table names (optional, default is none).
      */
     public function __construct($db, $dbTableNamePrefix = '')
     {
@@ -101,9 +84,9 @@ class DataConnector
     /**
      * Load tool consumer object.
      *
-     * @param ToolConsumer $consumer ToolConsumer object
+     * @param ToolConsumer $consumer ToolConsumer object.
      *
-     * @return boolean True if the tool consumer object was successfully loaded
+     * @return bool TRUE if the tool consumer object was successfully loaded
      */
     public function loadToolConsumer($consumer)
     {
@@ -119,9 +102,9 @@ class DataConnector
     /**
      * Save tool consumer object.
      *
-     * @param ToolConsumer $consumer Consumer object
+     * @param ToolConsumer $consumer Consumer object.
      *
-     * @return boolean True if the tool consumer object was successfully saved
+     * @return bool TRUE if the tool consumer object was successfully saved
      */
     public function saveToolConsumer($consumer)
     {
@@ -133,9 +116,9 @@ class DataConnector
     /**
      * Delete tool consumer object.
      *
-     * @param ToolConsumer $consumer Consumer object
+     * @param ToolConsumer $consumer Consumer object.
      *
-     * @return boolean True if the tool consumer object was successfully deleted
+     * @return bool TRUE if the tool consumer object was successfully deleted
      */
     public function deleteToolConsumer($consumer)
     {
@@ -162,9 +145,9 @@ class DataConnector
     /**
      * Load tool proxy object.
      *
-     * @param ToolProxy $toolProxy ToolProxy object
+     * @param ToolProxy $toolProxy ToolProxy object.
      *
-     * @return boolean True if the tool proxy object was successfully loaded
+     * @return bool TRUE if the tool proxy object was successfully loaded
      */
     public function loadToolProxy($toolProxy)
     {
@@ -178,9 +161,9 @@ class DataConnector
     /**
      * Save tool proxy object.
      *
-     * @param ToolProxy $toolProxy ToolProxy object
+     * @param ToolProxy $toolProxy ToolProxy object.
      *
-     * @return boolean True if the tool proxy object was successfully saved
+     * @return bool TRUE if the tool proxy object was successfully saved
      */
     public function saveToolProxy($toolProxy)
     {
@@ -192,9 +175,9 @@ class DataConnector
     /**
      * Delete tool proxy object.
      *
-     * @param ToolProxy $toolProxy ToolProxy object
+     * @param ToolProxy $toolProxy ToolProxy object.
      *
-     * @return boolean True if the tool proxy object was successfully deleted
+     * @return bool TRUE if the tool proxy object was successfully deleted
      */
     public function deleteToolProxy($toolProxy)
     {
@@ -211,9 +194,9 @@ class DataConnector
     /**
      * Load context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the context object was successfully loaded
+     * @return bool TRUE if the context object was successfully loaded
      */
     public function loadContext($context)
     {
@@ -227,9 +210,9 @@ class DataConnector
     /**
      * Save context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the context object was successfully saved
+     * @return bool TRUE if the context object was successfully saved
      */
     public function saveContext($context)
     {
@@ -241,9 +224,9 @@ class DataConnector
     /**
      * Delete context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the Context object was successfully deleted
+     * @return bool TRUE if the Context object was successfully deleted
      */
     public function deleteContext($context)
     {
@@ -260,9 +243,9 @@ class DataConnector
     /**
      * Load resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully loaded
+     * @return bool TRUE if the resource link object was successfully loaded
      */
     public function loadResourceLink($resourceLink)
     {
@@ -276,9 +259,9 @@ class DataConnector
     /**
      * Save resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully saved
+     * @return bool TRUE if the resource link object was successfully saved
      */
     public function saveResourceLink($resourceLink)
     {
@@ -290,9 +273,9 @@ class DataConnector
     /**
      * Delete resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully deleted
+     * @return bool TRUE if the resource link object was successfully deleted
      */
     public function deleteResourceLink($resourceLink)
     {
@@ -307,9 +290,9 @@ class DataConnector
      * Obtain an array of User objects for users with a result sourcedId.  The array may include users from other
      * resource links which are sharing this resource link.  It may also be optionally indexed by the user ID of a specified scope.
      *
-     * @param ResourceLink $resourceLink      Resource link object
-     * @param boolean     $localOnly True if only users within the resource link are to be returned (excluding users sharing this resource link)
-     * @param int         $idScope     Scope value to use for user IDs
+     * @param ResourceLink $resourceLink Resource link object.
+     * @param bool $localOnly TRUE if only users within the resource link are to be returned (excluding users sharing this resource link).
+     * @param int $idScope Scope value to use for user IDs.
      *
      * @return array Array of User objects
      */
@@ -321,7 +304,7 @@ class DataConnector
     /**
      * Get array of shares defined for this resource link.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
      * @return array Array of ResourceLinkShare objects
      */
@@ -338,9 +321,9 @@ class DataConnector
     /**
      * Load nonce object.
      *
-     * @param ConsumerNonce $nonce Nonce object
+     * @param ConsumerNonce $nonce Nonce object.
      *
-     * @return boolean True if the nonce object was successfully loaded
+     * @return bool TRUE if the nonce object was successfully loaded
      */
     public function loadConsumerNonce($nonce)
     {
@@ -350,9 +333,9 @@ class DataConnector
     /**
      * Save nonce object.
      *
-     * @param ConsumerNonce $nonce Nonce object
+     * @param ConsumerNonce $nonce Nonce object.
      *
-     * @return boolean True if the nonce object was successfully saved
+     * @return bool TRUE if the nonce object was successfully saved
      */
     public function saveConsumerNonce($nonce)
     {
@@ -367,9 +350,9 @@ class DataConnector
     /**
      * Load resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource_Link share key object
+     * @param ResourceLinkShareKey $shareKey Resource_Link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully loaded
+     * @return bool TRUE if the resource link share key object was successfully loaded
      */
     public function loadResourceLinkShareKey($shareKey)
     {
@@ -379,9 +362,9 @@ class DataConnector
     /**
      * Save resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource link share key object
+     * @param ResourceLinkShareKey $shareKey Resource link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully saved
+     * @return bool TRUE if the resource link share key object was successfully saved
      */
     public function saveResourceLinkShareKey($shareKey)
     {
@@ -391,9 +374,9 @@ class DataConnector
     /**
      * Delete resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource link share key object
+     * @param ResourceLinkShareKey $shareKey Resource link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully deleted
+     * @return bool TRUE if the resource link share key object was successfully deleted
      */
     public function deleteResourceLinkShareKey($shareKey)
     {
@@ -408,9 +391,9 @@ class DataConnector
     /**
      * Load user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully loaded
+     * @return bool TRUE if the user object was successfully loaded
      */
     public function loadUser($user)
     {
@@ -424,9 +407,9 @@ class DataConnector
     /**
      * Save user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully saved
+     * @return bool TRUE if the user object was successfully saved
      */
     public function saveUser($user)
     {
@@ -438,9 +421,9 @@ class DataConnector
     /**
      * Delete user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully deleted
+     * @return bool TRUE if the user object was successfully deleted
      */
     public function deleteUser($user)
     {
@@ -457,7 +440,8 @@ class DataConnector
     /**
      * Return a hash of a consumer key for values longer than 255 characters.
      *
-     * @param string $key
+     * @param string $key.
+     *
      * @return string
      */
     protected static function getConsumerKey($key)
@@ -481,9 +465,9 @@ class DataConnector
      * (for example, to use a bespoke connector) by specifying a type.  If no database is passed then this class is used which acts as a dummy
      * connector with no persistence.
      *
-     * @param string  $dbTableNamePrefix  Prefix for database table names (optional, default is none)
-     * @param object  $db                 A database connection object or string (optional, default is no persistence)
-     * @param string  $type               The type of data connector (optional, default is based on $db parameter)
+     * @param string $dbTableNamePrefix Prefix for database table names (optional, default is none).
+     * @param object $db A database connection object or string (optional, default is no persistence).
+     * @param string $type The type of data connector (optional, default is based on $db parameter).
      *
      * @return DataConnector Data connector object
      */
@@ -522,7 +506,7 @@ class DataConnector
      *
      * The generated string will only comprise letters (upper- and lower-case) and digits.
      *
-     * @param int $length Length of string to be generated (optional, default is 8 characters)
+     * @param int $length Length of string to be generated (optional, default is 8 characters).
      *
      * @return string Random string
      */
@@ -546,8 +530,9 @@ class DataConnector
      * Any single quotes in the value passed will be replaced with two single quotes.  If a null value is passed, a string
      * of 'null' is returned (which will never be enclosed in quotes irrespective of the value of the $addQuotes parameter.
      *
-     * @param string $value Value to be quoted
-     * @param bool $addQuotes If true the returned string will be enclosed in single quotes (optional, default is true)
+     * @param string $value Value to be quoted.
+     * @param bool $addQuotes If TRUE the returned string will be enclosed in single quotes (optional, default is TRUE).
+     *
      * @return string The quoted string.
      */
     public static function quoted($value, $addQuotes = true)

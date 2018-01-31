@@ -2,48 +2,33 @@
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
- * Class to represent a tool consumer nonce
+ * Class to represent a tool consumer nonce.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class ConsumerNonce
 {
     
-    /**
-     * Maximum age nonce values will be retained for (in minutes).
-     */
-    const MAX_NONCE_AGE = 30; // in minutes
+    /** @var int Maximum age nonce values will be retained for (in minutes). */
+    const MAX_NONCE_AGE = 30;
 
-    /**
-     * Date/time when the nonce value expires.
-     *
-     * @var int $expires
-     */
+    /** @var int Date/time when the nonce value expires. */
     public $expires = null;
 
-    /**
-     * Tool Consumer to which this nonce applies.
-     *
-     * @var ToolConsumer $consumer
-     */
+    /** @var ToolConsumer Tool Consumer to which this nonce applies. */
     private $consumer = null;
 
-    /**
-     * Nonce value.
-     *
-     * @var string $value
-     */
+    /** @var string Nonce value. */
     private $value = null;
 
     /**
      * Class constructor.
      *
-     * @param ToolConsumer      $consumer Consumer object
-     * @param string            $value    Nonce value (optional, default is null)
+     * @param ToolConsumer $consumer Consumer object.
+     * @param string|null $value Nonce value (optional, default is NULL).
      */
     public function __construct($consumer, $value = null)
     {
@@ -55,7 +40,7 @@ class ConsumerNonce
     /**
      * Load a nonce value from the database.
      *
-     * @return boolean True if the nonce value was successfully loaded
+     * @return bool TRUE if the nonce value was successfully loaded
      */
     public function load()
     {
@@ -65,7 +50,7 @@ class ConsumerNonce
     /**
      * Save a nonce value in the database.
      *
-     * @return boolean True if the nonce value was successfully saved
+     * @return bool TRUE if the nonce value was successfully saved
      */
     public function save()
     {

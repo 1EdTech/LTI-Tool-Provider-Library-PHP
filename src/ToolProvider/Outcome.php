@@ -2,63 +2,38 @@
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
- * Class to represent an outcome
+ * Class to represent an outcome.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class Outcome
 {
 
-    /**
-     * Language value.
-     *
-     * @var string $language
-     */
+    /** @var string Language value. */
     public $language = null;
 
-    /**
-     * Outcome status value.
-     *
-     * @var string $status
-     */
+    /** @var string Outcome status value. */
     public $status = null;
 
-    /**
-     * Outcome date value.
-     *
-     * @var string $date
-     */
+    /** @var string Outcome date value. */
     public $date = null;
 
-    /**
-     * Outcome type value.
-     *
-     * @var string $type
-     */
+    /** @var string Outcome type value. */
     public $type = null;
 
-    /**
-     * Outcome data source value.
-     *
-     * @var string $dataSource
-     */
+    /** @var string Outcome data source value. */
     public $dataSource = null;
 
-    /**
-     * Outcome value.
-     *
-     * @var string $value
-     */
+    /** @var string Outcome value. */
     private $value = null;
 
     /**
      * Class constructor.
      *
-     * @param string $value     Outcome value (optional, default is none)
+     * @param string $value Outcome value (optional, default is none).
      */
     public function __construct($value = null)
     {
@@ -81,7 +56,7 @@ class Outcome
     /**
      * Set the outcome value.
      *
-     * @param string $value  Outcome value
+     * @param string $value Outcome value.
      */
     public function setValue($value)
     {

@@ -5,85 +5,44 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider\Service;
 
 /**
- * Class to represent a tool consumer context
+ * Class to represent a tool consumer context.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class Context
 {
 
-    /**
-     * Context ID as supplied in the last connection request.
-     *
-     * @var string $ltiContextId
-     */
+    /** @var string Context ID as supplied in the last connection request. */
     public $ltiContextId = null;
 
-    /**
-     * Context title.
-     *
-     * @var string $title
-     */
+    /** @var string Context title. */
     public $title = null;
 
-    /**
-     * Setting values (LTI parameters, custom parameters and local parameters).
-     *
-     * @var array $settings
-     */
+    /** @var array Setting values (LTI parameters, custom parameters and local parameters). */
     public $settings = null;
 
-    /**
-     * Date/time when the object was created.
-     *
-     * @var int $created
-     */
+    /** @var int Date/time when the object was created. */
     public $created = null;
 
-    /**
-     * Date/time when the object was last updated.
-     *
-     * @var int $updated
-     */
+    /** @var int Date/time when the object was last updated. */
     public $updated = null;
 
-    /**
-     * Tool Consumer for this context.
-     *
-     * @var ToolConsumer $consumer
-     */
+    /** @var ToolConsumer Tool Consumer for this context. */
     private $consumer = null;
 
-    /**
-     * Tool Consumer ID for this context.
-     *
-     * @var int $consumerId
-     */
+    /** @var int Tool Consumer ID for this context. */
     private $consumerId = null;
 
-    /**
-     * ID for this context.
-     *
-     * @var int $id
-     */
+    /** @var int ID for this context. */
     private $id = null;
 
-    /**
-     * Whether the settings value have changed since last saved.
-     *
-     * @var boolean $settingsChanged
-     */
+    /** @var bool Whether the settings value have changed since last saved. */
     private $settingsChanged = false;
 
-    /**
-     * Data connector object or string.
-     *
-     * @var mixed $dataConnector
-     */
+    /** @var mixed Data connector object or string. */
     private $dataConnector = null;
 
     /**
@@ -158,7 +117,7 @@ class Context
     /**
      * Set tool consumer ID.
      *
-     * @param int $consumerId  Tool Consumer ID for this resource link.
+     * @param int $consumerId Tool Consumer ID for this resource link.
      */
     public function setConsumerId($consumerId)
     {
@@ -219,8 +178,8 @@ class Context
     /**
      * Get a setting value.
      *
-     * @param string $name    Name of setting
-     * @param string $default Value to return if the setting does not exist (optional, default is an empty string)
+     * @param string $name Name of setting.
+     * @param string $default Value to return if the setting does not exist (optional, default is an empty string).
      *
      * @return string Setting value
      */
@@ -238,8 +197,8 @@ class Context
     /**
      * Set a setting value.
      *
-     * @param string $name  Name of setting
-     * @param string $value Value to set, use an empty value to delete a setting (optional, default is null)
+     * @param string $name Name of setting.
+     * @param string $value Value to set, use an empty value to delete a setting (optional, default is null).
      */
     public function setSetting($name, $value = null)
     {
@@ -269,7 +228,7 @@ class Context
     /**
      * Set an array of all setting values.
      *
-     * @param array $settings Associative array of setting values
+     * @param array $settings Associative array of setting values.
      */
     public function setSettings($settings)
     {
@@ -307,8 +266,8 @@ class Context
     /**
      * Get Tool Settings.
      *
-     * @param int      $mode       Mode for request (optional, default is current level only)
-     * @param boolean  $simple     True if all the simple media type is to be used (optional, default is true)
+     * @param int $mode Mode for request (optional, default is current level only).
+     * @param bool $simple True if all the simple media type is to be used (optional, default is true).
      *
      * @return mixed The array of settings if successful, otherwise false
      */
@@ -324,7 +283,7 @@ class Context
     /**
      * Perform a Tool Settings service request.
      *
-     * @param array    $settings   An associative array of settings (optional, default is none)
+     * @param array $settings An associative array of settings (optional, default is none).
      *
      * @return boolean True if action was successful, otherwise false
      */
@@ -366,8 +325,8 @@ class Context
     /**
      * Load the context from the database.
      *
-     * @param int             $id               Record ID of context
-     * @param DataConnector   $dataConnector    Database connection object
+     * @param int $id Record ID of context.
+     * @param DataConnector $dataConnector Database connection object.
      *
      * @return Context    Context object
      */
@@ -383,8 +342,9 @@ class Context
     /**
      * Class constructor from consumer.
      *
-     * @param ToolConsumer $consumer Consumer instance
-     * @param string $ltiContextId LTI Context ID value
+     * @param ToolConsumer $consumer Consumer instance.
+     * @param string $ltiContextId LTI Context ID value.
+     *
      * @return Context
      */
     public static function fromConsumer($consumer, $ltiContextId)
@@ -409,7 +369,7 @@ class Context
     /**
      * Load the context from the database.
      *
-     * @param int $id     Record ID of context (optional, default is null)
+     * @param int $id Record ID of context (optional, default is null).
      *
      * @return boolean True if context was successfully loaded
      */

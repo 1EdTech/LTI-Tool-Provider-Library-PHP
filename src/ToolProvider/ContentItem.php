@@ -2,28 +2,25 @@
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
- * Class to represent a content-item object
+ * Class to represent a content-item object.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class ContentItem
 {
     
-    /**
-     * Media type for LTI launch links.
-     */
+    /** @var string Media type for LTI launch links. */
     const LTI_LINK_MEDIA_TYPE = 'application/vnd.ims.lti.v1.ltilink';
 
     /**
      * Class constructor.
      *
-     * @param string $type Class type of content-item
-     * @param ContentItemPlacement $placementAdvice  Placement object for item (optional)
-     * @param string $id   URL of content-item (optional)
+     * @param string $type Class type of content-item.
+     * @param ContentItemPlacement $placementAdvice Placement object for item (optional).
+     * @param string $id URL of content-item (optional).
      */
     public function __construct($type, $placementAdvice = null, $id = null)
     {
@@ -41,7 +38,7 @@ class ContentItem
     /**
      * Set a URL value for the content-item.
      *
-     * @param string $url  URL value
+     * @param string $url URL value.
      */
     public function setUrl($url)
     {
@@ -55,7 +52,7 @@ class ContentItem
     /**
      * Set a media type value for the content-item.
      *
-     * @param string $mediaType  Media type value
+     * @param string $mediaType Media type value.
      */
     public function setMediaType($mediaType)
     {
@@ -69,7 +66,7 @@ class ContentItem
     /**
      * Set a title value for the content-item.
      *
-     * @param string $title  Title value
+     * @param string $title Title value.
      */
     public function setTitle($title)
     {
@@ -83,7 +80,7 @@ class ContentItem
     /**
      * Set a link text value for the content-item.
      *
-     * @param string $text  Link text value
+     * @param string $text Link text value.
      */
     public function setText($text)
     {
@@ -97,7 +94,8 @@ class ContentItem
     /**
      * Wrap the content items to form a complete application/vnd.ims.lti.v1.contentitems+json media type instance.
      *
-     * @param mixed $items An array of content items or a single item
+     * @param mixed $items An array of content items or a single item.
+     *
      * @return string
      */
     public static function toJson($items)

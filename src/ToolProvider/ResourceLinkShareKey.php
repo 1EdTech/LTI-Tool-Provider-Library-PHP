@@ -4,13 +4,12 @@ namespace IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 /**
- * Class to represent a tool consumer resource link share key
+ * Class to represent a tool consumer resource link share key.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.2
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class ResourceLinkShareKey
 {
@@ -32,62 +31,34 @@ class ResourceLinkShareKey
      */
     const MAX_SHARE_KEY_LENGTH = 32;
 
-    /**
-     * ID for resource link being shared.
-     *
-     * @var string $resourceLinkId
-     */
+    /** @var string ID for resource link being shared. */
     public $resourceLinkId = null;
 
-    /**
-     * Length of share key.
-     *
-     * @var int $length
-     */
+    /** @var int Length of share key. */
     public $length = null;
 
-    /**
-     * Life of share key.
-     *
-     * @var int $life
-     */
+    /** @var int Life of share key. */
     public $life = null;
     // in hours
     
 
-    /**
-     * Whether the sharing arrangement should be automatically approved when first used.
-     *
-     * @var boolean $autoApprove
-     */
+    /** @var bool Whether the sharing arrangement should be automatically approved when first used. */
     public $autoApprove = false;
 
-    /**
-     * Date/time when the share key expires.
-     *
-     * @var int $expires
-     */
+    /** @var int Date/time when the share key expires. */
     public $expires = null;
 
-    /**
-     * Share key value.
-     *
-     * @var string $id
-     */
+    /** @var string Share key value. */
     private $id = null;
 
-    /**
-     * Data connector.
-     *
-     * @var DataConnector $dataConnector
-     */
+    /** @var DataConnector Data connector. */
     private $dataConnector = null;
 
     /**
      * Class constructor.
      *
-     * @param ResourceLink $resourceLink  Resource_Link object
-     * @param string       $id      Value of share key (optional, default is null)
+     * @param ResourceLink $resourceLink Resource_Link object.
+     * @param string $id Value of share key (optional, default is NULL).
      */
     public function __construct($resourceLink, $id = null)
     {
@@ -125,7 +96,7 @@ class ResourceLinkShareKey
     /**
      * Save the resource link share key to the database.
      *
-     * @return boolean True if the share key was successfully saved
+     * @return bool TRUE if the share key was successfully saved
      */
     public function save()
     {
@@ -153,7 +124,7 @@ class ResourceLinkShareKey
     /**
      * Delete the resource link share key from the database.
      *
-     * @return boolean True if the share key was successfully deleted
+     * @return bool TRUE if the share key was successfully deleted
      */
     public function delete()
     {

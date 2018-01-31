@@ -2,9 +2,9 @@
 namespace IMSGlobal\LTI\OAuth;
 
 /**
- * Class to represent an %OAuth Request
+ * Class to represent an %OAuth Request.
  *
- * @copyright  Andy Smith
+ * @copyright Andy Smith
  * @version 2008-08-04
  * @license https://opensource.org/licenses/MIT The MIT License
  */
@@ -134,6 +134,7 @@ class OAuthRequest
 
     /**
      * The request parameters, sorted and concatenated into a normalized string.
+     *
      * @return string
      */
     public function get_signable_parameters()
@@ -152,7 +153,7 @@ class OAuthRequest
     }
 
     /**
-     * Returns the base string of this request
+     * Returns the base string of this request.
      *
      * The base string defined as the method, the url
      * and the parameters (normalized), each urlencoded

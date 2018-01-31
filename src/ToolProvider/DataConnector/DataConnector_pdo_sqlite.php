@@ -7,13 +7,12 @@ use IMSGlobal\LTI\ToolProvider\ToolConsumer;
 use PDO;
 
 /**
- * Class to represent an LTI Data Connector for PDO variations for SQLite connections
+ * Class to represent an LTI Data Connector for PDO variations for SQLite connections.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class DataConnector_pdo_sqlite extends DataConnector_pdo
 {
@@ -26,9 +25,9 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
     /**
      * Delete tool consumer object.
      *
-     * @param ToolConsumer $consumer Consumer object
+     * @param ToolConsumer $consumer Consumer object.
      *
-     * @return boolean True if the tool consumer object was successfully deleted
+     * @return bool TRUE if the tool consumer object was successfully deleted
      */
     public function deleteToolConsumer($consumer)
     {
@@ -147,9 +146,9 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
     /**
      * Delete context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the Context object was successfully deleted
+     * @return bool TRUE if the Context object was successfully deleted
      */
     public function deleteContext($context)
     {

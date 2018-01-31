@@ -4,13 +4,12 @@ namespace IMSGlobal\LTI\ToolProvider\Service;
 use IMSGlobal\LTI\ToolProvider;
 
 /**
- * Class to implement the Membership service
+ * Class to implement the Membership service.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class Membership extends Service
 {
@@ -25,8 +24,8 @@ class Membership extends Service
     /**
      * Class constructor.
      *
-     * @param object       $source     The object to which the memberships apply (ResourceLink or Context)
-     * @param string       $endpoint   Service endpoint
+     * @param object $source The object to which the memberships apply (ResourceLink or Context).
+     * @param string $endpoint Service endpoint.
      */
     public function __construct($source, $endpoint)
     {
@@ -38,10 +37,10 @@ class Membership extends Service
     /**
      * Get the memberships.
      *
-     * @param string    $role   Role for which memberships are to be requested (optional, default is all roles)
-     * @param int       $limit  Limit on the number of memberships to be returned (optional, default is all)
+     * @param string $role Role for which memberships are to be requested (optional, default is all roles).
+     * @param int $limit Limit on the number of memberships to be returned (optional, default is all).
      *
-     * @return mixed The array of User objects if successful, otherwise false
+     * @return mixed The array of User objects if successful, otherwise FALSE
      */
     public function get($role = null, $limit = 0)
     {

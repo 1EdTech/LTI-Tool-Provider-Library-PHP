@@ -4,13 +4,12 @@ namespace IMSGlobal\LTI\ToolProvider\MediaType;
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 
 /**
- * Class to represent an LTI Tool Profile
+ * Class to represent an LTI Tool Profile.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.0
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.0
+ * @license Apache-2.0
  */
 class ToolProfile
 {
@@ -20,7 +19,7 @@ class ToolProfile
     /**
      * Class constructor.
      *
-     * @param ToolProvider $toolProvider   Tool Provider object
+     * @param ToolProvider $toolProvider Tool Provider object.
      */
     public function __construct($toolProvider)
     {

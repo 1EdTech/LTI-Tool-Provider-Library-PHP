@@ -11,22 +11,21 @@ use IMSGlobal\LTI\ToolProvider\User;
 use PDO;
 
 /**
- * Class to represent an LTI Data Connector for PDO connections
+ * Class to represent an LTI Data Connector for PDO connections.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class DataConnector_pdo extends DataConnector
 {
 
     /**
-     * Class constructor
+     * Class constructor.
      *
-     * @param object $db                 Database connection object
-     * @param string $dbTableNamePrefix  Prefix for database table names (optional, default is none)
+     * @param object $db Database connection object.
+     * @param string $dbTableNamePrefix Prefix for database table names (optional, default is none).
      */
     public function __construct($db, $dbTableNamePrefix = '')
     {
@@ -45,9 +44,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load tool consumer object.
      *
-     * @param ToolConsumer $consumer ToolConsumer object
+     * @param ToolConsumer $consumer ToolConsumer object.
      *
-     * @return boolean True if the tool consumer object was successfully loaded
+     * @return bool TRUE if the tool consumer object was successfully loaded
      */
     public function loadToolConsumer($consumer)
     {
@@ -129,9 +128,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save tool consumer object.
      *
-     * @param ToolConsumer $consumer Consumer object
+     * @param ToolConsumer $consumer Consumer object.
      *
-     * @return boolean True if the tool consumer object was successfully saved
+     * @return bool TRUE if the tool consumer object was successfully saved
      */
     public function saveToolConsumer($consumer)
     {
@@ -238,9 +237,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Delete tool consumer object.
      *
-     * @param ToolConsumer $consumer Consumer object
+     * @param ToolConsumer $consumer Consumer object.
      *
-     * @return boolean True if the tool consumer object was successfully deleted
+     * @return bool TRUE if the tool consumer object was successfully deleted
      */
     public function deleteToolConsumer($consumer)
     {
@@ -446,9 +445,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the context object was successfully loaded
+     * @return bool TRUE if the context object was successfully loaded
      */
     public function loadContext($context)
     {
@@ -497,9 +496,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the context object was successfully saved
+     * @return bool TRUE if the context object was successfully saved
      */
     public function saveContext($context)
     {
@@ -548,9 +547,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Delete context object.
      *
-     * @param Context $context Context object
+     * @param Context $context Context object.
      *
-     * @return boolean True if the Context object was successfully deleted
+     * @return bool TRUE if the Context object was successfully deleted
      */
     public function deleteContext($context)
     {
@@ -610,9 +609,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully loaded
+     * @return bool TRUE if the resource link object was successfully loaded
      */
     public function loadResourceLink($resourceLink)
     {
@@ -690,9 +689,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully saved
+     * @return bool TRUE if the resource link object was successfully saved
      */
     public function saveResourceLink($resourceLink)
     {
@@ -779,9 +778,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Delete resource link object.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
-     * @return boolean True if the resource link object was successfully deleted
+     * @return bool TRUE if the resource link object was successfully deleted
      */
     public function deleteResourceLink($resourceLink)
     {
@@ -834,9 +833,9 @@ class DataConnector_pdo extends DataConnector
      * Obtain an array of User objects for users with a result sourcedId.  The array may include users from other
      * resource links which are sharing this resource link.  It may also be optionally indexed by the user ID of a specified scope.
      *
-     * @param ResourceLink $resourceLink      Resource link object
-     * @param boolean     $localOnly True if only users within the resource link are to be returned (excluding users sharing this resource link)
-     * @param int         $idScope     Scope value to use for user IDs
+     * @param ResourceLink $resourceLink Resource link object.
+     * @param bool $localOnly TRUE if only users within the resource link are to be returned (excluding users sharing this resource link).
+     * @param int $idScope Scope value to use for user IDs.
      *
      * @return array Array of User objects
      */
@@ -884,7 +883,7 @@ class DataConnector_pdo extends DataConnector
     /**
      * Get array of shares defined for this resource link.
      *
-     * @param ResourceLink $resourceLink Resource_Link object
+     * @param ResourceLink $resourceLink Resource_Link object.
      *
      * @return array Array of ResourceLinkShare objects
      */
@@ -921,9 +920,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load nonce object.
      *
-     * @param ConsumerNonce $nonce Nonce object
+     * @param ConsumerNonce $nonce Nonce object.
      *
-     * @return boolean True if the nonce object was successfully loaded
+     * @return bool TRUE if the nonce object was successfully loaded
      */
     public function loadConsumerNonce($nonce)
     {
@@ -960,9 +959,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save nonce object.
      *
-     * @param ConsumerNonce $nonce Nonce object
+     * @param ConsumerNonce $nonce Nonce object.
      *
-     * @return boolean True if the nonce object was successfully saved
+     * @return bool TRUE if the nonce object was successfully saved
      */
     public function saveConsumerNonce($nonce)
     {
@@ -988,9 +987,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource_Link share key object
+     * @param ResourceLinkShareKey $shareKey Resource_Link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully loaded
+     * @return bool TRUE if the resource link share key object was successfully loaded
      */
     public function loadResourceLinkShareKey($shareKey)
     {
@@ -1031,9 +1030,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource link share key object
+     * @param ResourceLinkShareKey $shareKey Resource link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully saved
+     * @return bool TRUE if the resource link share key object was successfully saved
      */
     public function saveResourceLinkShareKey($shareKey)
     {
@@ -1054,9 +1053,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Delete resource link share key object.
      *
-     * @param ResourceLinkShareKey $shareKey Resource link share key object
+     * @param ResourceLinkShareKey $shareKey Resource link share key object.
      *
-     * @return boolean True if the resource link share key object was successfully deleted
+     * @return bool TRUE if the resource link share key object was successfully deleted
      */
     public function deleteResourceLinkShareKey($shareKey)
     {
@@ -1082,9 +1081,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Load user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully loaded
+     * @return bool TRUE if the user object was successfully loaded
      */
     public function loadUser($user)
     {
@@ -1129,9 +1128,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Save user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully saved
+     * @return bool TRUE if the user object was successfully saved
      */
     public function saveUser($user)
     {
@@ -1174,9 +1173,9 @@ class DataConnector_pdo extends DataConnector
     /**
      * Delete user object.
      *
-     * @param User $user User object
+     * @param User $user User object.
      *
-     * @return boolean True if the user object was successfully deleted
+     * @return bool TRUE if the user object was successfully deleted
      */
     public function deleteUser($user)
     {

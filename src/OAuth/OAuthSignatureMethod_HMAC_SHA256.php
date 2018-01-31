@@ -2,19 +2,16 @@
 namespace IMSGlobal\LTI\OAuth;
 
 /**
- * Class to represent an %OAuth HMAC_SHA256 signature method
+ * Class to represent an %OAuth HMAC_SHA256 signature method.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * The HMAC-SHA256 signature method uses the HMAC-SHA256 signature algorithm as defined in [RFC6234] where the
+ * Signature Base String is the text and the key is the concatenated values (each first encoded per Parameter Encoding)
+ * of the Consumer Secret and Token Secret, separated by an '&' character (ASCII code 38) even if empty.
+ *
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 2015-11-30
  * @license https://opensource.org/licenses/MIT The MIT License
- */
-/**
- * The HMAC-SHA256 signature method uses the HMAC-SHA256 signature algorithm as defined in [RFC6234]
- * where the Signature Base String is the text and the key is the concatenated values (each first
- * encoded per Parameter Encoding) of the Consumer Secret and Token Secret, separated by an '&'
- * character (ASCII code 38) even if empty.
  */
 class OAuthSignatureMethod_HMAC_SHA256 extends OAuthSignatureMethod
 {

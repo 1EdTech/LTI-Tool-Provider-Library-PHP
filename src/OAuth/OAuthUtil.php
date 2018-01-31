@@ -2,9 +2,9 @@
 namespace IMSGlobal\LTI\OAuth;
 
 /**
- * Class to provide %OAuth utility methods
+ * Class to provide %OAuth utility methods.
  *
- * @copyright  Andy Smith
+ * @copyright Andy Smith
  * @version 2008-08-04
  * @license https://opensource.org/licenses/MIT The MIT License
  */

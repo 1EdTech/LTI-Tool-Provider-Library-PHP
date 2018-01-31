@@ -5,13 +5,12 @@ use IMSGlobal\LTI\Profile\ServiceDefinition;
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 
 /**
- * Class to represent an LTI Tool Proxy media type
+ * Class to represent an LTI Tool Proxy media type.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.0
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.0
+ * @license Apache-2.0
  */
 class ToolProxy
 {
@@ -19,9 +18,9 @@ class ToolProxy
     /**
      * Class constructor.
      *
-     * @param ToolProvider $toolProvider   Tool Provider object
-     * @param ServiceDefinition $toolProxyService  Tool Proxy service
-     * @param string $secret  Shared secret
+     * @param ToolProvider $toolProvider Tool Provider object.
+     * @param ServiceDefinition $toolProxyService Tool Proxy service.
+     * @param string $secret Shared secret.
      */
     public function __construct($toolProvider, $toolProxyService, $secret)
     {

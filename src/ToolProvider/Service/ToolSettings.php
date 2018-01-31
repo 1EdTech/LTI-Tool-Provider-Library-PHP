@@ -2,13 +2,12 @@
 namespace IMSGlobal\LTI\ToolProvider\Service;
 
 /**
- * Class to implement the Tool Settings service
+ * Class to implement the Tool Settings service.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class ToolSettings extends Service
 {
@@ -26,11 +25,7 @@ class ToolSettings extends Service
      */
     const MODE_DISTINCT_NAMES = 3;
 
-    /**
-     * Names of LTI parameters to be retained in the consumer settings property.
-     *
-     * @var array $LEVEL_NAMES
-     */
+    /** @var array Names of LTI parameters to be retained in the consumer settings property. */
     private static $LEVEL_NAMES = array(
         'ToolProxy' => 'system',
         'ToolProxyBinding' => 'context',
@@ -47,16 +42,16 @@ class ToolSettings extends Service
     /**
      * Whether to use the simple JSON format.
      *
-     * @var boolean  $simple
+     * @var bool  $simple
      */
     private $simple;
 
     /**
      * Class constructor.
      *
-     * @param object       $source     The object to which the settings apply (ResourceLink, Context or ToolConsumer)
-     * @param string       $endpoint   Service endpoint
-     * @param boolean      $simple     True if the simple media type is to be used (optional, default is true)
+     * @param object $source The object to which the settings apply (ResourceLink, Context or ToolConsumer).
+     * @param string $endpoint Service endpoint.
+     * @param bool $simple TRUE if the simple media type is to be used (optional, default is TRUE).
      */
     public function __construct($source, $endpoint, $simple = true)
     {
@@ -80,9 +75,9 @@ class ToolSettings extends Service
     /**
      * Get the tool settings.
      *
-     * @param int          $mode       Mode for request (optional, default is current level only)
+     * @param int $mode Mode for request (optional, default is current level only).
      *
-     * @return mixed The array of settings if successful, otherwise false
+     * @return mixed The array of settings if successful, otherwise FALSE
      */
     public function get($mode = self::MODE_CURRENT_LEVEL)
     {
@@ -116,7 +111,7 @@ class ToolSettings extends Service
     /**
      * Set the tool settings.
      *
-     * @param array  $settings  An associative array of settings (optional, default is null)
+     * @param array $settings An associative array of settings (optional, default is NULL).
      *
      * @return HTTPMessage HTTP object containing request and response details
      */

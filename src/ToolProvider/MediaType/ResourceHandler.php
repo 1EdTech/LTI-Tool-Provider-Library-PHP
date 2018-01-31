@@ -5,13 +5,12 @@ use IMSGlobal\LTI\ToolProvider\ToolProvider;
 use IMSGlobal\LTI\Profile\ResourceHandler as ProfileResourceHandler;
 
 /**
- * Class to represent an LTI Resource Handler
+ * Class to represent an LTI Resource Handler.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.0
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.0
+ * @license Apache-2.0
  */
 class ResourceHandler
 {
@@ -19,8 +18,8 @@ class ResourceHandler
     /**
      * Class constructor.
      *
-     * @param ToolProvider $toolProvider   Tool Provider object
-     * @param ProfileResourceHandler $resourceHandler   Resource handler object
+     * @param ToolProvider $toolProvider Tool Provider object.
+     * @param ProfileResourceHandler $resourceHandler Resource handler object.
      */
     public function __construct($toolProvider, $resourceHandler)
     {

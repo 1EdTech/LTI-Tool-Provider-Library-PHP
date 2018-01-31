@@ -2,13 +2,12 @@
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
 
 /**
- * Class to represent an LTI Message
+ * Class to represent an LTI Message.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.0
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.0
+ * @license Apache-2.0
  */
 class Message
 {
@@ -16,8 +15,8 @@ class Message
     /**
      * Class constructor.
      *
-     * @param Message $message               Message object
-     * @param array   $capabilitiesOffered   Capabilities offered
+     * @param Message $message Message object.
+     * @param array $capabilitiesOffered Capabilities offered.
      */
     public function __construct($message, $capabilitiesOffered)
     {
