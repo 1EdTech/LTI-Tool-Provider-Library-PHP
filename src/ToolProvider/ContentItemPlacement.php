@@ -26,12 +26,15 @@ class ContentItemPlacement
         if (!empty($displayWidth)) {
             $this->displayWidth = $displayWidth;
         }
+        
         if (!empty($displayHeight)) {
             $this->displayHeight = $displayHeight;
         }
+        
         if (!empty($documentTarget)) {
             $this->documentTarget = $documentTarget;
         }
+        
         if (!empty($windowTarget)) {
             $this->windowTarget = $windowTarget;
         }

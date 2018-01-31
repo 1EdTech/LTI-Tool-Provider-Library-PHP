@@ -123,6 +123,7 @@ class Context
     public function save()
     {
         $ok = $this->getDataConnector()->saveContext($this);
+        
         if ($ok) {
             $this->settingsChanged = false;
         }
@@ -243,12 +244,14 @@ class Context
     public function setSetting($name, $value = null)
     {
         $old_value = $this->getSetting($name);
+        
         if ($value !== $old_value) {
             if (!empty($value)) {
                 $this->settings[$name] = $value;
             } else {
                 unset($this->settings[$name]);
             }
+            
             $this->settingsChanged = true;
         }
     }
@@ -390,16 +393,17 @@ class Context
         $context->consumer = $consumer;
         $context->dataConnector = $consumer->getDataConnector();
         $context->ltiContextId = $ltiContextId;
+        
         if (!empty($ltiContextId)) {
             $context->load();
         }
         
         return $context;
     }
-
-###
-###  PRIVATE METHODS
-###
+    
+    ###
+    ###  PRIVATE METHODS
+    ###
     
 
     /**

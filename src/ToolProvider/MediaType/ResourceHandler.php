@@ -37,9 +37,11 @@ class ResourceHandler
         $this->icon_info->default_location->path = $resourceHandler->icon;
         $this->icon_info->key = "{$resourceHandler->item->id}.icon.path";
         $this->message = array();
+        
         foreach ($resourceHandler->requiredMessages as $message) {
             $this->message[] = new Message($message, $toolProvider->consumer->profile->capability_offered);
         }
+        
         foreach ($resourceHandler->optionalMessages as $message) {
             if (in_array($message->type, $toolProvider->consumer->profile->capability_offered)) {
                 $this->message[] = new Message($message, $toolProvider->consumer->profile->capability_offered);

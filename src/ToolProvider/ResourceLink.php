@@ -265,6 +265,7 @@ class ResourceLink
     public function save()
     {
         $ok = $this->getDataConnector()->saveResourceLink($this);
+        
         if ($ok) {
             $this->settingsChanged = false;
         }
@@ -424,12 +425,14 @@ class ResourceLink
     public function setSetting($name, $value = null)
     {
         $old_value = $this->getSetting($name);
+        
         if ($value !== $old_value) {
             if (!empty($value)) {
                 $this->settings[$name] = $value;
             } else {
                 unset($this->settings[$name]);
             }
+            
             $this->settingsChanged = true;
         }
     }
@@ -519,14 +522,15 @@ class ResourceLink
     {
         $response = false;
         $this->extResponse = null;
-
-// Lookup service details from the source resource link appropriate to the user (in case the destination is being shared)
+        
+        // Lookup service details from the source resource link appropriate to the user (in case the destination is being shared)
         $sourceResourceLink = $user->getResourceLink();
         $sourcedId = $user->ltiResultSourcedId;
-
-// Use LTI 1.1 service in preference to extension service if it is available
+        
+        // Use LTI 1.1 service in preference to extension service if it is available
         $urlLTI11 = $sourceResourceLink->getSetting('lis_outcome_service_url');
         $urlExt = $sourceResourceLink->getSetting('ext_ims_lis_basic_outcome_url');
+        
         if ($urlExt || $urlLTI11) {
             switch ($action) {
                 case self::EXT_READ:
@@ -536,6 +540,7 @@ class ResourceLink
                         $urlLTI11 = null;
                         $do = 'basic-lis-readresult';
                     }
+                    
                     break;
                 case self::EXT_WRITE:
                     if ($urlLTI11 && $this->checkValueType($ltiOutcome, array(
@@ -546,6 +551,7 @@ class ResourceLink
                         $urlLTI11 = null;
                         $do = 'basic-lis-updateresult';
                     }
+                    
                     break;
                 case self::EXT_DELETE:
                     if ($urlLTI11 && ($ltiOutcome->type === self::EXT_TYPE_DECIMAL)) {
@@ -554,16 +560,21 @@ class ResourceLink
                         $urlLTI11 = null;
                         $do = 'basic-lis-deleteresult';
                     }
+                    
                     break;
             }
         }
+        
         if (isset($do)) {
             $value = $ltiOutcome->getValue();
+            
             if (is_null($value)) {
                 $value = '';
             }
+            
             if ($urlLTI11) {
                 $xml = '';
+                
                 if ($action === self::EXT_WRITE) {
                     $xml = <<<EOF
 
@@ -575,14 +586,17 @@ class ResourceLink
         </result>
 EOF;
                 }
+                
                 $sourcedId = htmlentities($sourcedId);
                 $xml = <<<EOF
       <resultRecord>
         <sourcedGUID>
           <sourcedId>{$sourcedId}</sourcedId>
         </sourcedGUID>{$xml}
+      
       </resultRecord>
 EOF;
+                
                 if ($this->doLTI11Service($do, $urlLTI11, $xml)) {
                     switch ($action) {
                         case self::EXT_READ:
@@ -591,7 +605,8 @@ EOF;
                             } else {
                                 $ltiOutcome->setValue($this->extNodes['imsx_POXBody']["{$do}Response"]['result']['resultScore']['textString']);
                             }
-                            // FALL-THROUGH !!!
+                        
+                        // FALL-THROUGH !!!
                         case self::EXT_WRITE:
                         case self::EXT_DELETE:
                             $response = true;
@@ -602,27 +617,34 @@ EOF;
                 $params = array();
                 $params['sourcedid'] = $sourcedId;
                 $params['result_resultscore_textstring'] = $value;
+                
                 if (!empty($ltiOutcome->language)) {
                     $params['result_resultscore_language'] = $ltiOutcome->language;
                 }
+                
                 if (!empty($ltiOutcome->status)) {
                     $params['result_statusofresult'] = $ltiOutcome->status;
                 }
+                
                 if (!empty($ltiOutcome->date)) {
                     $params['result_date'] = $ltiOutcome->date;
                 }
+                
                 if (!empty($ltiOutcome->type)) {
                     $params['result_resultvaluesourcedid'] = $ltiOutcome->type;
                 }
+                
                 if (!empty($ltiOutcome->data_source)) {
                     $params['result_datasource'] = $ltiOutcome->data_source;
                 }
+                
                 if ($this->doService($do, $urlExt, $params)) {
                     switch ($action) {
                         case self::EXT_READ:
                             if (isset($this->extNodes['result']['resultscore']['textstring'])) {
                                 $response = $this->extNodes['result']['resultscore']['textstring'];
                             }
+                            
                             break;
                         case self::EXT_WRITE:
                         case self::EXT_DELETE:
@@ -631,6 +653,7 @@ EOF;
                     }
                 }
             }
+            
             if (is_array($response) && (count($response) <= 0)) {
                 $response = '';
             }
@@ -657,9 +680,11 @@ EOF;
         $params = array();
         $params['id'] = $this->getSetting('ext_ims_lis_memberships_id');
         $ok = false;
+        
         if ($withGroups) {
             $ok = $this->doService('basic-lis-readmembershipsforcontextwithgroups', $url, $params);
         }
+        
         if ($ok) {
             $this->groupSets = array();
             $this->groups = array();
@@ -679,23 +704,23 @@ EOF;
             
             for ($i = 0; $i < count($members); $i++) {
                 $user = User::fromResourceLink($this, $members[$i]['user_id']);
-
-// Set the user name
+                
+                // Set the user name
                 $firstname = (isset($members[$i]['person_name_given'])) ? $members[$i]['person_name_given'] : '';
                 $lastname = (isset($members[$i]['person_name_family'])) ? $members[$i]['person_name_family'] : '';
                 $fullname = (isset($members[$i]['person_name_full'])) ? $members[$i]['person_name_full'] : '';
                 $user->setNames($firstname, $lastname, $fullname);
-
-// Set the user email
+                
+                // Set the user email
                 $email = (isset($members[$i]['person_contact_email_primary'])) ? $members[$i]['person_contact_email_primary'] : '';
                 $user->setEmail($email, $this->getConsumer()->defaultEmail);
-
-/// Set the user roles
+                
+                /// Set the user roles
                 if (isset($members[$i]['roles'])) {
                     $user->roles = ToolProvider::parseRoles($members[$i]['roles']);
                 }
-
-// Set the user groups
+                
+                // Set the user groups
                 if (!isset($members[$i]['groups']['group'])) {
                     $groups = array();
                 } elseif (!isset($members[$i]['groups']['group'][0])) {
@@ -704,10 +729,13 @@ EOF;
                 } else {
                     $groups = $members[$i]['groups']['group'];
                 }
+                
                 for ($j = 0; $j < count($groups); $j++) {
                     $group = $groups[$j];
+                    
                     if (isset($group['set'])) {
                         $set_id = $group['set']['id'];
+                        
                         if (!isset($this->groupSets[$set_id])) {
                             $this->groupSets[$set_id] = array(
                                 'title' => $group['set']['title'],
@@ -717,16 +745,21 @@ EOF;
                                 'num_learners' => 0
                             );
                         }
+                        
                         $this->groupSets[$set_id]['num_members']++;
+                        
                         if ($user->isStaff()) {
                             $this->groupSets[$set_id]['num_staff']++;
                         }
+                        
                         if ($user->isLearner()) {
                             $this->groupSets[$set_id]['num_learners']++;
                         }
+                        
                         if (!in_array($group['id'], $this->groupSets[$set_id]['groups'])) {
                             $this->groupSets[$set_id]['groups'][] = $group['id'];
                         }
+                        
                         $this->groups[$group['id']] = array(
                             'title' => $group['title'],
                             'set' => $set_id
@@ -736,21 +769,23 @@ EOF;
                             'title' => $group['title']
                         );
                     }
+                    
                     $user->groups[] = $group['id'];
                 }
-
-// If a result sourcedid is provided save the user
+                
+                // If a result sourcedid is provided save the user
                 if (isset($members[$i]['lis_result_sourcedid'])) {
                     $user->ltiResultSourcedId = $members[$i]['lis_result_sourcedid'];
                     $user->save();
                 }
+                
                 $users[] = $user;
-
-// Remove old user (if it exists)
+                
+                // Remove old user (if it exists)
                 unset($oldUsers[$user->getId(ToolProvider::ID_SCOPE_RESOURCE)]);
             }
-
-// Delete any old users which were not in the latest list from the tool consumer
+            
+            // Delete any old users which were not in the latest list from the tool consumer
             foreach ($oldUsers as $id => $user) {
                 $user->delete();
             }
@@ -773,6 +808,7 @@ EOF;
     {
         $response = false;
         $this->extResponse = null;
+        
         switch ($action) {
             case self::EXT_READ:
                 $do = 'basic-lti-loadsetting';
@@ -784,13 +820,16 @@ EOF;
                 $do = 'basic-lti-deletesetting';
                 break;
         }
+        
         if (isset($do)) {
             $url = $this->getSetting('ext_ims_lti_tool_setting_url');
             $params = array();
             $params['id'] = $this->getSetting('ext_ims_lti_tool_setting_id');
+            
             if (is_null($value)) {
                 $value = '';
             }
+            
             $params['setting'] = $value;
             
             if ($this->doService($do, $url, $params)) {
@@ -798,10 +837,12 @@ EOF;
                     case self::EXT_READ:
                         if (isset($this->extNodes['setting']['value'])) {
                             $response = $this->extNodes['setting']['value'];
+                            
                             if (is_array($response)) {
                                 $response = '';
                             }
                         }
+                        
                         break;
                     case self::EXT_WRITE:
                         $this->setSetting('ext_ims_lti_tool_setting', $value);
@@ -871,6 +912,7 @@ EOF;
     public function hasMembershipService()
     {
         $has = !empty($this->contextId);
+        
         if ($has) {
             $has = !empty($this->getContext()->getSetting('custom_context_memberships_url'));
         }
@@ -886,8 +928,10 @@ EOF;
     public function getMembership()
     {
         $response = false;
+        
         if (!empty($this->contextId)) {
             $url = $this->getContext()->getSetting('custom_context_memberships_url');
+            
             if (!empty($url)) {
                 $service = new Service\Membership($this, $url);
                 $response = $service->get();
@@ -937,8 +981,10 @@ EOF;
         $resourceLink->consumer = $consumer;
         $resourceLink->dataConnector = $consumer->getDataConnector();
         $resourceLink->ltiResourceLinkId = $ltiResourceLinkId;
+        
         if (!empty($ltiResourceLinkId)) {
             $resourceLink->load();
+            
             if (is_null($resourceLink->id) && !empty($tempId)) {
                 $resourceLink->ltiResourceLinkId = $tempId;
                 $resourceLink->load();
@@ -964,8 +1010,10 @@ EOF;
         $resourceLink->context = $context;
         $resourceLink->dataConnector = $context->getDataConnector();
         $resourceLink->ltiResourceLinkId = $ltiResourceLinkId;
+        
         if (!empty($ltiResourceLinkId)) {
             $resourceLink->load();
+            
             if (is_null($resourceLink->id) && !empty($tempId)) {
                 $resourceLink->ltiResourceLinkId = $tempId;
                 $resourceLink->load();
@@ -992,10 +1040,10 @@ EOF;
         
         return $resourceLink;
     }
-
-###
-###  PRIVATE METHODS
-###
+    
+    ###
+    ###  PRIVATE METHODS
+    ###
     
 
     /**
@@ -1026,17 +1074,21 @@ EOF;
         if (empty($supportedTypes)) {
             $supportedTypes = explode(',', str_replace(' ', '', strtolower($this->getSetting('ext_ims_lis_resultvalue_sourcedids', self::EXT_TYPE_DECIMAL))));
         }
+        
         $type = $ltiOutcome->type;
         $value = $ltiOutcome->getValue();
-// Check whether the type is supported or there is no value
+        // Check whether the type is supported or there is no value
         $ok = in_array($type, $supportedTypes) || (strlen($value) <= 0);
+        
         if (!$ok) {
-// Convert numeric values to decimal
             if ($type === self::EXT_TYPE_PERCENTAGE) {
+                // Convert numeric values to decimal
                 if (substr($value, -1) === '%') {
                     $value = substr($value, 0, -1);
                 }
+                
                 $ok = is_numeric($value) && ($value >= 0) && ($value <= 100);
+                
                 if ($ok) {
                     $ltiOutcome->setValue($value / 100);
                     $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
@@ -1045,12 +1097,13 @@ EOF;
                 $parts = explode('/', $value, 2);
                 $ok = (count($parts) === 2) && is_numeric($parts[0]) && is_numeric($parts[1]) && ($parts[0] >= 0) &&
                      ($parts[1] > 0);
+                
                 if ($ok) {
                     $ltiOutcome->setValue($parts[0] / $parts[1]);
                     $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
                 }
-                // Convert letter_af to letter_af_plus or text
             } elseif ($type === self::EXT_TYPE_LETTER_AF) {
+                // Convert letter_af to letter_af_plus or text
                 if (in_array(self::EXT_TYPE_LETTER_AF_PLUS, $supportedTypes)) {
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_LETTER_AF_PLUS;
@@ -1058,8 +1111,8 @@ EOF;
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_TEXT;
                 }
-                // Convert letter_af_plus to letter_af or text
             } elseif ($type === self::EXT_TYPE_LETTER_AF_PLUS) {
+                // Convert letter_af_plus to letter_af or text
                 if (in_array(self::EXT_TYPE_LETTER_AF, $supportedTypes) && (strlen($value) === 1)) {
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_LETTER_AF;
@@ -1067,14 +1120,16 @@ EOF;
                     $ok = true;
                     $ltiOutcome->type = self::EXT_TYPE_TEXT;
                 }
-                // Convert text to decimal
             } elseif ($type === self::EXT_TYPE_TEXT) {
+                // Convert text to decimal
                 $ok = is_numeric($value) && ($value >= 0) && ($value <= 1);
+                
                 if ($ok) {
                     $ltiOutcome->type = self::EXT_TYPE_DECIMAL;
                 } elseif (substr($value, -1) === '%') {
                     $value = substr($value, 0, -1);
                     $ok = is_numeric($value) && ($value >= 0) && ($value <= 100);
+                    
                     if ($ok) {
                         if (in_array(self::EXT_TYPE_PERCENTAGE, $supportedTypes)) {
                             $ltiOutcome->type = self::EXT_TYPE_PERCENTAGE;
@@ -1106,18 +1161,23 @@ EOF;
         $this->extRequestHeaders = '';
         $this->extResponse = null;
         $this->extResponseHeaders = '';
+        
         if (!empty($url)) {
             $params = $this->getConsumer()->signParameters($url, $type, $this->getConsumer()->ltiVersion, $params);
-// Connect to tool consumer
+            
+            // Connect to tool consumer
             $http = new HTTPMessage($url, 'POST', $params);
-// Parse XML response
+            
+            // Parse XML response
             if ($http->send()) {
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
+                
                 try {
                     $this->extDoc = new DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
+                    
                     if (isset($this->extNodes['statusinfo']['codemajor']) &&
                          ($this->extNodes['statusinfo']['codemajor'] === 'Success')) {
                         $ok = true;
@@ -1125,6 +1185,7 @@ EOF;
                 } catch (\Exception $e) {
                 }
             }
+            
             $this->extRequest = $http->request;
             $this->extRequestHeaders = $http->requestHeaders;
         }
@@ -1148,6 +1209,7 @@ EOF;
         $this->extRequestHeaders = '';
         $this->extResponse = null;
         $this->extResponseHeaders = '';
+        
         if (!empty($url)) {
             $id = uniqid();
             $xmlRequest = <<< EOD
@@ -1162,17 +1224,18 @@ EOF;
   <imsx_POXBody>
     <{$type}Request>
 {$xml}
+    
     </{$type}Request>
   </imsx_POXBody>
 </imsx_POXEnvelopeRequest>
 EOD;
-// Calculate body hash
+            // Calculate body hash
             $hash = base64_encode(sha1($xmlRequest, true));
             $params = array(
                 'oauth_body_hash' => $hash
             );
-
-// Add OAuth signature
+            
+            // Add OAuth signature
             $hmacMethod = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
             $consumer = new OAuth\OAuthConsumer($this->getConsumer()->getKey(), $this->getConsumer()->secret, null);
             $req = OAuth\OAuthRequest::from_consumer_and_token($consumer, null, 'POST', $url, $params);
@@ -1180,16 +1243,20 @@ EOD;
             $params = $req->get_parameters();
             $header = $req->to_header();
             $header .= "\nContent-Type: application/xml";
-// Connect to tool consumer
+            
+            // Connect to tool consumer
             $http = new HTTPMessage($url, 'POST', $xmlRequest, $header);
-// Parse XML response
+            
+            // Parse XML response
             if ($http->send()) {
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
+                
                 try {
                     $this->extDoc = new DOMDocument();
                     $this->extDoc->loadXML($http->response);
                     $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
+                    
                     if (isset($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) && ($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor'] ===
                          'success')) {
                         $ok = true;
@@ -1197,6 +1264,7 @@ EOD;
                 } catch (\Exception $e) {
                 }
             }
+            
             $this->extRequest = $http->request;
             $this->extRequestHeaders = $http->requestHeaders;
         }
@@ -1214,6 +1282,7 @@ EOD;
     private function domnodeToArray($node)
     {
         $output = '';
+        
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
             case XML_TEXT_NODE:
@@ -1223,33 +1292,42 @@ EOD;
                 for ($i = 0; $i < $node->childNodes->length; $i++) {
                     $child = $node->childNodes->item($i);
                     $v = $this->domnodeToArray($child);
+                    
                     if (isset($child->tagName)) {
                         $t = $child->tagName;
+                        
                         if (!isset($output[$t])) {
                             $output[$t] = array();
                         }
+                        
                         $output[$t][] = $v;
                     } else {
                         $s = (string) $v;
+                        
                         if (strlen($s) > 0) {
                             $output = $s;
                         }
                     }
                 }
+                
                 if (is_array($output)) {
                     if ($node->attributes->length) {
                         $a = array();
+                        
                         foreach ($node->attributes as $attrName => $attrNode) {
                             $a[$attrName] = (string) $attrNode->value;
                         }
+                        
                         $output['@attributes'] = $a;
                     }
+                    
                     foreach ($output as $t => $v) {
                         if (is_array($v) && count($v) == 1 && $t != '@attributes') {
                             $output[$t] = $v[0];
                         }
                     }
                 }
+                
                 break;
         }
         

@@ -68,6 +68,7 @@ class ToolProxy
     {
         $this->initialize();
         $this->dataConnector = $dataConnector;
+        
         if (!empty($id)) {
             $this->load($id);
         } else {
@@ -151,10 +152,10 @@ class ToolProxy
     {
         return $this->dataConnector;
     }
-
-###
-###  PRIVATE METHOD
-###
+    
+    ###
+    ###  PRIVATE METHOD
+    ###
     
 
     /**
@@ -169,6 +170,7 @@ class ToolProxy
         $this->initialize();
         $this->id = $id;
         $ok = $this->dataConnector->loadToolProxy($this);
+        
         if (!$ok) {
             $this->enabled = $autoEnable;
         }

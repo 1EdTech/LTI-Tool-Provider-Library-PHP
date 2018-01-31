@@ -23,9 +23,11 @@ class ContentItemImage
     public function __construct($id, $height = null, $width = null)
     {
         $this->{'@id'} = $id;
+        
         if (!is_null($height)) {
             $this->height = $height;
         }
+        
         if (!is_null($width)) {
             $this->width = $width;
         }

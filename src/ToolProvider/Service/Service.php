@@ -70,26 +70,29 @@ class Service
     public function send($method, $parameters = array(), $body = null)
     {
         $url = $this->endpoint;
+        
         if (!empty($parameters)) {
             if (strpos($url, '?') === false) {
                 $sep = '?';
             } else {
                 $sep = '&';
             }
+            
             foreach ($parameters as $name => $value) {
                 $url .= $sep . urlencode($name) . '=' . urlencode($value);
                 $sep = '&';
             }
         }
+        
         if (!$this->unsigned) {
             $header = ToolProvider\ToolConsumer::addSignature($url, $this->consumer->getKey(), $this->consumer->secret, $body, $method, $this->mediaType);
         } else {
             $header = null;
         }
-
-// Connect to tool consumer
+        
+        // Connect to tool consumer
         $http = new HTTPMessage($url, $method, $body, $header);
-// Parse JSON response
+        // Parse JSON response
         if ($http->send() && !empty($http->response)) {
             $http->responseJson = json_decode($http->response);
             $http->ok = !is_null($http->responseJson);

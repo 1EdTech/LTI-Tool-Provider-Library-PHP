@@ -65,11 +65,13 @@ class ToolSettings extends Service
         } else {
             $consumer = $source->getConsumer();
         }
+        
         if ($simple) {
             $mediaType = 'application/vnd.ims.lti.v2.toolsettings.simple+json';
         } else {
             $mediaType = 'application/vnd.ims.lti.v2.toolsettings+json';
         }
+        
         parent::__construct($consumer, $endpoint, $mediaType);
         $this->source = $source;
         $this->simple = $simple;
@@ -85,18 +87,22 @@ class ToolSettings extends Service
     public function get($mode = self::MODE_CURRENT_LEVEL)
     {
         $parameter = array();
+        
         if ($mode === self::MODE_ALL_LEVELS) {
             $parameter['bubble'] = 'all';
         } elseif ($mode === self::MODE_DISTINCT_NAMES) {
             $parameter['bubble'] = 'distinct';
         }
+        
         $http = $this->send('GET', $parameter);
+        
         if (!$http->ok) {
             $response = false;
         } elseif ($this->simple) {
             $response = json_decode($http->response, true);
         } elseif (isset($http->responseJson->{'@graph'})) {
             $response = array();
+            
             foreach ($http->responseJson->{'@graph'} as $level) {
                 $settings = json_decode(json_encode($level->custom), true);
                 unset($settings['@id']);
@@ -124,6 +130,7 @@ class ToolSettings extends Service
             } else {
                 $type = 'LtiLink';
             }
+            
             $obj = new \stdClass();
             $obj->{'@context'} = 'http://purl.imsglobal.org/ctx/lti/v2/ToolSettings';
             $obj->{'@graph'} = array();

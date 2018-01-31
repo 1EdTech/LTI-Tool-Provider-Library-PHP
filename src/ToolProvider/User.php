@@ -253,22 +253,27 @@ class User
                 $idScope = ToolProvider::ID_SCOPE_ID_ONLY;
             }
         }
+        
         switch ($idScope) {
             case ToolProvider::ID_SCOPE_GLOBAL:
                 $id = $this->getResourceLink()->getKey() . ToolProvider::ID_SCOPE_SEPARATOR . $this->ltiUserId;
                 break;
             case ToolProvider::ID_SCOPE_CONTEXT:
                 $id = $this->getResourceLink()->getKey();
+                
                 if ($this->resourceLink->ltiContextId) {
                     $id .= ToolProvider::ID_SCOPE_SEPARATOR . $this->resourceLink->ltiContextId;
                 }
+                
                 $id .= ToolProvider::ID_SCOPE_SEPARATOR . $this->ltiUserId;
                 break;
             case ToolProvider::ID_SCOPE_RESOURCE:
                 $id = $this->getResourceLink()->getKey();
+                
                 if ($this->resourceLink->ltiResourceLinkId) {
                     $id .= ToolProvider::ID_SCOPE_SEPARATOR . $this->resourceLink->ltiResourceLinkId;
                 }
+                
                 $id .= ToolProvider::ID_SCOPE_SEPARATOR . $this->ltiUserId;
                 break;
             default:
@@ -292,10 +297,12 @@ class User
             0 => '',
             1 => ''
         );
+        
         if (!empty($fullname)) {
             $this->fullname = trim($fullname);
             $names = preg_split("/[\s]+/", $this->fullname, 2);
         }
+        
         if (!empty($firstname)) {
             $this->firstname = trim($firstname);
             $names[0] = $this->firstname;
@@ -304,6 +311,7 @@ class User
         } else {
             $this->firstname = 'User';
         }
+        
         if (!empty($lastname)) {
             $this->lastname = trim($lastname);
             $names[1] = $this->lastname;
@@ -312,6 +320,7 @@ class User
         } else {
             $this->lastname = $this->ltiUserId;
         }
+        
         if (empty($this->fullname)) {
             $this->fullname = "{$this->firstname} {$this->lastname}";
         }
@@ -329,6 +338,7 @@ class User
             $this->email = $email;
         } elseif (!empty($defaultEmail)) {
             $this->email = $defaultEmail;
+            
             if (substr($this->email, 0, 1) === '@') {
                 $this->email = $this->getId() . $this->email;
             }
@@ -397,21 +407,24 @@ class User
     {
         $user = new User();
         $user->resourceLink = $resourceLink;
+        
         if (!is_null($resourceLink)) {
             $user->resourceLinkId = $resourceLink->getRecordId();
             $user->dataConnector = $resourceLink->getDataConnector();
         }
+        
         $user->ltiUserId = $ltiUserId;
+        
         if (!empty($ltiUserId)) {
             $user->load();
         }
         
         return $user;
     }
-
-###
-###  PRIVATE METHODS
-###
+    
+    ###
+    ###  PRIVATE METHODS
+    ###
     
 
     /**
@@ -442,6 +455,7 @@ class User
         $this->initialize();
         $this->id = $id;
         $dataConnector = $this->getDataConnector();
+        
         if (!is_null($dataConnector)) {
             return $dataConnector->loadUser($this);
         }

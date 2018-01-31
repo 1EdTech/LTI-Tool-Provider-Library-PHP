@@ -41,10 +41,12 @@ class OAuthUtil
     public static function split_header($header, $only_allow_oauth_parameters = true)
     {
         $params = array();
+        
         if (preg_match_all('/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }
+            
             if (isset($params['realm'])) {
                 unset($params['realm']);
             }
@@ -66,6 +68,7 @@ class OAuthUtil
             // returns the headers in the same case as they are in the
             // request
             $out = array();
+            
             foreach ($headers as $key => $value) {
                 $key = str_replace(" ", "-", ucwords(strtolower(str_replace("-", " ", $key))));
                 $out[$key] = $value;
@@ -74,9 +77,11 @@ class OAuthUtil
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
             $out = array();
+            
             if (isset($_SERVER['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
             }
+            
             if (isset($_ENV['CONTENT_TYPE'])) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
@@ -91,6 +96,7 @@ class OAuthUtil
                 }
             }
         }
+        
         return $out;
     }
     
@@ -106,6 +112,7 @@ class OAuthUtil
         $pairs = explode('&', $input);
         
         $parsed_parameters = array();
+        
         foreach ($pairs as $pair) {
             $split = explode('=', $pair, 2);
             $parameter = self::urldecode_rfc3986($split[0]);
@@ -149,12 +156,14 @@ class OAuthUtil
         uksort($params, 'strcmp');
         
         $pairs = array();
+        
         foreach ($params as $parameter => $value) {
             if (is_array($value)) {
                 // If two or more parameters share the same name, they are sorted by their value
                 // Ref: Spec: 9.1.1 (1)
                 // June 12th, 2010 - changed to sort because of issue 164 by hidetaka
                 sort($value, SORT_STRING);
+                
                 foreach ($value as $duplicate_value) {
                     $pairs[] = $parameter . '=' . $duplicate_value;
                 }

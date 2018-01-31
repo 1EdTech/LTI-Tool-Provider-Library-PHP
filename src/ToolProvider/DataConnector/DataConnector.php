@@ -92,10 +92,10 @@ class DataConnector
         $this->db = $db;
         $this->dbTableNamePrefix = $dbTableNamePrefix;
     }
-
-###
-###  ToolConsumer methods
-###
+    
+    ###
+    ###  ToolConsumer methods
+    ###
     
 
     /**
@@ -153,10 +153,10 @@ class DataConnector
     {
         return array();
     }
-
-###
-###  ToolProxy methods
-###
+    
+    ###
+    ###  ToolProxy methods
+    ###
     
 
     /**
@@ -202,10 +202,10 @@ class DataConnector
         
         return true;
     }
-
-###
-###  Context methods
-###
+    
+    ###
+    ###  Context methods
+    ###
     
 
     /**
@@ -251,10 +251,10 @@ class DataConnector
         
         return true;
     }
-
-###
-###  ResourceLink methods
-###
+    
+    ###
+    ###  ResourceLink methods
+    ###
     
 
     /**
@@ -329,10 +329,10 @@ class DataConnector
     {
         return array();
     }
-
-###
-###  ConsumerNonce methods
-###
+    
+    ###
+    ###  ConsumerNonce methods
+    ###
     
 
     /**
@@ -358,10 +358,10 @@ class DataConnector
     {
         return true;
     }
-
-###
-###  ResourceLinkShareKey methods
-###
+    
+    ###
+    ###  ResourceLinkShareKey methods
+    ###
     
 
     /**
@@ -399,10 +399,10 @@ class DataConnector
     {
         return true;
     }
-
-###
-###  User methods
-###
+    
+    ###
+    ###  User methods
+    ###
     
 
     /**
@@ -448,10 +448,10 @@ class DataConnector
         
         return true;
     }
-
-###
-###  Other methods
-###
+    
+    ###
+    ###  Other methods
+    ###
     
 
     /**
@@ -463,6 +463,7 @@ class DataConnector
     protected static function getConsumerKey($key)
     {
         $len = strlen($key);
+        
         if ($len > 255) {
             $key = 'sha512:' . hash('sha512', $key);
         }
@@ -491,20 +492,25 @@ class DataConnector
         if (is_null($dbTableNamePrefix)) {
             $dbTableNamePrefix = '';
         }
+        
         if (!is_null($db) && empty($type)) {
             if (is_object($db)) {
                 $type = get_class($db);
             }
         }
+        
         $type = strtolower($type);
+        
         if (($type === 'pdo') && ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite')) {
             $type .= '_sqlite';
         }
+        
         if (!empty($type)) {
             $type = "DataConnector_{$type}";
         } else {
             $type = 'DataConnector';
         }
+        
         $type = "\\IMSGlobal\\LTI\\ToolProvider\\DataConnector\\{$type}";
         $dataConnector = new $type($db, $dbTableNamePrefix);
         
@@ -550,6 +556,7 @@ class DataConnector
             $value = 'null';
         } else {
             $value = str_replace('\'', '\'\'', $value);
+            
             if ($addQuotes) {
                 $value = "'{$value}'";
             }

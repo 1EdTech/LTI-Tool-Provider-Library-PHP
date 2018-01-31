@@ -12,7 +12,7 @@ namespace IMSGlobal\LTI\ToolProvider;
  */
 class ConsumerNonce
 {
-
+    
     /**
      * Maximum age nonce values will be retained for (in minutes).
      */

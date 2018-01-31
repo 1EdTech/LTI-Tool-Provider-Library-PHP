@@ -16,6 +16,7 @@ class OAuthRequest
     protected $http_method;
 
     protected $http_url;
+    
     // for debug purposes
     public $base_string;
 
@@ -88,6 +89,7 @@ class OAuthRequest
             'oauth_timestamp' => OAuthRequest::generate_timestamp(),
             'oauth_consumer_key' => $consumer->key
         );
+        
         if ($token) {
             $defaults['oauth_token'] = $token->key;
         }
@@ -204,6 +206,7 @@ class OAuthRequest
     {
         $post_data = $this->to_postdata();
         $out = $this->get_normalized_http_url();
+        
         if ($post_data) {
             $out .= '?' . $post_data;
         }
@@ -225,20 +228,25 @@ class OAuthRequest
     public function to_header($realm = null)
     {
         $first = true;
+        
         if ($realm) {
             $out = 'Authorization: OAuth realm="' . OAuthUtil::urlencode_rfc3986($realm) . '"';
             $first = false;
         } else {
             $out = 'Authorization: OAuth';
         }
+        
         $total = array();
+        
         foreach ($this->parameters as $k => $v) {
             if (substr($k, 0, 5) != "oauth") {
                 continue;
             }
+            
             if (is_array($v)) {
                 throw new OAuthException('Arrays not supported in headers');
             }
+            
             $out .= ($first) ? ' ' : ',';
             $out .= OAuthUtil::urlencode_rfc3986($k) . '="' . OAuthUtil::urlencode_rfc3986($v) . '"';
             $first = false;

@@ -31,14 +31,15 @@ class DataConnector_pdo extends DataConnector
     public function __construct($db, $dbTableNamePrefix = '')
     {
         parent::__construct($db, $dbTableNamePrefix);
+        
         if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) == 'oci') {
             $this->date_format = 'd-M-Y';
         }
     }
-
-###
-###  ToolConsumer methods
-###
+    
+    ###
+    ###  ToolConsumer methods
+    ###
     
 
     /**
@@ -51,6 +52,7 @@ class DataConnector_pdo extends DataConnector
     public function loadToolConsumer($consumer)
     {
         $ok = false;
+        
         if (!empty($consumer->getRecordId())) {
             $sql = 'SELECT consumer_pk, name, consumer_key256, consumer_key, secret, lti_version, ' .
                  'consumer_name, consumer_version, consumer_guid, ' .
@@ -74,6 +76,7 @@ class DataConnector_pdo extends DataConnector
         if ($query->execute()) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $row = array_change_key_case($row);
+                
                 if (empty($key256) || empty($row['consumer_key']) || ($consumer->getKey() === $row['consumer_key'])) {
                     $consumer->setRecordId(intval($row['consumer_pk']));
                     $consumer->name = $row['name'];
@@ -86,24 +89,32 @@ class DataConnector_pdo extends DataConnector
                     $consumer->profile = json_decode($row['profile']);
                     $consumer->toolProxy = $row['tool_proxy'];
                     $settings = unserialize($row['settings']);
+                    
                     if (!is_array($settings)) {
                         $settings = array();
                     }
+                    
                     $consumer->setSettings($settings);
                     $consumer->protected = (intval($row['protected']) === 1);
                     $consumer->enabled = (intval($row['enabled']) === 1);
                     $consumer->enableFrom = null;
+                    
                     if (!is_null($row['enable_from'])) {
                         $consumer->enableFrom = strtotime($row['enable_from']);
                     }
+                    
                     $consumer->enableUntil = null;
+                    
                     if (!is_null($row['enable_until'])) {
                         $consumer->enableUntil = strtotime($row['enable_until']);
                     }
+                    
                     $consumer->lastAccess = null;
+                    
                     if (!is_null($row['last_access'])) {
                         $consumer->lastAccess = strtotime($row['last_access']);
                     }
+                    
                     $consumer->created = strtotime($row['created']);
                     $consumer->updated = strtotime($row['updated']);
                     $ok = true;
@@ -127,9 +138,11 @@ class DataConnector_pdo extends DataConnector
         $id = $consumer->getRecordId();
         $key = $consumer->getKey();
         $key256 = $this->getConsumerKey($key);
+        
         if ($key === $key256) {
             $key = null;
         }
+        
         $protected = ($consumer->protected) ? 1 : 0;
         $enabled = ($consumer->enabled) ? 1 : 0;
         $profile = (!empty($consumer->profile)) ? json_encode($consumer->profile) : null;
@@ -137,17 +150,23 @@ class DataConnector_pdo extends DataConnector
         $time = time();
         $now = date("{$this->dateFormat} {$this->timeFormat}", $time);
         $from = null;
+        
         if (!is_null($consumer->enableFrom)) {
             $from = date("{$this->dateFormat} {$this->timeFormat}", $consumer->enableFrom);
         }
+        
         $until = null;
+        
         if (!is_null($consumer->enableUntil)) {
             $until = date("{$this->dateFormat} {$this->timeFormat}", $consumer->enableUntil);
         }
+        
         $last = null;
+        
         if (!is_null($consumer->lastAccess)) {
             $last = date($this->dateFormat, $consumer->lastAccess);
         }
+        
         if (empty($id)) {
             $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME .
                  ' (consumer_key256, consumer_key, name, ' .
@@ -201,12 +220,15 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('updated', $now, PDO::PARAM_STR);
             $query->bindValue('id', $id, PDO::PARAM_INT);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             if (empty($id)) {
                 $consumer->setRecordId(intval($this->db->lastInsertId()));
                 $consumer->created = $time;
             }
+            
             $consumer->updated = $time;
         }
         
@@ -223,22 +245,22 @@ class DataConnector_pdo extends DataConnector
     public function deleteToolConsumer($consumer)
     {
         $id = $consumer->getRecordId();
-
-// Delete any nonce values for this consumer
+        
+        // Delete any nonce values for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any outstanding share keys for resource links for this consumer
+        
+        // Delete any outstanding share keys for resource links for this consumer
         $sql = 'DELETE sk ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
              ' sk ' . "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON sk.resource_link_pk = rl.resource_link_pk ' . 'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any outstanding share keys for resource links for contexts in this consumer
+        
+        // Delete any outstanding share keys for resource links for contexts in this consumer
         $sql = 'DELETE sk ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
              ' sk ' . "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON sk.resource_link_pk = rl.resource_link_pk ' . "INNER JOIN {$this->dbTableNamePrefix}" .
@@ -246,16 +268,16 @@ class DataConnector_pdo extends DataConnector
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for this consumer
+        
+        // Delete any users in resource links for this consumer
         $sql = 'DELETE u ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON u.resource_link_pk = rl.resource_link_pk ' . 'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for contexts in this consumer
+        
+        // Delete any users in resource links for contexts in this consumer
         $sql = 'DELETE u ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON u.resource_link_pk = rl.resource_link_pk ' . "INNER JOIN {$this->dbTableNamePrefix}" .
@@ -263,8 +285,8 @@ class DataConnector_pdo extends DataConnector
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for which this consumer is acting as a primary resource link
+        
+        // Update any resource links for which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
@@ -272,8 +294,8 @@ class DataConnector_pdo extends DataConnector
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for contexts in which this consumer is acting as a primary resource link
+        
+        // Update any resource links for contexts in which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' . "INNER JOIN {$this->dbTableNamePrefix}" .
@@ -282,30 +304,30 @@ class DataConnector_pdo extends DataConnector
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for this consumer
+        
+        // Delete any resource links for this consumer
         $sql = 'DELETE rl ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              'WHERE rl.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for contexts in this consumer
+        
+        // Delete any resource links for contexts in this consumer
         $sql = 'DELETE rl ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME .
              ' c ON rl.context_pk = c.context_pk ' . 'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any contexts for this consumer
+        
+        // Delete any contexts for this consumer
         $sql = 'DELETE c ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ' .
              'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete consumer
+        
+        // Delete consumer
         $sql = 'DELETE c ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' c ' .
              'WHERE c.consumer_pk = :id';
         $query = $this->db->prepare($sql);
@@ -318,10 +340,10 @@ class DataConnector_pdo extends DataConnector
         
         return $ok;
     }
-
-###
-#    Load all tool consumers from the database
-###
+    
+    ###
+    #    Load all tool consumers from the database
+    ###
     public function getToolConsumers()
     {
         $consumers = array();
@@ -352,24 +374,32 @@ class DataConnector_pdo extends DataConnector
                 $consumer->profile = json_decode($row['profile']);
                 $consumer->toolProxy = $row['tool_proxy'];
                 $settings = unserialize($row['settings']);
+                
                 if (!is_array($settings)) {
                     $settings = array();
                 }
+                
                 $consumer->setSettings($settings);
                 $consumer->protected = (intval($row['protected']) === 1);
                 $consumer->enabled = (intval($row['enabled']) === 1);
                 $consumer->enableFrom = null;
+                
                 if (!is_null($row['enable_from'])) {
                     $consumer->enableFrom = strtotime($row['enable_from']);
                 }
+                
                 $consumer->enableUntil = null;
+                
                 if (!is_null($row['enable_until'])) {
                     $consumer->enableUntil = strtotime($row['enable_until']);
                 }
+                
                 $consumer->lastAccess = null;
+                
                 if (!is_null($row['last_access'])) {
                     $consumer->lastAccess = strtotime($row['last_access']);
                 }
+                
                 $consumer->created = strtotime($row['created']);
                 $consumer->updated = strtotime($row['updated']);
                 $consumers[] = $consumer;
@@ -378,39 +408,39 @@ class DataConnector_pdo extends DataConnector
         
         return $consumers;
     }
+    
+    ###
+    ###  ToolProxy methods
+    ###
+    
 
-###
-###  ToolProxy methods
-###
-
-
-###
-#    Load the tool proxy from the database
-###
+    ###
+    #    Load the tool proxy from the database
+    ###
     public function loadToolProxy($toolProxy)
     {
         return false;
     }
-
-###
-#    Save the tool proxy to the database
-###
+    
+    ###
+    #    Save the tool proxy to the database
+    ###
     public function saveToolProxy($toolProxy)
     {
         return false;
     }
-
-###
-#    Delete the tool proxy from the database
-###
+    
+    ###
+    #    Delete the tool proxy from the database
+    ###
     public function deleteToolProxy($toolProxy)
     {
         return false;
     }
-
-###
-###  Context methods
-###
+    
+    ###
+    ###  Context methods
+    ###
     
 
     /**
@@ -423,6 +453,7 @@ class DataConnector_pdo extends DataConnector
     public function loadContext($context)
     {
         $ok = false;
+        
         if (!empty($context->getRecordId())) {
             $sql = 'SELECT context_pk, consumer_pk, lti_context_id, settings, created, updated ' .
                  "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' . 'WHERE (context_pk = :id)';
@@ -436,20 +467,25 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('cid', $context->getConsumer()->getRecordId(), PDO::PARAM_INT);
             $query->bindValue('ctx', $context->ltiContextId, PDO::PARAM_STR);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             $row = $query->fetch(PDO::FETCH_ASSOC);
             $ok = ($row !== false);
         }
+        
         if ($ok) {
             $row = array_change_key_case($row);
             $context->setRecordId(intval($row['context_pk']));
             $context->setConsumerId(intval($row['consumer_pk']));
             $context->ltiContextId = $row['lti_context_id'];
             $settings = unserialize($row['settings']);
+            
             if (!is_array($settings)) {
                 $settings = array();
             }
+            
             $context->setSettings($settings);
             $context->created = strtotime($row['created']);
             $context->updated = strtotime($row['updated']);
@@ -472,6 +508,7 @@ class DataConnector_pdo extends DataConnector
         $settingsValue = serialize($context->getSettings());
         $id = $context->getRecordId();
         $consumer_pk = $context->getConsumer()->getRecordId();
+        
         if (empty($id)) {
             $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME .
                  ' (consumer_pk, lti_context_id, ' . 'settings, created, updated) ' .
@@ -493,12 +530,15 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('cid', $consumer_pk, PDO::PARAM_INT);
             $query->bindValue('ctxid', $id, PDO::PARAM_INT);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             if (empty($id)) {
                 $context->setRecordId(intval($this->db->lastInsertId()));
                 $context->created = $time;
             }
+            
             $context->updated = $time;
         }
         
@@ -515,24 +555,24 @@ class DataConnector_pdo extends DataConnector
     public function deleteContext($context)
     {
         $id = $context->getRecordId();
-
-// Delete any outstanding share keys for resource links for this context
+        
+        // Delete any outstanding share keys for resource links for this context
         $sql = 'DELETE sk ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
              ' sk ' . "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON sk.resource_link_pk = rl.resource_link_pk ' . 'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for this context
+        
+        // Delete any users in resource links for this context
         $sql = 'DELETE u ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' u ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON u.resource_link_pk = rl.resource_link_pk ' . 'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for which this consumer is acting as a primary resource link
+        
+        // Update any resource links for which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' prl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
              ' rl ON prl.primary_resource_link_pk = rl.resource_link_pk ' .
@@ -540,15 +580,15 @@ class DataConnector_pdo extends DataConnector
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for this consumer
+        
+        // Delete any resource links for this consumer
         $sql = 'DELETE rl ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              'WHERE rl.context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete context
+        
+        // Delete context
         $sql = 'DELETE c ' . "FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ' .
              'WHERE c.context_pk = :id';
         $query = $this->db->prepare($sql);
@@ -561,10 +601,10 @@ class DataConnector_pdo extends DataConnector
         
         return $ok;
     }
-
-###
-###  ResourceLink methods
-###
+    
+    ###
+    ###  ResourceLink methods
+    ###
     
 
     /**
@@ -599,7 +639,9 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('id2', $resourceLink->getConsumer()->getRecordId(), PDO::PARAM_INT);
             $query->bindValue('rlid', $resourceLink->getId(), PDO::PARAM_STR);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             $row = $query->fetch(PDO::FETCH_ASSOC);
             $ok = ($row !== false);
@@ -608,27 +650,34 @@ class DataConnector_pdo extends DataConnector
         if ($ok) {
             $row = array_change_key_case($row);
             $resourceLink->setRecordId(intval($row['resource_link_pk']));
+            
             if (!is_null($row['context_pk'])) {
                 $resourceLink->setContextId(intval($row['context_pk']));
             } else {
                 $resourceLink->setContextId(null);
             }
+            
             if (!is_null($row['consumer_pk'])) {
                 $resourceLink->setConsumerId(intval($row['consumer_pk']));
             } else {
                 $resourceLink->setConsumerId(null);
             }
+            
             $resourceLink->ltiResourceLinkId = $row['lti_resource_link_id'];
             $settings = unserialize($row['settings']);
+            
             if (!is_array($settings)) {
                 $settings = array();
             }
+            
             $resourceLink->setSettings($settings);
+            
             if (!is_null($row['primary_resource_link_pk'])) {
                 $resourceLink->primaryResourceLinkId = intval($row['primary_resource_link_pk']);
             } else {
                 $resourceLink->primaryResourceLinkId = null;
             }
+            
             $resourceLink->shareApproved = (is_null($row['share_approved'])) ? null : (intval($row['share_approved']) ===
                  1);
             $resourceLink->created = strtotime($row['created']);
@@ -650,6 +699,7 @@ class DataConnector_pdo extends DataConnector
         $time = time();
         $now = date("{$this->dateFormat} {$this->timeFormat}", $time);
         $settingsValue = serialize($resourceLink->getSettings());
+        
         if (!empty($resourceLink->getContext())) {
             $consumerId = null;
             $contextId = strval($resourceLink->getContext()->getRecordId());
@@ -660,12 +710,15 @@ class DataConnector_pdo extends DataConnector
             $consumerId = strval($resourceLink->getConsumer()->getRecordId());
             $contextId = null;
         }
+        
         if (empty($resourceLink->primaryResourceLinkId)) {
             $primaryResourceLinkId = null;
         } else {
             $primaryResourceLinkId = $resourceLink->primaryResourceLinkId;
         }
+        
         $id = $resourceLink->getRecordId();
+        
         if (empty($id)) {
             $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
                  ' (consumer_pk, context_pk, ' .
@@ -708,12 +761,15 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('cid', $consumerId, PDO::PARAM_INT);
             $query->bindValue('id', $id, PDO::PARAM_INT);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             if (empty($id)) {
                 $resourceLink->setRecordId(intval($this->db->lastInsertId()));
                 $resourceLink->created = $time;
             }
+            
             $resourceLink->updated = $time;
         }
         
@@ -730,15 +786,15 @@ class DataConnector_pdo extends DataConnector
     public function deleteResourceLink($resourceLink)
     {
         $id = $resourceLink->getRecordId();
-
-// Delete any outstanding share keys for resource links for this consumer
+        
+        // Delete any outstanding share keys for resource links for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
              'WHERE (resource_link_pk = :id)';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $ok = $query->execute();
-
-// Delete users
+        
+        // Delete users
         if ($ok) {
             $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
                  'WHERE (resource_link_pk = :id)';
@@ -746,8 +802,8 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('id', $id, PDO::PARAM_INT);
             $ok = $query->execute();
         }
-
-// Update any resource links for which this is the primary resource link
+        
+        // Update any resource links for which this is the primary resource link
         if ($ok) {
             $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
                  'SET primary_resource_link_pk = NULL ' . 'WHERE (primary_resource_link_pk = :id)';
@@ -755,8 +811,8 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('id', $id, PDO::PARAM_INT);
             $ok = $query->execute();
         }
-
-// Delete resource link
+        
+        // Delete resource link
         if ($ok) {
             $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
                  'WHERE (resource_link_pk = :id)';
@@ -808,10 +864,12 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('id', $id, PDO::PARAM_INT);
             $query->bindValue('pid', $id, PDO::PARAM_INT);
         }
+        
         if ($query->execute()) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $row = array_change_key_case($row);
                 $user = ToolProvider\User::fromRecordId($row['user_pk'], $resourceLink->getDataConnector());
+                
                 if (is_null($idScope)) {
                     $users[] = $user;
                 } else {
@@ -841,6 +899,7 @@ class DataConnector_pdo extends DataConnector
              'ORDER BY consumer_pk';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
+        
         if ($query->execute()) {
             while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 $row = array_change_key_case($row);
@@ -853,10 +912,10 @@ class DataConnector_pdo extends DataConnector
         
         return $shares;
     }
-
-###
-###  ConsumerNonce methods
-###
+    
+    ###
+    ###  ConsumerNonce methods
+    ###
     
 
     /**
@@ -869,15 +928,15 @@ class DataConnector_pdo extends DataConnector
     public function loadConsumerNonce($nonce)
     {
         $ok = true;
-
-// Delete any expired nonce values
+        
+        // Delete any expired nonce values
         $now = date("{$this->dateFormat} {$this->timeFormat}", time());
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE expires <= :now';
         $query = $this->db->prepare($sql);
         $query->bindValue('now', $now, PDO::PARAM_STR);
         $query->execute();
-
-// Load the nonce
+        
+        // Load the nonce
         $id = $nonce->getConsumer()->getRecordId();
         $value = $nonce->getValue();
         $sql = "SELECT value T FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME .
@@ -886,8 +945,10 @@ class DataConnector_pdo extends DataConnector
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->bindValue('value', $value, PDO::PARAM_STR);
         $ok = $query->execute();
+        
         if ($ok) {
             $row = $query->fetch(PDO::FETCH_ASSOC);
+            
             if ($row === false) {
                 $ok = false;
             }
@@ -918,10 +979,10 @@ class DataConnector_pdo extends DataConnector
         
         return $ok;
     }
-
-###
-###  ResourceLinkShareKey methods
-###
+    
+    ###
+    ###  ResourceLinkShareKey methods
+    ###
     
 
     /**
@@ -934,25 +995,28 @@ class DataConnector_pdo extends DataConnector
     public function loadResourceLinkShareKey($shareKey)
     {
         $ok = false;
-
-// Clear expired share keys
+        
+        // Clear expired share keys
         $now = date("{$this->dateFormat} {$this->timeFormat}", time());
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
              ' WHERE expires <= :now';
         $query = $this->db->prepare($sql);
         $query->bindValue('now', $now, PDO::PARAM_STR);
         $query->execute();
-
-// Load share key
+        
+        // Load share key
         $id = $shareKey->getId();
         $sql = 'SELECT resource_link_pk, auto_approve, expires ' . "FROM {$this->dbTableNamePrefix}" .
              DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' . 'WHERE share_key_id = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_STR);
+        
         if ($query->execute()) {
             $row = $query->fetch(PDO::FETCH_ASSOC);
+            
             if ($row !== false) {
                 $row = array_change_key_case($row);
+                
                 if (intval($row['resource_link_pk']) === $shareKey->resourceLinkId) {
                     $shareKey->autoApprove = ($row['auto_approve'] === 1);
                     $shareKey->expires = strtotime($row['expires']);
@@ -1009,10 +1073,10 @@ class DataConnector_pdo extends DataConnector
         
         return $ok;
     }
-
-###
-###  User methods
-###
+    
+    ###
+    ###  User methods
+    ###
     
 
     /**
@@ -1025,6 +1089,7 @@ class DataConnector_pdo extends DataConnector
     public function loadUser($user)
     {
         $ok = false;
+        
         if (!empty($user->getRecordId())) {
             $id = $user->getRecordId();
             $sql = 'SELECT user_pk, resource_link_pk, lti_user_id, lti_result_sourcedid, created, updated ' .
@@ -1042,8 +1107,10 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('id', $id, PDO::PARAM_INT);
             $query->bindValue('uid', $uid, PDO::PARAM_STR);
         }
+        
         if ($query->execute()) {
             $row = $query->fetch(PDO::FETCH_ASSOC);
+            
             if ($row !== false) {
                 $row = array_change_key_case($row);
                 $user->setRecordId(intval($row['user_pk']));
@@ -1070,6 +1137,7 @@ class DataConnector_pdo extends DataConnector
     {
         $time = time();
         $now = date("{$this->dateFormat} {$this->timeFormat}", $time);
+        
         if (is_null($user->created)) {
             $sql = "INSERT INTO {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME .
                  ' (resource_link_pk, ' . 'lti_user_id, lti_result_sourcedid, created, updated) ' .
@@ -1088,12 +1156,15 @@ class DataConnector_pdo extends DataConnector
             $query->bindValue('updated', $now, PDO::PARAM_STR);
             $query->bindValue('id', $user->getRecordId(), PDO::PARAM_INT);
         }
+        
         $ok = $query->execute();
+        
         if ($ok) {
             if (is_null($user->created)) {
                 $user->setRecordId(intval($this->db->lastInsertId()));
                 $user->created = $time;
             }
+            
             $user->updated = $time;
         }
         

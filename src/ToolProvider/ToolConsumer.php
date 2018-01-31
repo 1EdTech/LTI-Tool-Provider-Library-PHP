@@ -175,10 +175,13 @@ class ToolConsumer
     public function __construct($key = null, $dataConnector = null, $autoEnable = false)
     {
         $this->initialize();
+        
         if (empty($dataConnector)) {
             $dataConnector = DataConnector::getDataConnector();
         }
+        
         $this->dataConnector = $dataConnector;
+        
         if (!empty($key)) {
             $this->load($key, $autoEnable);
         } else {
@@ -231,6 +234,7 @@ class ToolConsumer
     public function save()
     {
         $ok = $this->dataConnector->saveToolConsumer($this);
+        
         if ($ok) {
             $this->settingsChanged = false;
         }
@@ -308,9 +312,11 @@ class ToolConsumer
         $ok = $this->enabled;
         
         $now = time();
+        
         if ($ok && !is_null($this->enableFrom)) {
             $ok = $this->enableFrom <= $now;
         }
+        
         if ($ok && !is_null($this->enableUntil)) {
             $ok = $this->enableUntil > $now;
         }
@@ -346,12 +352,14 @@ class ToolConsumer
     public function setSetting($name, $value = null)
     {
         $old_value = $this->getSetting($name);
+        
         if ($value !== $old_value) {
             if (!empty($value)) {
                 $this->settings[$name] = $value;
             } else {
                 unset($this->settings[$name]);
             }
+            
             $this->settingsChanged = true;
         }
     }
@@ -449,11 +457,13 @@ class ToolConsumer
     public function signParameters($url, $type, $version, $params)
     {
         if (!empty($url)) {
-// Check for query parameters which need to be included in the signature
+            // Check for query parameters which need to be included in the signature
             $queryParams = array();
             $queryString = parse_url($url, PHP_URL_QUERY);
+            
             if (!is_null($queryString)) {
                 $queryItems = explode('&', $queryString);
+                
                 foreach ($queryItems as $item) {
                     if (strpos($item, '=') !== false) {
                         list ($name, $value) = explode('=', $item);
@@ -463,18 +473,19 @@ class ToolConsumer
                     }
                 }
             }
+            
             $params = $params + $queryParams;
-// Add standard parameters
+            // Add standard parameters
             $params['lti_version'] = $version;
             $params['lti_message_type'] = $type;
             $params['oauth_callback'] = 'about:blank';
-// Add OAuth signature
+            // Add OAuth signature
             $hmacMethod = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
             $consumer = new OAuth\OAuthConsumer($this->getKey(), $this->secret, null);
             $req = OAuth\OAuthRequest::from_consumer_and_token($consumer, null, 'POST', $url, $params);
             $req->sign_request($hmacMethod, $consumer, null);
             $params = $req->get_parameters();
-// Remove parameters being passed on the query string
+            // Remove parameters being passed on the query string
             foreach (array_keys($queryParams) as $name) {
                 unset($params[$name]);
             }
@@ -491,14 +502,17 @@ class ToolConsumer
     public static function addSignature($endpoint, $consumerKey, $consumerSecret, $data, $method = 'POST', $type = null)
     {
         $params = array();
+        
         if (is_array($data)) {
             $params = $data;
         }
-// Check for query parameters which need to be included in the signature
+        // Check for query parameters which need to be included in the signature
         $queryParams = array();
         $queryString = parse_url($endpoint, PHP_URL_QUERY);
+        
         if (!is_null($queryString)) {
             $queryItems = explode('&', $queryString);
+            
             foreach ($queryItems as $item) {
                 if (strpos($item, '=') !== false) {
                     list ($name, $value) = explode('=', $item);
@@ -507,28 +521,30 @@ class ToolConsumer
                     $queryParams[urldecode($item)] = '';
                 }
             }
+            
             $params = $params + $queryParams;
         }
         
         if (!is_array($data)) {
-// Calculate body hash
+            // Calculate body hash
             $hash = base64_encode(sha1($data, true));
             $params['oauth_body_hash'] = $hash;
         }
-
-// Add OAuth signature
+        
+        // Add OAuth signature
         $hmacMethod = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
         $oauthConsumer = new OAuth\OAuthConsumer($consumerKey, $consumerSecret, null);
         $oauthReq = OAuth\OAuthRequest::from_consumer_and_token($oauthConsumer, null, $method, $endpoint, $params);
         $oauthReq->sign_request($hmacMethod, $oauthConsumer, null);
         $params = $oauthReq->get_parameters();
-// Remove parameters being passed on the query string
+        // Remove parameters being passed on the query string
         foreach (array_keys($queryParams) as $name) {
             unset($params[$name]);
         }
         
         if (!is_array($data)) {
             $header = $oauthReq->to_header();
+            
             if (empty($data)) {
                 if (!empty($type)) {
                     $header .= "\nAccept: {$type}";
@@ -537,6 +553,7 @@ class ToolConsumer
                 $header .= "\nContent-Type: {$type}";
                 $header .= "\nContent-Length: " . strlen($data);
             }
+            
             return $header;
         } else {
             return $params;
@@ -556,10 +573,10 @@ class ToolConsumer
     public function doServiceRequest($service, $method, $format, $data)
     {
         $header = ToolConsumer::addSignature($service->endpoint, $this->getKey(), $this->secret, $data, $method, $format);
-
-// Connect to tool consumer
+        
+        // Connect to tool consumer
         $http = new HTTPMessage($service->endpoint, $method, $data, $header);
-// Parse JSON response
+        // Parse JSON response
         if ($http->send() && !empty($http->response)) {
             $http->responseJson = json_decode($http->response);
             $http->ok = !is_null($http->responseJson);
@@ -582,16 +599,17 @@ class ToolConsumer
         
         $toolConsumer->initialize();
         $toolConsumer->setRecordId($id);
+        
         if (!$dataConnector->loadToolConsumer($toolConsumer)) {
             $toolConsumer->initialize();
         }
         
         return $toolConsumer;
     }
-
-###
-###  PRIVATE METHOD
-###
+    
+    ###
+    ###  PRIVATE METHOD
+    ###
     
 
     /**
@@ -606,6 +624,7 @@ class ToolConsumer
     {
         $this->key = $key;
         $ok = $this->dataConnector->loadToolConsumer($this);
+        
         if (!$ok) {
             $this->enabled = $autoEnable;
         }

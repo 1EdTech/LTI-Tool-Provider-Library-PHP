@@ -88,11 +88,13 @@ class HTTPMessage
     {
         $this->url = $url;
         $this->method = strtoupper($method);
+        
         if (is_array($params)) {
             $this->request = http_build_query($params);
         } else {
             $this->request = $params;
         }
+        
         if (!empty($header)) {
             $this->requestHeaders = explode("\n", $header);
         }
@@ -106,62 +108,76 @@ class HTTPMessage
     public function send()
     {
         $this->ok = false;
-// Try using curl if available
+        
+        // Try using curl if available
         if (function_exists('curl_init')) {
             $resp = '';
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->url);
+            
             if (!empty($this->requestHeaders)) {
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $this->requestHeaders);
             } else {
                 curl_setopt($ch, CURLOPT_HEADER, 0);
             }
+            
             if ($this->method === 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
             } elseif ($this->method !== 'GET') {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+                
                 if (!is_null($this->request)) {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->request);
                 }
             }
+            
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLINFO_HEADER_OUT, true);
             curl_setopt($ch, CURLOPT_HEADER, true);
+            
             //curl_setopt($ch, CURLOPT_SSLVERSION,3);
             $chResp = curl_exec($ch);
             $this->ok = $chResp !== false;
+            
             if ($this->ok) {
                 $chResp = str_replace("\r\n", "\n", $chResp);
                 $chRespSplit = explode("\n\n", $chResp, 2);
+                
                 if ((count($chRespSplit) > 1) && (substr($chRespSplit[1], 0, 5) === 'HTTP/')) {
                     $chRespSplit = explode("\n\n", $chRespSplit[1], 2);
                 }
+                
                 $this->responseHeaders = $chRespSplit[0];
                 $resp = $chRespSplit[1];
                 $this->status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 $this->ok = $this->status < 400;
+                
                 if (!$this->ok) {
                     $this->error = curl_error($ch);
                 }
             }
+            
             $this->requestHeaders = str_replace("\r\n", "\n", curl_getinfo($ch, CURLINFO_HEADER_OUT));
             curl_close($ch);
             $this->response = $resp;
         } else {
-// Try using fopen if curl was not available
+            // Try using fopen if curl was not available
             $opts = array(
                 'method' => $this->method,
                 'content' => $this->request
             );
+            
             if (!empty($this->requestHeaders)) {
                 $opts['header'] = $this->requestHeaders;
             }
+            
             try {
                 $ctx = stream_context_create(array(
                     'http' => $opts
                 ));
                 $fp = @fopen($this->url, 'rb', false, $ctx);
+                
                 if ($fp) {
                     $resp = @stream_get_contents($fp);
                     $this->ok = $resp !== false;

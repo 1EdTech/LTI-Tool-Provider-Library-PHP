@@ -28,9 +28,11 @@ class ContentItem
     public function __construct($type, $placementAdvice = null, $id = null)
     {
         $this->{'@type'} = $type;
+        
         if (is_object($placementAdvice) && (count(get_object_vars($placementAdvice)) > 0)) {
             $this->placementAdvice = $placementAdvice;
         }
+        
         if (!empty($id)) {
             $this->{'@id'} = $id;
         }
@@ -100,19 +102,22 @@ class ContentItem
      */
     public static function toJson($items)
     {
-/*
- $data = array();
- if (!is_array($items)) {
- $data[] = json_encode($items);
- } else {
- foreach ($items as $item) {
- $data[] = json_encode($item);
- }
- }
- $json = '{ "@context" : "http://purl.imsglobal.org/ctx/lti/v1/ContentItem", "@graph" : [' . implode(", ", $data) . '] }';
- */
+        /*
+         $data = array();
+         
+         if (!is_array($items)) {
+         $data[] = json_encode($items);
+         } else {
+         foreach ($items as $item) {
+         $data[] = json_encode($item);
+         }
+         }
+         
+         $json = '{ "@context" : "http://purl.imsglobal.org/ctx/lti/v1/ContentItem", "@graph" : [' . implode(", ", $data) . '] }';
+         */
         $obj = new \stdClass();
         $obj->{'@context'} = 'http://purl.imsglobal.org/ctx/lti/v1/ContentItem';
+        
         if (!is_array($items)) {
             $obj->{'@graph'} = array();
             $obj->{'@graph'}[] = $items;

@@ -51,7 +51,9 @@ class ResourceLinkShareKey
      *
      * @var int $life
      */
-    public $life = null; // in hours
+    public $life = null;
+    // in hours
+    
 
     /**
      * Whether the sharing arrangement should be automatically approved when first used.
@@ -93,6 +95,7 @@ class ResourceLinkShareKey
         $this->dataConnector = $resourceLink->getDataConnector();
         $this->resourceLinkId = $resourceLink->getRecordId();
         $this->id = $id;
+        
         if (!empty($id)) {
             $this->load();
         }
@@ -131,13 +134,16 @@ class ResourceLinkShareKey
         } else {
             $this->life = max(min($this->life, self::MAX_SHARE_KEY_LIFE), 0);
         }
+        
         $this->expires = time() + ($this->life * 60 * 60);
+        
         if (empty($this->id)) {
             if (empty($this->length) || !is_numeric($this->length)) {
                 $this->length = self::MAX_SHARE_KEY_LENGTH;
             } else {
                 $this->length = max(min($this->length, self::MAX_SHARE_KEY_LENGTH), self::MIN_SHARE_KEY_LENGTH);
             }
+            
             $this->id = DataConnector::getRandomString($this->length);
         }
         
@@ -163,10 +169,10 @@ class ResourceLinkShareKey
     {
         return $this->id;
     }
-
-###
-###  PRIVATE METHOD
-###
+    
+    ###
+    ###  PRIVATE METHOD
+    ###
     
 
     /**
@@ -176,9 +182,11 @@ class ResourceLinkShareKey
     {
         $this->initialize();
         $this->dataConnector->loadResourceLinkShareKey($this);
+        
         if (!is_null($this->id)) {
             $this->length = strlen($this->id);
         }
+        
         if (!is_null($this->expires)) {
             $this->life = ($this->expires - time()) / 60 / 60;
         }

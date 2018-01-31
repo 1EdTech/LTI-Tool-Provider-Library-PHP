@@ -47,48 +47,56 @@ class Membership extends Service
     {
         $isLink = is_a($this->source, 'IMSGlobal\LTI\ToolProvider\ResourceLink');
         $parameters = array();
+        
         if (!empty($role)) {
             $parameters['role'] = $role;
         }
+        
         if ($limit > 0) {
             $parameters['limit'] = strval($limit);
         }
+        
         if ($isLink) {
             $parameters['rlid'] = $this->source->getId();
         }
+        
         $http = $this->send('GET', $parameters);
+        
         if (!$http->ok) {
             $users = false;
         } else {
             $users = array();
+            
             if ($isLink) {
                 $oldUsers = $this->source->getUserResultSourcedIDs(true, ToolProvider\ToolProvider::ID_SCOPE_RESOURCE);
             }
+            
             foreach ($http->responseJson->pageOf->membershipSubject->membership as $membership) {
                 $member = $membership->member;
+                
                 if ($isLink) {
                     $user = ToolProvider\User::fromResourceLink($this->source, $member->userId);
                 } else {
                     $user = new ToolProvider\User();
                     $user->ltiUserId = $member->userId;
                 }
-
-// Set the user name
+                
+                // Set the user name
                 $firstname = (isset($member->givenName)) ? $member->givenName : '';
                 $lastname = (isset($member->familyName)) ? $member->familyName : '';
                 $fullname = (isset($member->name)) ? $member->name : '';
                 $user->setNames($firstname, $lastname, $fullname);
-
-// Set the user email
+                
+                // Set the user email
                 $email = (isset($member->email)) ? $member->email : '';
                 $user->setEmail($email, $this->source->getConsumer()->defaultEmail);
-
-// Set the user roles
+                
+                // Set the user roles
                 if (isset($membership->role)) {
                     $user->roles = ToolProvider\ToolProvider::parseRoles($membership->role);
                 }
-
-// If a result sourcedid is provided save the user
+                
+                // If a result sourcedid is provided save the user
                 if ($isLink) {
                     if (isset($member->message)) {
                         foreach ($member->message as $message) {
@@ -97,20 +105,22 @@ class Membership extends Service
                                     $user->ltiResultSourcedId = $message->lis_result_sourcedid;
                                     $user->save();
                                 }
+                                
                                 break;
                             }
                         }
                     }
                 }
+                
                 $users[] = $user;
-
-// Remove old user (if it exists)
+                
+                // Remove old user (if it exists)
                 if ($isLink) {
                     unset($oldUsers[$user->getId(ToolProvider\ToolProvider::ID_SCOPE_RESOURCE)]);
                 }
             }
-
-// Delete any old users which were not in the latest list from the tool consumer
+            
+            // Delete any old users which were not in the latest list from the tool consumer
             if ($isLink) {
                 foreach ($oldUsers as $id => $user) {
                     $user->delete();

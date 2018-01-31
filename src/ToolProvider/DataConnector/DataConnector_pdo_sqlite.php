@@ -17,10 +17,10 @@ use PDO;
  */
 class DataConnector_pdo_sqlite extends DataConnector_pdo
 {
-
-###
-###  ToolConsumer methods
-###
+    
+    ###
+    ###  ToolConsumer methods
+    ###
     
 
     /**
@@ -33,14 +33,14 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
     public function deleteToolConsumer($consumer)
     {
         $id = $consumer->getRecordId();
-
-// Delete any nonce values for this consumer
+        
+        // Delete any nonce values for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::NONCE_TABLE_NAME . ' WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any outstanding share keys for resource links for this consumer
+        
+        // Delete any outstanding share keys for resource links for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "WHERE ({$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
@@ -48,8 +48,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any outstanding share keys for resource links for contexts in this consumer
+        
+        // Delete any outstanding share keys for resource links for contexts in this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME .
@@ -59,8 +59,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for this consumer
+        
+        // Delete any users in resource links for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "WHERE ({$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME .
@@ -68,8 +68,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for contexts in this consumer
+        
+        // Delete any users in resource links for contexts in this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "INNER JOIN {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME .
@@ -79,8 +79,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for which this consumer is acting as a primary resource link
+        
+        // Update any resource links for which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'SET primary_resource_link_pk = NULL, share_approved = NULL ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
@@ -89,8 +89,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for contexts in which this consumer is acting as a primary resource link
+        
+        // Update any resource links for contexts in which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'SET primary_resource_link_pk = NULL, share_approved = NULL ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
@@ -101,15 +101,15 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for this consumer
+        
+        // Delete any resource links for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for contexts in this consumer
+        
+        // Delete any resource links for contexts in this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' c ' .
              "WHERE ({$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME .
@@ -117,15 +117,15 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any contexts for this consumer
+        
+        // Delete any contexts for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' .
              'WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete consumer
+        
+        // Delete consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::CONSUMER_TABLE_NAME . ' ' .
              'WHERE consumer_pk = :id';
         $query = $this->db->prepare($sql);
@@ -138,10 +138,10 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         
         return $ok;
     }
-
-###
-###  Context methods
-###
+    
+    ###
+    ###  Context methods
+    ###
     
 
     /**
@@ -154,8 +154,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
     public function deleteContext($context)
     {
         $id = $context->getRecordId();
-
-// Delete any outstanding share keys for resource links for this context
+        
+        // Delete any outstanding share keys for resource links for this context
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "WHERE ({$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_SHARE_KEY_TABLE_NAME .
@@ -163,8 +163,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any users in resource links for this context
+        
+        // Delete any users in resource links for this context
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME . ' ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
              "WHERE ({$this->dbTableNamePrefix}" . DataConnector::USER_RESULT_TABLE_NAME .
@@ -172,8 +172,8 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Update any resource links for which this consumer is acting as a primary resource link
+        
+        // Update any resource links for which this consumer is acting as a primary resource link
         $sql = "UPDATE {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'SET primary_resource_link_pk = null, share_approved = null ' .
              "WHERE EXISTS (SELECT * FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' rl ' .
@@ -182,15 +182,15 @@ class DataConnector_pdo_sqlite extends DataConnector_pdo
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete any resource links for this consumer
+        
+        // Delete any resource links for this consumer
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::RESOURCE_LINK_TABLE_NAME . ' ' .
              'WHERE context_pk = :id';
         $query = $this->db->prepare($sql);
         $query->bindValue('id', $id, PDO::PARAM_INT);
         $query->execute();
-
-// Delete context
+        
+        // Delete context
         $sql = "DELETE FROM {$this->dbTableNamePrefix}" . DataConnector::CONTEXT_TABLE_NAME . ' ' .
              'WHERE context_pk = :id';
         $query = $this->db->prepare($sql);

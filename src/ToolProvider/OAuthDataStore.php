@@ -72,9 +72,11 @@ class OAuthDataStore extends OAuth\OAuthDataStore
     {
         $nonce = new ConsumerNonce($this->toolProvider->consumer, $value);
         $ok = !$nonce->load();
+        
         if ($ok) {
             $ok = $nonce->save();
         }
+        
         if (!$ok) {
             $this->toolProvider->reason = 'Invalid nonce.';
         }

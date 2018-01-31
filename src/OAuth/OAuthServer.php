@@ -14,7 +14,7 @@ class OAuthServer
     protected $timestamp_threshold = 300; // in seconds, five minutes
     
     protected $version = '1.0';
-    
+
     protected $signature_methods = array();
 
     protected $data_store;
@@ -97,11 +97,13 @@ class OAuthServer
     private function get_version(&$request)
     {
         $version = $request->get_parameter("oauth_version");
+        
         if (!$version) {
             // Service Providers MUST assume the protocol version to be 1.0 if this parameter is not present.
             // Chapter 7.0 ("Accessing Protected Ressources")
             $version = '1.0';
         }
+        
         if ($version !== $this->version) {
             throw new OAuthException("OAuth version '$version' not supported");
         }
@@ -142,6 +144,7 @@ class OAuthServer
         }
         
         $consumer = $this->data_store->lookup_consumer($consumer_key);
+        
         if (!$consumer) {
             throw new OAuthException('Invalid consumer');
         }
@@ -157,6 +160,7 @@ class OAuthServer
         $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
         
         $token = $this->data_store->lookup_token($consumer, $token_type, $token_field);
+        
         if (!$token) {
             throw new OAuthException("Invalid $token_type token: $token_field");
         }
@@ -199,6 +203,7 @@ class OAuthServer
         
         // verify that timestamp is recentish
         $now = time();
+        
         if (abs($now - $timestamp) > $this->timestamp_threshold) {
             throw new OAuthException("Expired timestamp, yours $timestamp, ours $now");
         }
@@ -215,6 +220,7 @@ class OAuthServer
         
         // verify that the nonce is uniqueish
         $found = $this->data_store->lookup_nonce($consumer, $token, $nonce, $timestamp);
+        
         if ($found) {
             throw new OAuthException("Nonce already used: $nonce");
         }

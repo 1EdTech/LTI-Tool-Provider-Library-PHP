@@ -24,6 +24,7 @@ class SecurityContract
     public function __construct($toolProvider, $secret)
     {
         $tcContexts = array();
+        
         foreach ($toolProvider->consumer->profile->{'@context'} as $context) {
             if (is_object($context)) {
                 $tcContexts = array_merge(get_object_vars($context), $tcContexts);
@@ -32,17 +33,21 @@ class SecurityContract
         
         $this->shared_secret = $secret;
         $toolServices = array();
+        
         foreach ($toolProvider->requiredServices as $requiredService) {
             foreach ($requiredService->formats as $format) {
                 $service = $toolProvider->findService($format, $requiredService->actions);
+                
                 if (($service !== false) && !array_key_exists($service->{'@id'}, $toolServices)) {
                     $id = $service->{'@id'};
                     $parts = explode(':', $id, 2);
+                    
                     if (count($parts) > 1) {
                         if (array_key_exists($parts[0], $tcContexts)) {
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
+                    
                     $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
@@ -51,17 +56,21 @@ class SecurityContract
                 }
             }
         }
+        
         foreach ($toolProvider->optionalServices as $optionalService) {
             foreach ($optionalService->formats as $format) {
                 $service = $toolProvider->findService($format, $optionalService->actions);
+                
                 if (($service !== false) && !array_key_exists($service->{'@id'}, $toolServices)) {
                     $id = $service->{'@id'};
                     $parts = explode(':', $id, 2);
+                    
                     if (count($parts) > 1) {
                         if (array_key_exists($parts[0], $tcContexts)) {
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
+                    
                     $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
@@ -70,6 +79,7 @@ class SecurityContract
                 }
             }
         }
+        
         $this->tool_service = array_values($toolServices);
     }
 }
