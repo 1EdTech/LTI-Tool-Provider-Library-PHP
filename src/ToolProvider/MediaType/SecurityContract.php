@@ -1,50 +1,53 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider\MediaType;
+
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 
 /**
- * Class to represent an LTI Security Contract document
+ * Class to represent an LTI Security Contract document.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
- * @version  3.0.0
- * @license  GNU Lesser General Public License, version 3 (<http://www.gnu.org/licenses/lgpl.html>)
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
+ * @version 3.0.0
+ * @license Apache-2.0
  */
 class SecurityContract
 {
 
-/**
- * Class constructor.
- *
- * @param ToolProvider $toolProvider  Tool Provider instance
- * @param string $secret Shared secret
- */
-    function __construct($toolProvider, $secret)
+    /**
+     * Class constructor.
+     *
+     * @param ToolProvider $toolProvider Tool Provider instance.
+     * @param string $secret Shared secret.
+     */
+    public function __construct($toolProvider, $secret)
     {
-
         $tcContexts = array();
+        
         foreach ($toolProvider->consumer->profile->{'@context'} as $context) {
-          if (is_object($context)) {
-            $tcContexts = array_merge(get_object_vars($context), $tcContexts);
-          }
+            if (is_object($context)) {
+                $tcContexts = array_merge(get_object_vars($context), $tcContexts);
+            }
         }
-
+        
         $this->shared_secret = $secret;
         $toolServices = array();
+        
         foreach ($toolProvider->requiredServices as $requiredService) {
             foreach ($requiredService->formats as $format) {
                 $service = $toolProvider->findService($format, $requiredService->actions);
+                
                 if (($service !== false) && !array_key_exists($service->{'@id'}, $toolServices)) {
                     $id = $service->{'@id'};
                     $parts = explode(':', $id, 2);
+                    
                     if (count($parts) > 1) {
                         if (array_key_exists($parts[0], $tcContexts)) {
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
-                    $toolService = new \stdClass;
+                    
+                    $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
                     $toolService->action = $requiredService->actions;
@@ -52,18 +55,22 @@ class SecurityContract
                 }
             }
         }
+        
         foreach ($toolProvider->optionalServices as $optionalService) {
             foreach ($optionalService->formats as $format) {
                 $service = $toolProvider->findService($format, $optionalService->actions);
+                
                 if (($service !== false) && !array_key_exists($service->{'@id'}, $toolServices)) {
                     $id = $service->{'@id'};
                     $parts = explode(':', $id, 2);
+                    
                     if (count($parts) > 1) {
                         if (array_key_exists($parts[0], $tcContexts)) {
                             $id = "{$tcContexts[$parts[0]]}{$parts[1]}";
                         }
                     }
-                    $toolService = new \stdClass;
+                    
+                    $toolService = new \stdClass();
                     $toolService->{'@type'} = 'RestServiceProfile';
                     $toolService->service = $id;
                     $toolService->action = $optionalService->actions;
@@ -71,8 +78,7 @@ class SecurityContract
                 }
             }
         }
+        
         $this->tool_service = array_values($toolServices);
-
     }
-
 }

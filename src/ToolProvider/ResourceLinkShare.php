@@ -1,49 +1,33 @@
 <?php
-
 namespace IMSGlobal\LTI\ToolProvider;
 
 /**
- * Class to represent a tool consumer resource link share
+ * Class to represent a tool consumer resource link share.
  *
- * @author  Stephen P Vickers <svickers@imsglobal.org>
- * @copyright  IMS Global Learning Consortium Inc
- * @date  2016
+ * @author Stephen P Vickers <svickers@imsglobal.org>
+ * @copyright 2016 IMS Global Learning Consortium Inc
  * @version 3.0.0
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license Apache-2.0
  */
 class ResourceLinkShare
 {
 
-/**
- * Consumer key value.
- *
- * @var string $consumerKey
- */
+    /** @var string Consumer key value. */
     public $consumerKey = null;
-/**
- * Resource link ID value.
- *
- * @var string $resourceLinkId
- */
+
+    /** @var string Resource link ID value. */
     public $resourceLinkId = null;
-/**
- * Title of sharing context.
- *
- * @var string $title
- */
+
+    /** @var string Title of sharing context. */
     public $title = null;
-/**
- * Whether sharing request is to be automatically approved on first use.
- *
- * @var boolean $approved
- */
+
+    /** @var bool Whether sharing request is to be automatically approved on first use. */
     public $approved = null;
 
-/**
- * Class constructor.
- */
+    /**
+     * Class constructor.
+     */
     public function __construct()
     {
     }
-
 }

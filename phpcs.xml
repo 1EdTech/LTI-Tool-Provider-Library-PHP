@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+    <file>./src</file>
+    <arg value="p" />
+    <arg name="colors" />
+    <rule ref="PSR2">
+        <exclude name="Generic.Files.LineLength.TooLong" />
+    </rule>
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>./src/OAuth/OAuthSignatureMethod_*</exclude-pattern>
+        <exclude-pattern>./src/ToolProvider/DataConnector/DataConnector_*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>./src/OAuth/*</exclude-pattern>
+        <exclude-pattern>./src/Toolprovider/OAuthDataStore.php</exclude-pattern>
+    </rule>
+</ruleset>
