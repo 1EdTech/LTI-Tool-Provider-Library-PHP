@@ -53,14 +53,22 @@ class Outcome
     private $value = null;
 
 /**
+ * Outcome result data passback.
+ *
+ * @var array $resultData (type=>value)
+ */
+    private $resultData = null;
+
+
+/**
  * Class constructor.
  *
  * @param string $value     Outcome value (optional, default is none)
  */
-    public function __construct($value = null)
+    public function __construct($value = null, $resultData = null)
     {
-
         $this->value = $value;
+        $this->resultData = $resultData;
         $this->language = 'en-US';
         $this->date = gmdate('Y-m-d\TH:i:s\Z', time());
         $this->type = 'decimal';
@@ -88,6 +96,30 @@ class Outcome
     {
 
         $this->value = $value;
+
+    }
+
+/**
+ * Get the outcome result data.
+ *
+ * @return array Outcome Result Data (type=>value)
+ */
+    public function getResultData()
+    {
+
+        return $this->resultData;
+
+    }
+
+/**
+ * Set the outcome result data.
+ *
+ * @param array $resultData  Outcome result (type=>value)
+ */
+    public function setResultData($resultData)
+    {
+
+        $this->resultData = $resultData;
 
     }
 
